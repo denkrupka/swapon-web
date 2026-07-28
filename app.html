@@ -307,7 +307,7 @@
               <div style="flex:1;">
                 <div style="font-size:20px;font-weight:800;letter-spacing:-0.01em;">Баланс</div>
               </div>
-              <div style="width:34px;height:34px;flex:none;border-radius:11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:17px;color:#C4CBDC;cursor:pointer;">✕</div>
+              <div style="width:34px;height:34px;flex:none;border-radius:11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:17px;color:#C4CBDC;cursor:pointer;" onClick="{{ goHomeNav }}">✕</div>
             </div>
 
             <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:4px;gap:4px;margin:0 20px 14px;">
@@ -1164,6 +1164,7 @@ class Component extends DCLogic {
       profName: (this.state.__uname?'@'+this.state.__uname:(this.state.__fname||(this.state.__tgid?('ID '+this.state.__tgid):'Не авторизован'))),
       profInitial: (((this.state.__fname||this.state.__uname||'U')[0])||'U').toUpperCase(),
       goBal: () => { try{ var N=window.SwapOnNative; var h=N&&N.getHistoryJson&&N.getHistoryJson(); if(h)this.setState({history:JSON.parse(h)}); }catch(e){} this.setState({ screen:'bal', balTab:'topup' }); },
+      goHomeNav: () => this.setState({ screen:'home' }),
       openBot: () => { var N=window.SwapOnNative; if(N&&N.openBot)N.openBot(); },
 
     };
