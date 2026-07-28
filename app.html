@@ -84,7 +84,7 @@
               <div style="display:flex;align-items:center;gap:7px;">
                 <div style="display:flex;align-items:center;gap:6px;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.30);padding:4px 4px 4px 11px;border-radius:20px;">
                   <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ balLabel }}</span>
-                  <button style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
+                  <button onClick="{{ goBal }}" style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
                 </div>
               </div>
             </div>
@@ -93,10 +93,10 @@
             <div style="position:relative;background:linear-gradient(150deg,rgba(174,159,255,0.14),rgba(45,120,255,0.06));border:1px solid rgba(174,159,255,0.26);border-radius:18px;padding:17px 18px;margin-bottom:14px;">
               <span onClick="{{ toggleInfo }}" style="position:absolute;top:13px;right:14px;width:19px;height:19px;border-radius:50%;background:rgba(174,159,255,0.18);border:1px solid rgba(174,159,255,0.4);color:#CDBFFF;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;">?</span>
               <div style="display:flex;align-items:center;gap:16px;">
-                <button style="width:64px;height:64px;border-radius:50%;flex:none;border:2px solid rgba(58,214,142,0.55);background:radial-gradient(circle at 50% 40%,rgba(58,214,142,0.28),rgba(58,214,142,0.06));color:#3AD68E;display:flex;align-items:center;justify-content:center;box-shadow:0 0 22px rgba(58,214,142,0.35),inset 0 0 14px rgba(58,214,142,0.15);cursor:pointer;" onClick="{{ togglePwr }}">{{ iconPower }}</button>
-                <div style="flex:1;">
-                  <div style="font-size:22px;font-weight:800;letter-spacing:0.04em;color:#3AD68E;">ON</div>
-                  <div style="font-size:12px;color:#9AA3B8;margin-top:2px;">Нажмите, чтобы выключить</div>
+                <button onClick="{{ toggleModule }}" style="{{ powerBtn }}">{{ iconPower }}</button>
+                <div style="flex:1;cursor:pointer;" onClick="{{ toggleModule }}">
+                  <div style="font-size:22px;font-weight:800;letter-spacing:0.04em;color:{{ powerColor }};">{{ powerLabel }}</div>
+                  <div style="font-size:12px;color:#9AA3B8;margin-top:2px;">{{ powerHint }}</div>
                 </div>
               </div>
               <sc-if value="{{ showInfo }}" hint-placeholder-val="{{ false }}">
@@ -107,51 +107,62 @@
               </sc-if>
             </div>
 
-            <!-- camera lens toggles -->
-            <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ВЫБЕРИ КАМЕРУ ДЛЯ ЗАМЕНЫ ИЗОБРАЖЕНИЯ</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px;">
-              <div style="background:rgba(45,120,255,0.09);border:1px solid rgba(45,120,255,0.28);border-radius:16px;padding:15px 15px 14px;">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-                  <div style="width:30px;height:30px;border-radius:9px;background:rgba(45,120,255,0.18);display:flex;align-items:center;justify-content:center;">{{ iconFront }}</div>
-                  <div onClick="{{ toggleFront }}" style="{{ frontTog }}"><span style="{{ frontKnob }}"></span></div>
-                </div>
-                <div style="font-size:14px;font-weight:700;margin-top:11px;">Фронтальная</div>
-              </div>
-              <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:15px 15px 14px;">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-                  <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;">{{ iconBack }}</div>
-                  <div onClick="{{ toggleBack }}" style="{{ backTog }}"><span style="{{ backKnob }}"></span></div>
-                </div>
-                <div style="font-size:14px;font-weight:700;margin-top:11px;color:#C4CBDC;">Основная</div>
-              </div>
-            </div>
-
             <!-- video source segmented -->
             <div style="display:flex;align-items:center;gap:8px;margin:0 2px 9px;">
-              <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">ОТКУДА БРАТЬ ВИДЕО</span>
+              <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">ПОДМЕНА ВИДЕО</span>
               <span onClick="{{ hint.source.toggle }}" style="{{ qStyle }}">?</span>
+              <div onClick="{{ toggleVideoOn }}" style="{{ videoSwitch }}"><span style="{{ videoKnob }}"></span></div>
             </div>
+            <div style="{{ videoBlockStyle }}">
             <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:4px;gap:4px;margin-bottom:10px;">
-              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;line-height:1.2;{{ vs_local }}" onClick="{{ pickVLocal }}">Локальное видео</div>
-              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;line-height:1.2;{{ vs_stream }}" onClick="{{ pickVStream }}">Трансляция</div>
-              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;gap:4px;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;line-height:1.2;{{ vs_face }}" onClick="{{ pickVFace }}"><span style="font-size:10px;">✦</span>Замена лица</div>
+              <div onClick="{{ setVideoLocal }}" style="{{ vsLocal }}">Локальное видео</div>
+              <div onClick="{{ setVideoStream }}" style="{{ vsStream }}">Трансляция</div>
+              <div onClick="{{ setVideoFace }}" style="{{ vsFace }}"><span style="font-size:10px;">✦</span>Замена лица</div>
             </div>
             <sc-if value="{{ hint.source.open }}" hint-placeholder-val="{{ false }}">
               <div style="{{ hintBox }}"><span style="{{ hintIcon }}">ℹ</span><div style="{{ hintText }}"><b style="color:#E8EAF2;">Локальное видео</b> — берётся файл с телефона. <b style="color:#E8EAF2;">Трансляция</b> — видео приходит по сети с вашего сервера.</div></div>
             </sc-if>
 
+            <!-- camera lens toggles -->
+            <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ВЫБЕРИ КАМЕРУ ДЛЯ ЗАМЕНЫ ИЗОБРАЖЕНИЯ</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px;">
+              <div onClick="{{ toggleCamFront }}" style="{{ camFrontCard }}">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                  <div style="width:30px;height:30px;border-radius:9px;background:rgba(45,120,255,0.18);display:flex;align-items:center;justify-content:center;">{{ iconFront }}</div>
+                  <div style="{{ camFrontTgl }}"><span style="{{ camFrontKnob }}"></span></div>
+                </div>
+                <div style="font-size:14px;font-weight:700;margin-top:11px;">Фронтальная</div>
+              </div>
+              <div onClick="{{ toggleCamBack }}" style="{{ camBackCard }}">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                  <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;">{{ iconBack }}</div>
+                  <div style="{{ camBackTgl }}"><span style="{{ camBackKnob }}"></span></div>
+                </div>
+                <div style="font-size:14px;font-weight:700;margin-top:11px;color:#C4CBDC;">Основная</div>
+              </div>
+            </div>
+            </div>
+
             <!-- audio source segmented -->
-            <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ОТКУДА БЕРЕМ ЗВУК</div>
+            <div style="display:flex;align-items:center;gap:8px;margin:0 2px 9px;">
+              <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">ПОДМЕНА ЗВУКА</span>
+              <span onClick="{{ hint.audio.toggle }}" style="{{ qStyle }}">?</span>
+              <div onClick="{{ toggleAudioOn }}" style="{{ audioSwitch }}"><span style="{{ audioKnob }}"></span></div>
+            </div>
+            <div style="{{ audioBlockStyle }}">
             <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:4px;gap:4px;margin-bottom:16px;">
-              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;line-height:1.2;{{ as_stream }}" onClick="{{ pickAStream }}">Звук из видео/трансляции</div>
-              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;line-height:1.2;{{ as_mic }}" onClick="{{ pickAMic }}">Микрофон телефона</div>
-              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;gap:4px;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;line-height:1.2;{{ as_voice }}" onClick="{{ pickAVoice }}"><span style="font-size:10px;">✦</span>Замена голоса</div>
+              <div onClick="{{ setAudioVideo }}" style="{{ asVideo }}">Звук из видео/трансляции</div>
+              <div onClick="{{ setAudioVoice }}" style="{{ asVoice }}"><span style="font-size:10px;">✦</span>Замена голоса</div>
+            </div>
+            <sc-if value="{{ hint.audio.open }}" hint-placeholder-val="{{ false }}">
+              <div style="{{ hintBox }}"><span style="{{ hintIcon }}">ℹ</span><div style="{{ hintText }}"><b style="color:#E8EAF2;">Звук из видео/трансляции</b> — берётся из подставляемого источника. <b style="color:#E8EAF2;">Микрофон телефона</b> — ваш живой голос. <b style="color:#E8EAF2;">Замена голоса</b> — ваш голос звучит выбранным голосом.</div></div>
+            </sc-if>
             </div>
 
 
 
             <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:20px 2px 9px;">ПРОФИЛЬ</div>
-            <div onClick="{{ goBal }}" style="display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:11px 13px;margin-bottom:10px;cursor:pointer;">
+            <div onClick="{{ openBot }}" style="display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:11px 13px;margin-bottom:10px;cursor:pointer;">
               <div style="width:36px;height:36px;flex:none;border-radius:50%;background:linear-gradient(135deg,#229ED9,#5CC8FF);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;">{{ profInitial }}</div>
               <div style="flex:1;min-width:0;">
                 <div style="font-size:13.5px;font-weight:700;color:#E8EAF2;">{{ profName }}</div>
@@ -254,7 +265,7 @@
             </div>
 
             <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ФАЙЛ ВИДЕО</div>
-            <div onClick="{{ pickVideo }}" style="display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:11px 13px;margin-bottom:11px;cursor:pointer;">
+            <div style="display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:11px 13px;margin-bottom:11px;cursor:pointer;">
               <div style="width:36px;height:36px;flex:none;border-radius:10px;background:rgba(45,120,255,0.15);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#8FC0FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="12" height="12" rx="2"></rect><path d="M15 10l5-3v10l-5-3"></path></svg></div>
               <div style="flex:1;min-width:0;"><div style="font-size:13.5px;font-weight:700;">{{ videoName }}</div><div style="font-size:11px;color:#8A93A8;">{{ videoMeta }}</div></div>
               <span style="font-size:12.5px;font-weight:700;color:#AE9FFF;">Заменить</span>
@@ -412,7 +423,7 @@
               <div style="flex:1;font-size:21px;font-weight:800;letter-spacing:-0.01em;">Замена лица</div>
               <div style="display:flex;align-items:center;gap:6px;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.30);padding:4px 4px 4px 11px;border-radius:20px;">
                 <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ balLabel }}</span>
-                <button style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
+                <button onClick="{{ goBal }}" style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
               </div>
             </div>
 
@@ -457,25 +468,25 @@
               <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Убрать синеву камеры</span><div onClick="{{ tglDeblue }}" style="margin-left:auto;{{ fDeblueTog }}"><span style="{{ fDeblueKnob }}"></span></div></div>
               <div style="display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
                 <span style="font-size:13.5px;font-weight:600;flex:none;">Модель</span>
-                <div onClick="{{ cycModel }}" style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
+                <div style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
                   <span style="font-size:12.5px;font-weight:600;color:#CDBFFF;">{{ fModelVal }}</span>
                   <span style="font-size:11px;color:#586A85;">▾</span>
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
                 <span style="font-size:13.5px;font-weight:600;flex:none;">Вариант</span>
-                <div onClick="{{ cycVariant }}" style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
+                <div style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
                   <span style="font-size:12.5px;font-weight:600;color:#CDBFFF;">{{ fVariantVal }}</span>
                   <span style="font-size:11px;color:#586A85;">▾</span>
                 </div>
               </div>
               <div style="padding:13px 15px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Непрозрачность наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fOpacityLabel }}</span></div>
-                <input type="range" min="0" max="100" value="{{ fOpacityVal }}" onChange="{{ onOpacity }}" style="width:100%;accent-color:#AE9FFF;" />
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Непрозрачность наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">85%</span></div>
+                <input type="range" min="0" max="100" value="85" style="width:100%;accent-color:#AE9FFF;" />
               </div>
               <div style="padding:13px 15px 15px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Резкость наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fSharpLabel }}</span></div>
-                <input type="range" min="0" max="100" value="{{ fSharpVal }}" onChange="{{ onSharp }}" style="width:100%;accent-color:#AE9FFF;" />
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Резкость наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">40%</span></div>
+                <input type="range" min="0" max="100" value="40" style="width:100%;accent-color:#AE9FFF;" />
               </div>
             </div>
 
@@ -496,8 +507,8 @@
                   </div>
                 </div>
                 <div style="padding:13px 15px 15px;">
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Качество</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fQualLabel }}</span></div>
-                  <input type="range" min="1" max="4" value="{{ fQualVal }}" onChange="{{ onQual }}" style="width:100%;accent-color:#AE9FFF;" />
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Качество</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">4x</span></div>
+                  <input type="range" min="1" max="4" value="4" style="width:100%;accent-color:#AE9FFF;" />
                 </div>
               </div>
             </sc-if>
@@ -515,7 +526,7 @@
               <div style="flex:1;font-size:21px;font-weight:800;letter-spacing:-0.01em;">Замена голоса</div>
               <div style="display:flex;align-items:center;gap:6px;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.30);padding:4px 4px 4px 11px;border-radius:20px;">
                 <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ balLabel }}</span>
-                <button style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
+                <button onClick="{{ goBal }}" style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
               </div>
             </div>
 
@@ -591,6 +602,13 @@ class Component extends DCLogic {
   state = {
     screen: "home",
     showInfo: false,
+    videoOn: true,
+    audioOn: true,
+    moduleOn: true,
+    videoSrc: 'stream',
+    audioSrc: 'video',
+    camFront: true,
+    camBack: false,
     showAdd: false,
     openHints: {},
     showStore: false,
@@ -618,10 +636,15 @@ class Component extends DCLogic {
 
   componentDidMount() {
     try { var _N = window.SwapOnNative; if (_N) { var _c = JSON.parse(_N.getConfig());
-      var _st = { __on:_c.enabled, __front:_c.front, __back:_c.back, __bal:_c.balance, __vsrc:_c.videoSource, __asrc:_c.audioSource, faceMode:_c.faceMode||'pro',
+      var _st = { __on:_c.enabled, __bal:_c.balance, faceMode:_c.faceMode||'pro',
         __direct:_c.direct, __rotate:_c.rotate, __mirror:_c.mirror, __fit:_c.fit, __addr:(_c.whepUrl||''), __lang:(_c.lang||'RU'),
         __tgid:(_c.telegramId||0), __uname:(_c.username||''), __fname:(_c.firstName||''),
-        fBlend:_c.faceBlend, fDeblue:_c.faceDeblue, fEnhance:_c.faceEnhance };
+        fBlend:_c.faceBlend, fDeblue:_c.faceDeblue, fEnhance:_c.faceEnhance,
+        // NEW Home design state <- engine
+        moduleOn:(_c.enabled!==false), videoOn:(_c.videoReplace!==false), audioOn:(_c.audioReplace!==false),
+        camFront:(_c.front!==false), camBack:(_c.back===true),
+        videoSrc:({pattern:'local',whep:'stream',face:'face'}[_c.videoSource]||'stream'),
+        audioSrc:(_c.audioSource==='voice'?'voice':'video') };
       if(_c.faceModel) _st.fModel=_c.faceModel; if(_c.faceVariant) _st.fVariant=_c.faceVariant;
       if(_c.faceOpacity) _st.fOpacity=_c.faceOpacity; if(_c.faceSharpness) _st.fSharp=_c.faceSharpness;
       if(_c.faceEnhanceModel) _st.fEnhModel=_c.faceEnhanceModel; if(_c.faceQuality) _st.fQual=_c.faceQuality;
@@ -646,11 +669,12 @@ class Component extends DCLogic {
   componentWillUnmount() { clearInterval(this._pushTimer); }
 
   syncTargets(list) { try { var a = list || this.state.added; var pkgs = a.filter(function(x){return x.enabled;}).map(function(x){return x.pkg;}).filter(function(p){return p && p !== '—';}).join(','); var N=window.SwapOnNative; if(N)N.setStr('config_target_packages', pkgs); } catch(e){} }
+  __syncEngine() { try { var s=this.state; var N=window.SwapOnNative; if(!N)return; var vmap={local:'pattern',stream:'whep',face:'face'}; var amap={video:'whep',voice:'voice',mic:'microphone'}; var vOn=(s.videoOn!==false), aOn=(s.audioOn!==false); N.setBool('inject_front_camera', !!(vOn && s.camFront)); N.setBool('inject_back_camera', !!(vOn && s.camBack)); N.setStr('frame_source', vmap[s.videoSrc]||'whep'); N.setBool('video_replace', vOn); N.setBool('audio_replace', aOn); N.setStr('audio_source', aOn ? (amap[s.audioSrc]||'whep') : 'microphone'); } catch(e){} }
   addFromCatalog(app) {
     this.setState(s => ({
       added: [...s.added, { id: s.nextId, name: app.name, pkg: app.pkg, enabled: true }],
       nextId: s.nextId + 1,
-    }), () => this.syncTargets());
+    }));
   }
   addManual() {
     const name = (this.state.newName || '').trim();
@@ -659,13 +683,13 @@ class Component extends DCLogic {
     this.setState(s => ({
       added: [...s.added, { id: s.nextId, name: name || pkg, pkg: pkg || '—', enabled: true }],
       nextId: s.nextId + 1, newName: '', newPkg: '', showAdd: false,
-    }), () => this.syncTargets());
+    }));
   }
   toggleApp(id) {
-    this.setState(s => ({ added: s.added.map(a => a.id === id ? { ...a, enabled: !a.enabled } : a) }), () => this.syncTargets());
+    this.setState(s => ({ added: s.added.map(a => a.id === id ? { ...a, enabled: !a.enabled } : a) }));
   }
   removeApp(id) {
-    this.setState(s => ({ added: s.added.filter(a => a.id !== id), editingId: null }), () => this.syncTargets());
+    this.setState(s => ({ added: s.added.filter(a => a.id !== id), editingId: null }));
   }
   startEdit(a) {
     this.setState({ editingId: a.id, editName: a.name, editPkg: a.pkg });
@@ -674,7 +698,7 @@ class Component extends DCLogic {
     this.setState(s => ({
       added: s.added.map(a => a.id === s.editingId ? { ...a, name: s.editName.trim() || a.name, pkg: s.editPkg.trim() || a.pkg } : a),
       editingId: null,
-    }), () => this.syncTargets());
+    }));
   }
 
   renderVals() {
@@ -701,9 +725,29 @@ class Component extends DCLogic {
       toggle: () => this.setState(s => ({ openHints: { ...s.openHints, [id]: !s.openHints[id] } })),
     });
     const hint = {
-      source: mkHint('source'), addr: mkHint('addr'), fit: mkHint('fit'),
+      source: mkHint('source'), addr: mkHint('addr'), fit: mkHint('fit'), audio: mkHint('audio'),
       direct: mkHint('direct'), rotate: mkHint('rotate'), mirror: mkHint('mirror'), adv: mkHint('adv'),
     };
+
+    const segBase = "flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;gap:4px;text-align:center;padding:4px;border-radius:10px;font-size:12px;line-height:1.2;cursor:pointer;";
+    const seg = (active, kind) => {
+      if (kind === 'gold') return segBase + (active
+        ? "font-weight:700;color:#F0D48A;background:rgba(232,193,90,0.18);border:1px solid rgba(232,193,90,0.5);"
+        : "font-weight:600;color:#E8C77A;background:rgba(232,193,90,0.07);border:1px solid rgba(232,193,90,0.32);");
+      if (kind === 'purple') return segBase + (active
+        ? "font-weight:700;background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);"
+        : "font-weight:600;color:#9AA3B8;border:1px solid transparent;");
+      return segBase + (active
+        ? "font-weight:700;background:rgba(45,120,255,0.20);color:#8FC0FF;border:1px solid rgba(45,120,255,0.38);"
+        : "font-weight:600;color:#9AA3B8;border:1px solid transparent;");
+    };
+    const camCard = (active) => "border-radius:16px;padding:15px 15px 14px;cursor:pointer;" + (active
+      ? "background:rgba(45,120,255,0.09);border:1px solid rgba(45,120,255,0.28);"
+      : "background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);");
+    this.__toggleSmOn = "width:40px;height:23px;border-radius:14px;padding:2px;display:flex;align-items:center;justify-content:flex-end;background:linear-gradient(120deg,#3AD68E,#2EBFA0);";
+    this.__toggleSmOff2 = "width:40px;height:23px;border-radius:14px;padding:2px;display:flex;align-items:center;justify-content:flex-start;background:rgba(255,255,255,0.14);";
+    this.__knobOn = "width:19px;height:19px;border-radius:50%;background:#fff;display:block;";
+    this.__knobOff = "width:19px;height:19px;border-radius:50%;background:#fff;display:block;";
 
     // ---- Logo mark: swap arrows + two-tone morph orb (camera/face/voice swap) ----
     const logo = (rounded) => R('svg', {viewBox:'0 0 256 256', width:'100%', height:'100%', style:{display:'block'}},
@@ -784,126 +828,50 @@ class Component extends DCLogic {
       R('path',{d:'M2.5 8A9.5 9.5 0 0 1 5.5 4'}),
       R('path',{d:'M21.5 8A9.5 9.5 0 0 0 18.5 4'}));
 
-    const nav = (label, iconEl, active, screen) => R('div', {onClick:()=>this.setState({screen}), style:{flex:'1', display:'flex', flexDirection:'column', alignItems:'center', gap:'4px', cursor:'pointer'}},
-      R('div', {style:{color: active ? '#AE9FFF' : '#5E677E', display:'flex'}}, iconEl),
-      R('span', {style:{fontSize:'9px', fontWeight: active?700:600, color: active ? '#AE9FFF' : '#5E677E', whiteSpace:'nowrap'}}, label));
     const makeNav = (active) => R('div', {style:{display:'flex', padding:'12px 14px 22px', borderTop:'1px solid rgba(255,255,255,0.06)', background:'rgba(9,13,20,0.9)', backdropFilter:'blur(8px)'}},
-      nav('Главная', svgHome, active==='home','home'),
-      nav('Замена лица', svgFace, active==='face','face'),
-      nav('Замена голоса', svgVoice, active==='voice','voice'),
-      nav('Настройки', svgSet, active==='set','set')
+      navItem('Главная', svgHome, active==='home'),
+      navItem('Замена лица', svgFace, active==='face'),
+      navItem('Замена голоса', svgVoice, active==='voice'),
+      navItem('Настройки', svgSet, active==='set')
     );
 
     return {
-      // ---- SwapOn app router + native engine bridge (added; screen markup is 1:1) ----
-      __scrHome: this.state.screen === 'home',
-      __scrSet: this.state.screen === 'set',
-      __scrBal: this.state.screen === 'bal',
-      __scrFace: this.state.screen === 'face',
-      __scrVoice: this.state.screen === 'voice',
-      __go: (s) => () => this.setState({ screen: s }),
-      balLabel: ((this.state.__bal!=null?this.state.__bal:124)+' Swaps'),
-      togglePwr: () => { var N=window.SwapOnNative; var cur=(this.state.__on!==false);
-        if(!cur){ var res = N ? N.setEnabled(true) : 'ok'; this.setState({__on:true, needFace:(res==='on_need_face')}); }
-        else { if(N)N.setEnabled(false); this.setState({__on:false, needFace:false}); } },
-      dismissNeedFace: () => this.setState({ needFace:false, screen:'face' }),
-      goBal: () => { try { var N=window.SwapOnNative; var h=N&&N.getHistoryJson&&N.getHistoryJson(); if(h) this.setState({ history: JSON.parse(h) }); } catch(e){} this.setState({ screen:'bal', balTab:'history' }); },
-      frontTog: (this.state.__front===false?toggleSmOff:toggleSm),
-      frontKnob: (this.state.__front===false?knobSmOff:knobSmOn),
-      toggleFront: () => { var N=window.SwapOnNative; var cur=(this.state.__front!==false); if(N)N.setBool('inject_front_camera',!cur); this.setState({__front:!cur}); },
-      backTog: (this.state.__back===true?toggleSm:toggleSmOff),
-      backKnob: (this.state.__back===true?knobSmOn:knobSmOff),
-      toggleBack: () => { var N=window.SwapOnNative; var cur=(this.state.__back===true); if(N)N.setBool('inject_back_camera',!cur); this.setState({__back:!cur}); },
-      vs_local: (this.state.__vsrc==='pattern'?"font-weight:700;background:rgba(45,120,255,0.20);color:#8FC0FF;border:1px solid rgba(45,120,255,0.38);":"color:#9AA3B8;"),
-      vs_stream: ((this.state.__vsrc==null||this.state.__vsrc==='whep')?"font-weight:700;background:rgba(45,120,255,0.20);color:#8FC0FF;border:1px solid rgba(45,120,255,0.38);":"font-weight:600;color:#9AA3B8;"),
-      pickVLocal: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_source','pattern'); this.setState({__vsrc:'pattern'}); },
-      pickVStream: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_source','whep'); this.setState({__vsrc:'whep'}); },
-      as_stream: ((this.state.__asrc==null||this.state.__asrc==='whep')?"font-weight:700;background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"font-weight:600;color:#9AA3B8;"),
-      as_mic: (this.state.__asrc==='microphone'?"font-weight:700;background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;"),
-      pickAStream: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','whep'); this.setState({__asrc:'whep'}); },
-      pickAMic: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','microphone'); this.setState({__asrc:'microphone'}); },
-      // Home: gold "attention" segments — face-swap video & voice-replace audio (selectable)
-      vs_face: (this.state.__vsrc==='face' ? "color:#FFE9A8;background:rgba(232,193,90,0.22);border:1px solid rgba(232,193,90,0.65);font-weight:700;" : "color:#E8C77A;background:rgba(232,193,90,0.07);border:1px solid rgba(232,193,90,0.32);font-weight:600;"),
-      pickVFace: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_source','face'); this.setState({__vsrc:'face'}); },
-      as_voice: (this.state.__asrc==='voice' ? "color:#FFE9A8;background:rgba(232,193,90,0.22);border:1px solid rgba(232,193,90,0.65);font-weight:700;" : "color:#E8C77A;background:rgba(232,193,90,0.07);border:1px solid rgba(232,193,90,0.32);font-weight:600;"),
-      pickAVoice: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','voice'); this.setState({__asrc:'voice'}); },
-      // Home: real authorized-user profile (from engine getConfig)
-      profId: (this.state.__tgid ? String(this.state.__tgid) : ''),
-      profName: (this.state.__uname ? '@'+this.state.__uname : (this.state.__fname || (this.state.__tgid ? ('ID '+this.state.__tgid) : 'Не авторизован'))),
-      profInitial: (((this.state.__fname||this.state.__uname||'U')[0])||'U').toUpperCase(),
-      // ---- Settings: engine toggles (live) ----
-      dirTog: (this.state.__direct===false?toggleSmOff:toggleSm), dirKnob: (this.state.__direct===false?knobSmOff:knobSmOn),
-      tglDirect: () => { var N=window.SwapOnNative; var c=(this.state.__direct!==false); if(N)N.setBool('no_hal_camera2',!c); this.setState({__direct:!c}); },
-      rotTog: (this.state.__rotate===false?toggleSmOff:toggleSm), rotKnob: (this.state.__rotate===false?knobSmOff:knobSmOn),
-      tglRotate: () => { var N=window.SwapOnNative; var c=(this.state.__rotate!==false); if(N)N.setBool('auto_camera_rotation',!c); this.setState({__rotate:!c}); },
-      mirTog: (this.state.__mirror===true?toggleSm:toggleSmOff), mirKnob: (this.state.__mirror===true?knobSmOn:knobSmOff),
-      tglMirror: () => { var N=window.SwapOnNative; var c=(this.state.__mirror===true); if(N)N.setBool('mirror_front',!c); this.setState({__mirror:!c}); },
-      // ---- Settings: translation address (WHEP url) editable ----
-      addrVal: (this.state.__addr!=null?this.state.__addr:''),
-      onAddr: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('whep_url', v); this.setState({__addr:v}); },
-      // ---- Settings: language (persist; full translation pending) ----
-      langRuStyle: "padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.__lang!=='EN'?"background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;border:1px solid transparent;"),
-      langEnStyle: "padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.__lang==='EN'?"background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;border:1px solid transparent;"),
-      pickLangRu: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','RU'); window.__i18nLang='RU'; this.setState({__lang:'RU'}); try{ location.reload(); }catch(e){} },
-      pickLangEn: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','EN'); window.__i18nLang='EN'; this.setState({__lang:'EN'}); try{ location.reload(); }catch(e){} },
-      // ---- Face: photo upload (native file picker -> data URL -> engine) ----
-      pickFace: () => { try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); }; rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
-      // ---- Face: replacement settings (live + persist) ----
-      fBlendTog: (this.state.fBlend===false?toggleSmOff:toggleSm), fBlendKnob: (this.state.fBlend===false?knobSmOff:knobSmOn),
-      tglBlend: () => { var N=window.SwapOnNative; var c=(this.state.fBlend!==false); if(N)N.setBool('face_blend',!c); this.setState({fBlend:!c}); },
-      fDeblueTog: (this.state.fDeblue===false?toggleSmOff:toggleSm), fDeblueKnob: (this.state.fDeblue===false?knobSmOff:knobSmOn),
-      tglDeblue: () => { var N=window.SwapOnNative; var c=(this.state.fDeblue!==false); if(N)N.setBool('face_deblue',!c); this.setState({fDeblue:!c}); },
-      fModelVal: (this.state.fModel||FACE_MODELS[0].name),
-      cycModel: () => { var i=FACE_MODELS.findIndex(m=>m.name===(this.state.fModel||FACE_MODELS[0].name)); var nm=FACE_MODELS[(i+1)%FACE_MODELS.length]; var v0=nm.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',nm.name); N.setStr('face_model_engine',nm.orig); N.setStr('face_variant',v0.name); N.setStr('face_variant_file',v0.file);} this.setState({fModel:nm.name, fVariant:v0.name}); },
-      fVariantVal: (this.state.fVariant||FACE_MODELS[0].variants[0].name),
-      cycVariant: () => { var m=FACE_MODELS.find(function(x){return x.name===(this.state.fModel||FACE_MODELS[0].name);}.bind(this))||FACE_MODELS[0]; var vi=m.variants.findIndex(function(v){return v.name===(this.state.fVariant||m.variants[0].name);}.bind(this)); var nv=m.variants[(vi+1)%m.variants.length]; var N=window.SwapOnNative; if(N){N.setStr('face_variant',nv.name); N.setStr('face_variant_file',nv.file);} this.setState({fVariant:nv.name}); },
-      fOpacityVal: (this.state.fOpacity!=null?this.state.fOpacity:85), fOpacityLabel: ((this.state.fOpacity!=null?this.state.fOpacity:85)+'%'),
-      onOpacity: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_opacity',String(v)); this.setState({fOpacity:v}); },
-      fSharpVal: (this.state.fSharp!=null?this.state.fSharp:40), fSharpLabel: ((this.state.fSharp!=null?this.state.fSharp:40)+'%'),
-      onSharp: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_sharpness',String(v)); this.setState({fSharp:v}); },
-      fEnhanceTog: (this.state.fEnhance===false?toggleSmOff:toggleSm), fEnhanceKnob: (this.state.fEnhance===false?knobSmOff:knobSmOn),
-      tglEnhance: () => { var N=window.SwapOnNative; var c=(this.state.fEnhance!==false); if(N)N.setBool('face_enhance',!c); this.setState({fEnhance:!c}); },
-      fQualVal: (this.state.fQual!=null?this.state.fQual:4), fQualLabel: ((this.state.fQual!=null?this.state.fQual:4)+'x'),
-      onQual: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_quality',String(v)); this.setState({fQual:v}); },
-      emSoftStyle: emCellStyle(this.state.fEnhModel, 'soft'), pickEmSoft: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Мягкое'); this.setState({fEnhModel:'soft'}); },
-      emSharpStyle: emCellStyle(this.state.fEnhModel, 'sharp'), pickEmSharp: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Чёткое'); this.setState({fEnhModel:'sharp'}); },
-      emRealStyle: emCellStyle(this.state.fEnhModel, 'real'), pickEmReal: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Реалистичное'); this.setState({fEnhModel:'real'}); },
-      emTopStyle: "flex:1;min-width:130px;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:700;color:#B6E86A;cursor:pointer;background:rgba(118,185,0,"+(this.state.fEnhModel==='top'?"0.22)":"0.10)")+";border:"+(this.state.fEnhModel==='top'?"2px solid rgba(118,185,0,0.9);":"1px solid rgba(118,185,0,0.4);"),
-      pickEmTop: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Наивысшее'); this.setState({fEnhModel:'top'}); },
-      // ---- Settings: video file picker + fit mode ----
-      videoName: (this.state.videoName||'clip_swap.mp4'), videoMeta: (this.state.videoMeta||'1080×1920 · 00:42'),
-      pickVideo: () => { try { var inp=document.createElement('input'); inp.type='file'; inp.accept='video/*'; inp.onchange=(ev)=>{ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var N=window.SwapOnNative; if(N){N.setStr('video_file_name',f.name); N.setStr('frame_source','pattern');} this.setState({videoName:f.name, videoMeta:(Math.round(f.size/104857.6)/10+' МБ'), __vsrc:'pattern'}); }; inp.click(); } catch(e){} },
-      fitFullStyle: "flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:"+((this.state.__fit==='fill')?"600;color:#9AA3B8;":"700;background:rgba(255,255,255,0.08);color:#E8EAF2;"),
-      fitFillStyle: "flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:"+((this.state.__fit==='fill')?"700;background:rgba(255,255,255,0.08);color:#E8EAF2;":"600;color:#9AA3B8;"),
-      pickFitFull: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_scale_mode','fit'); this.setState({__fit:'fit'}); },
-      pickFitFill: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_scale_mode','fill'); this.setState({__fit:'fill'}); },
-      // ---- Balance: real transaction history ----
-      historyView: ((this.state.history||[]).map(function(t){ var amt=Number(t.amount); var pos=amt>=0; return {
-        title: _txTitle(t), when: _txWhen(t.created_at),
-        amt: (pos?'+':'−')+_txFmt(amt),
-        amtColor: (pos?'#3AD68E':'#FF6B85'),
-        icon: (pos?'+':'−'),
-        iconStyle: 'display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;'+(pos?'background:rgba(58,214,142,0.15);color:#3AD68E;':'background:rgba(255,107,133,0.14);color:#FF6B85;'),
-        rowStyle: 'background:'+(pos?'rgba(58,214,142,0.06);border:1px solid rgba(58,214,142,0.22);':'rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);')+'border-radius:13px;padding:11px 13px;'
-      }; })),
-      histEmpty: ((this.state.history||[]).length===0),
-      histMonth: (function(h){ var now=new Date(); var s=0; (h||[]).forEach(function(t){ var d=new Date(t.created_at); var a=Number(t.amount); if(a<0 && d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear()) s+=Math.abs(a); }); return (Math.round(s*10)/10).toString().replace('.',',')+' Swaps'; })(this.state.history),
-      histSessions: (String(((this.state.history||[]).filter(function(t){return Number(t.amount)<0;})).length)),
-      // ---- Voice cloning (Мои голоса): upload samples / record a sample -> ElevenLabs clone ----
-      voiceBusyLabel: (this.state.voiceBusy ? (this.state.recording ? 'Идёт запись…' : 'Создаём голос…') : ''),
-      uploadSamples: () => { if(this.state.voiceBusy)return; var self=this; try { var inp=document.createElement('input'); inp.type='file'; inp.accept='audio/*'; inp.multiple=true; inp.onchange=function(ev){ var files=[].slice.call(ev.target.files||[]); if(!files.length)return; self.setState({voiceBusy:true, voiceErr:false}); Promise.all(files.map(function(f){ return new Promise(function(res){ var r=new FileReader(); r.onload=function(){res(r.result);}; r.readAsDataURL(f); }); })).then(function(b64){ var N=window.SwapOnNative; if(N)N.cloneVoice('Мой голос', JSON.stringify(b64)); else self.setState({voiceBusy:false}); }); }; inp.click(); } catch(e){} },
-      recordSample: () => { var self=this; if(this.state.recording){ if(self._rec)self._rec.stop(); return; } if(this.state.voiceBusy)return; try { navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){ var mr=new MediaRecorder(stream); var chunks=[]; mr.ondataavailable=function(e){ if(e.data&&e.data.size)chunks.push(e.data); }; mr.onstop=function(){ stream.getTracks().forEach(function(t){t.stop();}); self.setState({voiceBusy:true}); var blob=new Blob(chunks,{type:'audio/mpeg'}); var r=new FileReader(); r.onload=function(){ var N=window.SwapOnNative; if(N)N.cloneVoice('Мой голос', JSON.stringify([r.result])); else self.setState({voiceBusy:false}); }; r.readAsDataURL(blob); }; self._rec=mr; mr.start(); self.setState({recording:true, voiceErr:false}); setTimeout(function(){ if(mr.state==='recording')mr.stop(); }, 8000); }).catch(function(){ self.setState({voiceErr:true}); }); } catch(e){} },
-      // ---- Voice replacement TEST: record ~4s -> ElevenLabs STS -> play back in the selected voice ----
-      voiceTestLabel: (this.state.vtState==='rec' ? '● Идёт запись… говорите 5 секунд' : this.state.vtState==='conv' ? 'Преобразуем голос…' : this.state.vtState==='play' ? '▶ Ваш голос в выбранном тембре' : (this.state.vtErr ? '⚠ '+this.state.vtErr+' — нажмите ещё раз' : '🎧 Проверить замену голоса')),
-      voiceTestBg: (this.state.vtState==='rec' ? 'linear-gradient(120deg,#E8788F,#C94E6B)' : 'linear-gradient(120deg,#AE9FFF,#8E7CFF)'),
-      voiceTestBtn: () => { var self=this;
-        if(this.state.vtState==='rec'||this.state.vtState==='conv'||this.state.vtState==='play')return;
-        if(!this.state.selectedVoice){ this.setState({needVoice:true, vtErr:'Сначала выберите голос'}); return; }
-        var N=window.SwapOnNative;
-        if(N && N.voiceRecordTest){ self.setState({vtErr:'', vtState:'rec'}); N.voiceRecordTest(5); }
-        else { self.setState({vtErr:'Недоступно'}); } },
-
       showInfo: this.state.showInfo,
+      toggleModule: () => this.setState(s => ({ moduleOn: !s.moduleOn })),
+      powerLabel: this.state.moduleOn ? 'ON' : 'OFF',
+      powerHint: this.state.moduleOn ? 'Нажмите, чтобы выключить' : 'Нажмите, чтобы включить',
+      powerColor: this.state.moduleOn ? '#3AD68E' : '#7E8AA0',
+      powerBtn: "width:64px;height:64px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer;" + (this.state.moduleOn
+        ? "border:2px solid rgba(58,214,142,0.55);background:radial-gradient(circle at 50% 40%,rgba(58,214,142,0.28),rgba(58,214,142,0.06));color:#3AD68E;box-shadow:0 0 22px rgba(58,214,142,0.35),inset 0 0 14px rgba(58,214,142,0.15);"
+        : "border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.04);color:#7E8AA0;box-shadow:none;"),
+      setVideoLocal: () => this.setState({ videoSrc: 'local' }),
+      setVideoStream: () => this.setState({ videoSrc: 'stream' }),
+      setVideoFace: () => this.setState({ videoSrc: 'face' }),
+      setAudioVideo: () => this.setState({ audioSrc: 'video' }),
+      setAudioMic: () => this.setState({ audioSrc: 'mic' }),
+      setAudioVoice: () => this.setState({ audioSrc: 'voice' }),
+      toggleCamFront: () => this.setState(s => ({ camFront: !s.camFront })),
+      toggleCamBack: () => this.setState(s => ({ camBack: !s.camBack })),
+      vsLocal: seg(this.state.videoSrc === 'local', 'blue'),
+      vsStream: seg(this.state.videoSrc === 'stream', 'blue'),
+      vsFace: seg(this.state.videoSrc === 'face', 'gold'),
+      asVideo: seg(this.state.audioSrc === 'video', 'purple'),
+      asMic: seg(this.state.audioSrc === 'mic', 'purple'),
+      asVoice: seg(this.state.audioSrc === 'voice', 'gold'),
+      camFrontCard: camCard(this.state.camFront),
+      camBackCard: camCard(this.state.camBack),
+      camFrontTgl: this.state.camFront ? this.__toggleSmOn : this.__toggleSmOff2,
+      camBackTgl: this.state.camBack ? this.__toggleSmOn : this.__toggleSmOff2,
+      camFrontKnob: this.state.camFront ? this.__knobOn : this.__knobOff,
+      camBackKnob: this.state.camBack ? this.__knobOn : this.__knobOff,
+      toggleVideoOn: () => this.setState(s => ({ videoOn: !s.videoOn })),
+      toggleAudioOn: () => this.setState(s => ({ audioOn: !s.audioOn })),
+      videoSwitch: "margin-left:auto;width:40px;height:23px;border-radius:14px;padding:2px;display:flex;align-items:center;cursor:pointer;transition:background .15s;justify-content:" + (this.state.videoOn ? "flex-end;background:linear-gradient(120deg,#3AD68E,#2EBFA0);" : "flex-start;background:rgba(255,255,255,0.14);"),
+      videoKnob: "width:19px;height:19px;border-radius:50%;background:#fff;display:block;",
+      audioSwitch: "margin-left:auto;width:40px;height:23px;border-radius:14px;padding:2px;display:flex;align-items:center;cursor:pointer;transition:background .15s;justify-content:" + (this.state.audioOn ? "flex-end;background:linear-gradient(120deg,#3AD68E,#2EBFA0);" : "flex-start;background:rgba(255,255,255,0.14);"),
+      audioKnob: "width:19px;height:19px;border-radius:50%;background:#fff;display:block;",
+      videoBlockStyle: this.state.videoOn ? "opacity:1;transition:opacity .15s;" : "opacity:0.4;filter:grayscale(1);pointer-events:none;transition:opacity .15s;",
+      audioBlockStyle: this.state.audioOn ? "opacity:1;transition:opacity .15s;" : "opacity:0.4;filter:grayscale(1);pointer-events:none;transition:opacity .15s;",
       toggleInfo: () => this.setState(s => ({ showInfo: !s.showInfo })),
       showAdd: this.state.showAdd,
       toggleAdd: () => this.setState(s => ({ showAdd: !s.showAdd })),
@@ -1025,11 +993,8 @@ class Component extends DCLogic {
       addVoiceId: () => {
         const id = (this.state.newVoiceId || '').trim();
         if (!id) return;
-        var acc = (this.state._account || []).find(function(a){ return a.voice_id === id; });
-        var nm = acc ? acc.name : 'Импортированный голос';
-        const v = { id: 'imp' + this.state.voiceSeq, name: nm, meta: acc ? (acc.category || 'ElevenLabs') : 'ElevenLabs', initial: (nm || 'E')[0], vid: id, custom: true };
-        var N=window.SwapOnNative; if(N)N.setStr('cloud_voice_id', id);
-        this.setState(s => ({ catalog: [ ...(s.catalog||[]), v ], voiceSeq: s.voiceSeq + 1, newVoiceId: '', selectedVoice: v.id, voiceTab: 'ready' }));
+        const v = { id: 'v' + this.state.voiceSeq, name: 'Импортированный голос', meta: 'ElevenLabs', initial: 'E', vid: id, custom: true };
+        this.setState(s => ({ addedVoices: [...s.addedVoices, v], voiceSeq: s.voiceSeq + 1, newVoiceId: '', selectedVoice: v.id, voiceTab: 'mine' }));
       },
       voiceList: (() => {
         const presets = [
@@ -1075,6 +1040,132 @@ class Component extends DCLogic {
       liteDot: this.state.faceMode === 'lite' ? "width:9px;height:9px;border-radius:50%;background:#AE9FFF;display:block;" : "display:none;",
       proDot: this.state.faceMode === 'pro' ? "width:9px;height:9px;border-radius:50%;background:#AE9FFF;display:block;" : "display:none;",
       faceCost: this.state.faceMode === 'pro' ? '2 SwapOn' : '1 SwapOn',
+      // ---- SwapOn app router + native engine bridge (added; screen markup is 1:1) ----
+      __scrHome: this.state.screen === 'home',
+      __scrSet: this.state.screen === 'set',
+      __scrBal: this.state.screen === 'bal',
+      __scrFace: this.state.screen === 'face',
+      __scrVoice: this.state.screen === 'voice',
+      __go: (s) => () => this.setState({ screen: s }),
+      balLabel: ((this.state.__bal!=null?this.state.__bal:124)+' Swaps'),
+      togglePwr: () => { var N=window.SwapOnNative; var cur=(this.state.__on!==false);
+        if(!cur){ var res = N ? N.setEnabled(true) : 'ok'; this.setState({__on:true, needFace:(res==='on_need_face')}); }
+        else { if(N)N.setEnabled(false); this.setState({__on:false, needFace:false}); } },
+      dismissNeedFace: () => this.setState({ needFace:false, screen:'face' }),
+      goBal: () => { try { var N=window.SwapOnNative; var h=N&&N.getHistoryJson&&N.getHistoryJson(); if(h) this.setState({ history: JSON.parse(h) }); } catch(e){} this.setState({ screen:'bal', balTab:'history' }); },
+      frontTog: (this.state.__front===false?toggleSmOff:toggleSm),
+      frontKnob: (this.state.__front===false?knobSmOff:knobSmOn),
+      toggleFront: () => { var N=window.SwapOnNative; var cur=(this.state.__front!==false); if(N)N.setBool('inject_front_camera',!cur); this.setState({__front:!cur}); },
+      backTog: (this.state.__back===true?toggleSm:toggleSmOff),
+      backKnob: (this.state.__back===true?knobSmOn:knobSmOff),
+      toggleBack: () => { var N=window.SwapOnNative; var cur=(this.state.__back===true); if(N)N.setBool('inject_back_camera',!cur); this.setState({__back:!cur}); },
+      vs_local: (this.state.__vsrc==='pattern'?"font-weight:700;background:rgba(45,120,255,0.20);color:#8FC0FF;border:1px solid rgba(45,120,255,0.38);":"color:#9AA3B8;"),
+      vs_stream: ((this.state.__vsrc==null||this.state.__vsrc==='whep')?"font-weight:700;background:rgba(45,120,255,0.20);color:#8FC0FF;border:1px solid rgba(45,120,255,0.38);":"font-weight:600;color:#9AA3B8;"),
+      pickVLocal: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_source','pattern'); this.setState({__vsrc:'pattern'}); },
+      pickVStream: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_source','whep'); this.setState({__vsrc:'whep'}); },
+      as_stream: ((this.state.__asrc==null||this.state.__asrc==='whep')?"font-weight:700;background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"font-weight:600;color:#9AA3B8;"),
+      as_mic: (this.state.__asrc==='microphone'?"font-weight:700;background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;"),
+      pickAStream: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','whep'); this.setState({__asrc:'whep'}); },
+      pickAMic: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','microphone'); this.setState({__asrc:'microphone'}); },
+      // Home: gold "attention" segments — face-swap video & voice-replace audio (selectable)
+      vs_face: (this.state.__vsrc==='face' ? "color:#FFE9A8;background:rgba(232,193,90,0.22);border:1px solid rgba(232,193,90,0.65);font-weight:700;" : "color:#E8C77A;background:rgba(232,193,90,0.07);border:1px solid rgba(232,193,90,0.32);font-weight:600;"),
+      pickVFace: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_source','face'); this.setState({__vsrc:'face'}); },
+      as_voice: (this.state.__asrc==='voice' ? "color:#FFE9A8;background:rgba(232,193,90,0.22);border:1px solid rgba(232,193,90,0.65);font-weight:700;" : "color:#E8C77A;background:rgba(232,193,90,0.07);border:1px solid rgba(232,193,90,0.32);font-weight:600;"),
+      pickAVoice: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','voice'); this.setState({__asrc:'voice'}); },
+      // Home: real authorized-user profile (from engine getConfig)
+      profId: (this.state.__tgid ? String(this.state.__tgid) : ''),
+      profName: (this.state.__uname ? '@'+this.state.__uname : (this.state.__fname || (this.state.__tgid ? ('ID '+this.state.__tgid) : 'Не авторизован'))),
+      profInitial: (((this.state.__fname||this.state.__uname||'U')[0])||'U').toUpperCase(),
+      // ---- Settings: engine toggles (live) ----
+      dirTog: (this.state.__direct===false?toggleSmOff:toggleSm), dirKnob: (this.state.__direct===false?knobSmOff:knobSmOn),
+      tglDirect: () => { var N=window.SwapOnNative; var c=(this.state.__direct!==false); if(N)N.setBool('no_hal_camera2',!c); this.setState({__direct:!c}); },
+      rotTog: (this.state.__rotate===false?toggleSmOff:toggleSm), rotKnob: (this.state.__rotate===false?knobSmOff:knobSmOn),
+      tglRotate: () => { var N=window.SwapOnNative; var c=(this.state.__rotate!==false); if(N)N.setBool('auto_camera_rotation',!c); this.setState({__rotate:!c}); },
+      mirTog: (this.state.__mirror===true?toggleSm:toggleSmOff), mirKnob: (this.state.__mirror===true?knobSmOn:knobSmOff),
+      tglMirror: () => { var N=window.SwapOnNative; var c=(this.state.__mirror===true); if(N)N.setBool('mirror_front',!c); this.setState({__mirror:!c}); },
+      // ---- Settings: translation address (WHEP url) editable ----
+      addrVal: (this.state.__addr!=null?this.state.__addr:''),
+      onAddr: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('whep_url', v); this.setState({__addr:v}); },
+      // ---- Settings: language (persist; full translation pending) ----
+      langRuStyle: "padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.__lang!=='EN'?"background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;border:1px solid transparent;"),
+      langEnStyle: "padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.__lang==='EN'?"background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;border:1px solid transparent;"),
+      pickLangRu: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','RU'); window.__i18nLang='RU'; this.setState({__lang:'RU'}); try{ location.reload(); }catch(e){} },
+      pickLangEn: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','EN'); window.__i18nLang='EN'; this.setState({__lang:'EN'}); try{ location.reload(); }catch(e){} },
+      // ---- Face: photo upload (native file picker -> data URL -> engine) ----
+      pickFace: () => { try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); }; rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
+      // ---- Face: replacement settings (live + persist) ----
+      fBlendTog: (this.state.fBlend===false?toggleSmOff:toggleSm), fBlendKnob: (this.state.fBlend===false?knobSmOff:knobSmOn),
+      tglBlend: () => { var N=window.SwapOnNative; var c=(this.state.fBlend!==false); if(N)N.setBool('face_blend',!c); this.setState({fBlend:!c}); },
+      fDeblueTog: (this.state.fDeblue===false?toggleSmOff:toggleSm), fDeblueKnob: (this.state.fDeblue===false?knobSmOff:knobSmOn),
+      tglDeblue: () => { var N=window.SwapOnNative; var c=(this.state.fDeblue!==false); if(N)N.setBool('face_deblue',!c); this.setState({fDeblue:!c}); },
+      fModelVal: (this.state.fModel||FACE_MODELS[0].name),
+      cycModel: () => { var i=FACE_MODELS.findIndex(m=>m.name===(this.state.fModel||FACE_MODELS[0].name)); var nm=FACE_MODELS[(i+1)%FACE_MODELS.length]; var v0=nm.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',nm.name); N.setStr('face_model_engine',nm.orig); N.setStr('face_variant',v0.name); N.setStr('face_variant_file',v0.file);} this.setState({fModel:nm.name, fVariant:v0.name}); },
+      fVariantVal: (this.state.fVariant||FACE_MODELS[0].variants[0].name),
+      cycVariant: () => { var m=FACE_MODELS.find(function(x){return x.name===(this.state.fModel||FACE_MODELS[0].name);}.bind(this))||FACE_MODELS[0]; var vi=m.variants.findIndex(function(v){return v.name===(this.state.fVariant||m.variants[0].name);}.bind(this)); var nv=m.variants[(vi+1)%m.variants.length]; var N=window.SwapOnNative; if(N){N.setStr('face_variant',nv.name); N.setStr('face_variant_file',nv.file);} this.setState({fVariant:nv.name}); },
+      fOpacityVal: (this.state.fOpacity!=null?this.state.fOpacity:85), fOpacityLabel: ((this.state.fOpacity!=null?this.state.fOpacity:85)+'%'),
+      onOpacity: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_opacity',String(v)); this.setState({fOpacity:v}); },
+      fSharpVal: (this.state.fSharp!=null?this.state.fSharp:40), fSharpLabel: ((this.state.fSharp!=null?this.state.fSharp:40)+'%'),
+      onSharp: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_sharpness',String(v)); this.setState({fSharp:v}); },
+      fEnhanceTog: (this.state.fEnhance===false?toggleSmOff:toggleSm), fEnhanceKnob: (this.state.fEnhance===false?knobSmOff:knobSmOn),
+      tglEnhance: () => { var N=window.SwapOnNative; var c=(this.state.fEnhance!==false); if(N)N.setBool('face_enhance',!c); this.setState({fEnhance:!c}); },
+      fQualVal: (this.state.fQual!=null?this.state.fQual:4), fQualLabel: ((this.state.fQual!=null?this.state.fQual:4)+'x'),
+      onQual: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_quality',String(v)); this.setState({fQual:v}); },
+      emSoftStyle: emCellStyle(this.state.fEnhModel, 'soft'), pickEmSoft: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Мягкое'); this.setState({fEnhModel:'soft'}); },
+      emSharpStyle: emCellStyle(this.state.fEnhModel, 'sharp'), pickEmSharp: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Чёткое'); this.setState({fEnhModel:'sharp'}); },
+      emRealStyle: emCellStyle(this.state.fEnhModel, 'real'), pickEmReal: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Реалистичное'); this.setState({fEnhModel:'real'}); },
+      emTopStyle: "flex:1;min-width:130px;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:700;color:#B6E86A;cursor:pointer;background:rgba(118,185,0,"+(this.state.fEnhModel==='top'?"0.22)":"0.10)")+";border:"+(this.state.fEnhModel==='top'?"2px solid rgba(118,185,0,0.9);":"1px solid rgba(118,185,0,0.4);"),
+      pickEmTop: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Наивысшее'); this.setState({fEnhModel:'top'}); },
+      // ---- Settings: video file picker + fit mode ----
+      videoName: (this.state.videoName||'clip_swap.mp4'), videoMeta: (this.state.videoMeta||'1080×1920 · 00:42'),
+      pickVideo: () => { try { var inp=document.createElement('input'); inp.type='file'; inp.accept='video/*'; inp.onchange=(ev)=>{ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var N=window.SwapOnNative; if(N){N.setStr('video_file_name',f.name); N.setStr('frame_source','pattern');} this.setState({videoName:f.name, videoMeta:(Math.round(f.size/104857.6)/10+' МБ'), __vsrc:'pattern'}); }; inp.click(); } catch(e){} },
+      fitFullStyle: "flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:"+((this.state.__fit==='fill')?"600;color:#9AA3B8;":"700;background:rgba(255,255,255,0.08);color:#E8EAF2;"),
+      fitFillStyle: "flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:"+((this.state.__fit==='fill')?"700;background:rgba(255,255,255,0.08);color:#E8EAF2;":"600;color:#9AA3B8;"),
+      pickFitFull: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_scale_mode','fit'); this.setState({__fit:'fit'}); },
+      pickFitFill: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_scale_mode','fill'); this.setState({__fit:'fill'}); },
+      // ---- Balance: real transaction history ----
+      historyView: ((this.state.history||[]).map(function(t){ var amt=Number(t.amount); var pos=amt>=0; return {
+        title: _txTitle(t), when: _txWhen(t.created_at),
+        amt: (pos?'+':'−')+_txFmt(amt),
+        amtColor: (pos?'#3AD68E':'#FF6B85'),
+        icon: (pos?'+':'−'),
+        iconStyle: 'display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;'+(pos?'background:rgba(58,214,142,0.15);color:#3AD68E;':'background:rgba(255,107,133,0.14);color:#FF6B85;'),
+        rowStyle: 'background:'+(pos?'rgba(58,214,142,0.06);border:1px solid rgba(58,214,142,0.22);':'rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);')+'border-radius:13px;padding:11px 13px;'
+      }; })),
+      histEmpty: ((this.state.history||[]).length===0),
+      histMonth: (function(h){ var now=new Date(); var s=0; (h||[]).forEach(function(t){ var d=new Date(t.created_at); var a=Number(t.amount); if(a<0 && d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear()) s+=Math.abs(a); }); return (Math.round(s*10)/10).toString().replace('.',',')+' Swaps'; })(this.state.history),
+      histSessions: (String(((this.state.history||[]).filter(function(t){return Number(t.amount)<0;})).length)),
+      // ---- Voice cloning (Мои голоса): upload samples / record a sample -> ElevenLabs clone ----
+      voiceBusyLabel: (this.state.voiceBusy ? (this.state.recording ? 'Идёт запись…' : 'Создаём голос…') : ''),
+      uploadSamples: () => { if(this.state.voiceBusy)return; var self=this; try { var inp=document.createElement('input'); inp.type='file'; inp.accept='audio/*'; inp.multiple=true; inp.onchange=function(ev){ var files=[].slice.call(ev.target.files||[]); if(!files.length)return; self.setState({voiceBusy:true, voiceErr:false}); Promise.all(files.map(function(f){ return new Promise(function(res){ var r=new FileReader(); r.onload=function(){res(r.result);}; r.readAsDataURL(f); }); })).then(function(b64){ var N=window.SwapOnNative; if(N)N.cloneVoice('Мой голос', JSON.stringify(b64)); else self.setState({voiceBusy:false}); }); }; inp.click(); } catch(e){} },
+      recordSample: () => { var self=this; if(this.state.recording){ if(self._rec)self._rec.stop(); return; } if(this.state.voiceBusy)return; try { navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){ var mr=new MediaRecorder(stream); var chunks=[]; mr.ondataavailable=function(e){ if(e.data&&e.data.size)chunks.push(e.data); }; mr.onstop=function(){ stream.getTracks().forEach(function(t){t.stop();}); self.setState({voiceBusy:true}); var blob=new Blob(chunks,{type:'audio/mpeg'}); var r=new FileReader(); r.onload=function(){ var N=window.SwapOnNative; if(N)N.cloneVoice('Мой голос', JSON.stringify([r.result])); else self.setState({voiceBusy:false}); }; r.readAsDataURL(blob); }; self._rec=mr; mr.start(); self.setState({recording:true, voiceErr:false}); setTimeout(function(){ if(mr.state==='recording')mr.stop(); }, 8000); }).catch(function(){ self.setState({voiceErr:true}); }); } catch(e){} },
+      // ---- Voice replacement TEST: record ~4s -> ElevenLabs STS -> play back in the selected voice ----
+      voiceTestLabel: (this.state.vtState==='rec' ? '● Идёт запись… говорите 5 секунд' : this.state.vtState==='conv' ? 'Преобразуем голос…' : this.state.vtState==='play' ? '▶ Ваш голос в выбранном тембре' : (this.state.vtErr ? '⚠ '+this.state.vtErr+' — нажмите ещё раз' : '🎧 Проверить замену голоса')),
+      voiceTestBg: (this.state.vtState==='rec' ? 'linear-gradient(120deg,#E8788F,#C94E6B)' : 'linear-gradient(120deg,#AE9FFF,#8E7CFF)'),
+      voiceTestBtn: () => { var self=this;
+        if(this.state.vtState==='rec'||this.state.vtState==='conv'||this.state.vtState==='play')return;
+        if(!this.state.selectedVoice){ this.setState({needVoice:true, vtErr:'Сначала выберите голос'}); return; }
+        var N=window.SwapOnNative;
+        if(N && N.voiceRecordTest){ self.setState({vtErr:'', vtState:'rec'}); N.voiceRecordTest(5); }
+        else { self.setState({vtErr:'Недоступно'}); } },
+      // ==== NEW Home design: connect the design's independent video/audio replacement to the engine ====
+      toggleModule: () => { var cur=(this.state.moduleOn!==false); var N=window.SwapOnNative; var res=(N&&N.setEnabled)?N.setEnabled(!cur):'ok'; this.setState({ moduleOn:!cur, needFace:(!cur && res==='on_need_face') }, ()=>this.__syncEngine()); },
+      toggleVideoOn: () => this.setState(s=>({ videoOn:!s.videoOn }), ()=>this.__syncEngine()),
+      toggleAudioOn: () => this.setState(s=>({ audioOn:!s.audioOn }), ()=>this.__syncEngine()),
+      setVideoLocal: () => this.setState({ videoSrc:'local' }, ()=>this.__syncEngine()),
+      setVideoStream: () => this.setState({ videoSrc:'stream' }, ()=>this.__syncEngine()),
+      setVideoFace: () => this.setState({ videoSrc:'face' }, ()=>this.__syncEngine()),
+      setAudioVideo: () => this.setState({ audioSrc:'video' }, ()=>this.__syncEngine()),
+      setAudioVoice: () => this.setState({ audioSrc:'voice' }, ()=>this.__syncEngine()),
+      toggleCamFront: () => this.setState(s=>({ camFront:!s.camFront }), ()=>this.__syncEngine()),
+      toggleCamBack: () => this.setState(s=>({ camBack:!s.camBack }), ()=>this.__syncEngine()),
+      // real balance + profile + navigation the design lacks
+      balLabel: ((this.state.__bal!=null?this.state.__bal:124)+' Swaps'),
+      profId: (this.state.__tgid?String(this.state.__tgid):''),
+      profName: (this.state.__uname?'@'+this.state.__uname:(this.state.__fname||(this.state.__tgid?('ID '+this.state.__tgid):'Не авторизован'))),
+      profInitial: (((this.state.__fname||this.state.__uname||'U')[0])||'U').toUpperCase(),
+      goBal: () => { try{ var N=window.SwapOnNative; var h=N&&N.getHistoryJson&&N.getHistoryJson(); if(h)this.setState({history:JSON.parse(h)}); }catch(e){} this.setState({ screen:'bal', balTab:'topup' }); },
+      openBot: () => { var N=window.SwapOnNative; if(N&&N.openBot)N.openBot(); },
+
     };
   }
 }
