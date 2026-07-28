@@ -624,6 +624,8 @@ class Component extends DCLogic {
       if(_c.faceOpacity) _st.fOpacity=_c.faceOpacity; if(_c.faceSharpness) _st.fSharp=_c.faceSharpness;
       if(_c.faceEnhanceModel) _st.fEnhModel=_c.faceEnhanceModel; if(_c.faceQuality) _st.fQual=_c.faceQuality;
       if(_c.videoFileName) { _st.videoName=_c.videoFileName; _st.videoMeta='Выбранный файл'; }
+      // populate the apps-for-replacement list from the engine's target packages
+      try { if(_c.targetPackages){ var self=this; var pk=_c.targetPackages.split(',').map(function(x){return x.trim();}).filter(Boolean); var nm={}; (this.CATALOG||[]).forEach(function(c){ nm[c.pkg]=c.name; }); _st.added = pk.map(function(p,i){ return { id:i+1, name:(nm[p]||p), pkg:p, enabled:true }; }); _st.nextId = pk.length+1; } } catch(e){}
       this.setState(_st);
       try { window.__i18nLang = (_c.lang||'RU'); if(window.__applyI18n) window.__applyI18n(); } catch(e){}
       try { var _h = _N.getHistoryJson && _N.getHistoryJson(); if(_h) this.setState({ history: JSON.parse(_h) }); } catch(e){}
@@ -638,11 +640,12 @@ class Component extends DCLogic {
   }
   componentWillUnmount() { clearInterval(this._pushTimer); }
 
+  syncTargets(list) { try { var a = list || this.state.added; var pkgs = a.filter(function(x){return x.enabled;}).map(function(x){return x.pkg;}).filter(function(p){return p && p !== '—';}).join(','); var N=window.SwapOnNative; if(N)N.setStr('config_target_packages', pkgs); } catch(e){} }
   addFromCatalog(app) {
     this.setState(s => ({
       added: [...s.added, { id: s.nextId, name: app.name, pkg: app.pkg, enabled: true }],
       nextId: s.nextId + 1,
-    }));
+    }), () => this.syncTargets());
   }
   addManual() {
     const name = (this.state.newName || '').trim();
@@ -651,13 +654,13 @@ class Component extends DCLogic {
     this.setState(s => ({
       added: [...s.added, { id: s.nextId, name: name || pkg, pkg: pkg || '—', enabled: true }],
       nextId: s.nextId + 1, newName: '', newPkg: '', showAdd: false,
-    }));
+    }), () => this.syncTargets());
   }
   toggleApp(id) {
-    this.setState(s => ({ added: s.added.map(a => a.id === id ? { ...a, enabled: !a.enabled } : a) }));
+    this.setState(s => ({ added: s.added.map(a => a.id === id ? { ...a, enabled: !a.enabled } : a) }), () => this.syncTargets());
   }
   removeApp(id) {
-    this.setState(s => ({ added: s.added.filter(a => a.id !== id), editingId: null }));
+    this.setState(s => ({ added: s.added.filter(a => a.id !== id), editingId: null }), () => this.syncTargets());
   }
   startEdit(a) {
     this.setState({ editingId: a.id, editName: a.name, editPkg: a.pkg });
@@ -666,7 +669,7 @@ class Component extends DCLogic {
     this.setState(s => ({
       added: s.added.map(a => a.id === s.editingId ? { ...a, name: s.editName.trim() || a.name, pkg: s.editPkg.trim() || a.pkg } : a),
       editingId: null,
-    }));
+    }), () => this.syncTargets());
   }
 
   renderVals() {
