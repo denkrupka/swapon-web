@@ -307,7 +307,7 @@
 
             <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 20px 9px;">
               <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">{{ balSectionLabel }}</span>
-              <span style="font-size:12px;color:#8A93A8;font-weight:600;">Баланс: <span style="color:#CDBFFF;font-weight:800;font-family:'IBM Plex Mono',monospace;">124 Swaps</span></span>
+              <span style="font-size:12px;color:#8A93A8;font-weight:600;">Баланс: <span style="color:#CDBFFF;font-weight:800;font-family:'IBM Plex Mono',monospace;">{{ balLabel }}</span></span>
             </div>
             <div style="flex:1;min-height:0;overflow-y:auto;padding:0 20px;display:flex;flex-direction:column;justify-content:{{ balScrollJustify }};gap:11px;">
               <sc-if value="{{ balTopup }}" hint-placeholder-val="{{ true }}">
@@ -625,6 +625,7 @@ class Component extends DCLogic {
       if(_c.faceEnhanceModel) _st.fEnhModel=_c.faceEnhanceModel; if(_c.faceQuality) _st.fQual=_c.faceQuality;
       if(_c.videoFileName) { _st.videoName=_c.videoFileName; _st.videoMeta='Выбранный файл'; }
       this.setState(_st);
+      try { window.__i18nLang = (_c.lang||'RU'); if(window.__applyI18n) window.__applyI18n(); } catch(e){}
       try { var _h = _N.getHistoryJson && _N.getHistoryJson(); if(_h) this.setState({ history: JSON.parse(_h) }); } catch(e){}
       window.__swaponSync = function(){ try { var c=JSON.parse(window.SwapOnNative.getConfig()); this.setState({ __bal:c.balance, __uname:(c.username||''), __fname:(c.firstName||''), __tgid:(c.telegramId||0) }); var h=window.SwapOnNative.getHistoryJson&&window.SwapOnNative.getHistoryJson(); if(h) this.setState({history:JSON.parse(h)}); } catch(e){} }.bind(this);
       window.__swaponForceOff = function(){ this.setState({ __on:false }); }.bind(this);
@@ -835,8 +836,8 @@ class Component extends DCLogic {
       // ---- Settings: language (persist; full translation pending) ----
       langRuStyle: "padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.__lang!=='EN'?"background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;border:1px solid transparent;"),
       langEnStyle: "padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.__lang==='EN'?"background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;border:1px solid transparent;"),
-      pickLangRu: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','RU'); this.setState({__lang:'RU'}); },
-      pickLangEn: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','EN'); this.setState({__lang:'EN'}); },
+      pickLangRu: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','RU'); window.__i18nLang='RU'; this.setState({__lang:'RU'}); try{ location.reload(); }catch(e){} },
+      pickLangEn: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','EN'); window.__i18nLang='EN'; this.setState({__lang:'EN'}); try{ location.reload(); }catch(e){} },
       // ---- Face: photo upload (native file picker -> data URL -> engine) ----
       pickFace: () => { try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); }; rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
       // ---- Face: replacement settings (live + persist) ----
@@ -1061,4 +1062,5 @@ class Component extends DCLogic {
   }
 }
 </script>
+<script src="./i18n.js"></script>
 </body></html>
