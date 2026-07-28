@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SwapOn — привязка</title>
+<style>
+  body{margin:0;background:#05070C;color:#E8EAF2;font-family:system-ui,Manrope,sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center;padding:24px}
+  a{color:#AE9FFF;font-weight:700}
+</style>
+</head><body>
+<div>
+  <h2>Открываю SwapOn…</h2>
+  <p id="msg">Если приложение не открылось автоматически — <a id="deep" href="#">нажмите здесь</a>, либо откройте SwapOn на телефоне вручную.</p>
+</div>
+<script>
+  var tg = new URLSearchParams(location.search).get('tg');
+  var url = tg ? ('swapon://link?tg=' + encodeURIComponent(tg)) : null;
+  if (url) {
+    document.getElementById('deep').setAttribute('href', url);
+    location.href = url;
+  } else {
+    document.getElementById('msg').textContent = 'Нет параметра tg. Откройте ссылку из бота @swap_on_bot.';
+  }
+</script>
+</body></html>
