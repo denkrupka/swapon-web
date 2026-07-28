@@ -716,7 +716,7 @@ class Component extends DCLogic {
 
     // ---- shared style strings ----
     const NATIVE = (typeof window!=="undefined") && new URLSearchParams(location.search).get("native")==="1" && window.SwapOnNative;
-    const frameStyle = NATIVE ? "width:100vw;height:100vh;background:#090D14;" : "width:392px;height:812px;background:#0a0c12;border-radius:46px;padding:11px;box-shadow:0 40px 90px rgba(0,0,0,0.6),0 0 0 2px #1a1f2b,inset 0 0 0 2px #000;";
+    const frameStyle = NATIVE ? "width:100vw;height:calc(100vh - var(--sbtop, 0px));background:#090D14;" : "width:392px;height:812px;background:#0a0c12;border-radius:46px;padding:11px;box-shadow:0 40px 90px rgba(0,0,0,0.6),0 0 0 2px #1a1f2b,inset 0 0 0 2px #000;";
     const screenStyle = "position:relative;width:100%;height:100%;background:#090D14;border-radius:" + (NATIVE?"0":"36px") + ";overflow:hidden;display:flex;flex-direction:column;";
 
     // toggles
