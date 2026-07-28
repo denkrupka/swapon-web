@@ -43,7 +43,7 @@
 
               <div style="margin:0 20px 16px;background:linear-gradient(150deg,rgba(174,159,255,0.14),rgba(45,120,255,0.05));border:1px solid rgba(174,159,255,0.24);border-radius:16px;padding:15px 18px;display:flex;align-items:center;justify-content:space-between;">
                 <span style="font-size:13px;font-weight:600;color:#9AA3B8;">Текущий баланс</span>
-                <span style="font-size:20px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ balLabel }}</span>
+                <span style="font-size:20px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">124 Swaps</span>
               </div>
 
               <div style="flex:1;overflow-y:auto;padding:0 20px;display:flex;flex-direction:column;gap:11px;">
@@ -88,7 +88,7 @@
               </div>
               <div style="display:flex;align-items:center;gap:7px;">
                 <div style="display:flex;align-items:center;gap:6px;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.30);padding:4px 4px 4px 11px;border-radius:20px;">
-                  <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ balLabel }}</span>
+                  <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">124 Swaps</span>
                   <button style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
                 </div>
               </div>
@@ -98,7 +98,7 @@
             <div style="position:relative;background:linear-gradient(150deg,rgba(174,159,255,0.14),rgba(45,120,255,0.06));border:1px solid rgba(174,159,255,0.26);border-radius:18px;padding:17px 18px;margin-bottom:14px;">
               <span onClick="{{ toggleInfo }}" style="position:absolute;top:13px;right:14px;width:19px;height:19px;border-radius:50%;background:rgba(174,159,255,0.18);border:1px solid rgba(174,159,255,0.4);color:#CDBFFF;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;">?</span>
               <div style="display:flex;align-items:center;gap:16px;">
-                <button style="width:64px;height:64px;border-radius:50%;flex:none;border:2px solid rgba(58,214,142,0.55);background:radial-gradient(circle at 50% 40%,rgba(58,214,142,0.28),rgba(58,214,142,0.06));color:#3AD68E;display:flex;align-items:center;justify-content:center;box-shadow:0 0 22px rgba(58,214,142,0.35),inset 0 0 14px rgba(58,214,142,0.15);cursor:pointer;" onClick="{{ toggleOn }}">{{ iconPower }}</button>
+                <button style="width:64px;height:64px;border-radius:50%;flex:none;border:2px solid rgba(58,214,142,0.55);background:radial-gradient(circle at 50% 40%,rgba(58,214,142,0.28),rgba(58,214,142,0.06));color:#3AD68E;display:flex;align-items:center;justify-content:center;box-shadow:0 0 22px rgba(58,214,142,0.35),inset 0 0 14px rgba(58,214,142,0.15);cursor:pointer;">{{ iconPower }}</button>
                 <div style="flex:1;">
                   <div style="font-size:22px;font-weight:800;letter-spacing:0.04em;color:#3AD68E;">ON</div>
                   <div style="font-size:12px;color:#9AA3B8;margin-top:2px;">Нажмите, чтобы выключить</div>
@@ -118,14 +118,14 @@
               <div style="background:rgba(45,120,255,0.09);border:1px solid rgba(45,120,255,0.28);border-radius:16px;padding:15px 15px 14px;">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;">
                   <div style="width:30px;height:30px;border-radius:9px;background:rgba(45,120,255,0.18);display:flex;align-items:center;justify-content:center;">{{ iconFront }}</div>
-                  <div onClick="{{ toggleFront }}" style="{{ frontTog }}"><span style="{{ frontKnob }}"></span></div>
+                  <div style="{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div>
                 </div>
                 <div style="font-size:14px;font-weight:700;margin-top:11px;">Фронтальная</div>
               </div>
               <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:15px 15px 14px;">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;">
                   <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;">{{ iconBack }}</div>
-                  <div onClick="{{ toggleBack }}" style="{{ backTog }}"><span style="{{ backKnob }}"></span></div>
+                  <div style="{{ toggleSmOff }}"><span style="{{ knobSmOff }}"></span></div>
                 </div>
                 <div style="font-size:14px;font-weight:700;margin-top:11px;color:#C4CBDC;">Основная</div>
               </div>
@@ -651,8 +651,6 @@ class Component extends DCLogic {
   };
 
   componentDidMount() {
-    try { var N = window.SwapOnNative; if (N) { var c = JSON.parse(N.getConfig());
-      this.setState({ __on: c.enabled, __front: c.front, __back: c.back, __bal: c.balance }); } } catch(e) {}
     this._pushTimer = setInterval(() => {
       if (this.state.pushOn) this.setState(s => ({ pushElapsed: s.pushElapsed + 1 }));
     }, 1000);
@@ -806,14 +804,6 @@ class Component extends DCLogic {
       __scrFace: this.state.screen === 'face',
       __scrVoice: this.state.screen === 'voice',
       __go: (s) => () => this.setState({ screen: s }),
-      balLabel: ((this.state.__bal!=null?this.state.__bal:124)+' Swaps'),
-      toggleOn: () => { var N=window.SwapOnNative; var cur=(this.state.__on!==false); if(N)N.setBool('enabled',!cur); this.setState({__on:!cur}); },
-      frontTog: (this.state.__front===false?toggleSmOff:toggleSm),
-      frontKnob: (this.state.__front===false?knobSmOff:knobSmOn),
-      toggleFront: () => { var N=window.SwapOnNative; var cur=(this.state.__front!==false); if(N)N.setBool('inject_front_camera',!cur); this.setState({__front:!cur}); },
-      backTog: (this.state.__back===true?toggleSm:toggleSmOff),
-      backKnob: (this.state.__back===true?knobSmOn:knobSmOff),
-      toggleBack: () => { var N=window.SwapOnNative; var cur=(this.state.__back===true); if(N)N.setBool('inject_back_camera',!cur); this.setState({__back:!cur}); },
 
       showInfo: this.state.showInfo,
       toggleInfo: () => this.setState(s => ({ showInfo: !s.showInfo })),
