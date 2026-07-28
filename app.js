@@ -1519,11 +1519,54 @@ function App() {
       package: pkg
     });
   };
+  // ---- native engine bridge (inside the SwapOn Android app: ?native=1) ----
+  const NATIVE = typeof window !== 'undefined' && new URLSearchParams(location.search).get('native') === '1' && window.SwapOnNative;
+  useEffect(() => {
+    if (!NATIVE) return;
+    try {
+      const c = JSON.parse(NATIVE.getConfig());
+      set({
+        on: c.enabled,
+        front: c.front,
+        back: c.back,
+        vsrc: c.videoSource === 'pattern' ? 'local' : c.videoSource === 'face' ? 'face' : 'stream',
+        asrc: c.audioSource === 'microphone' ? 'mic' : c.audioSource === 'voice' ? 'voice' : 'stream',
+        faceMode: c.faceMode || 'pro',
+        balance: c.balance,
+        selectedVoice: c.voiceId || ''
+      });
+    } catch (e) {}
+  }, []);
+  const nset = p => {
+    set(p);
+    if (!NATIVE) return;
+    try {
+      if ('on' in p) NATIVE.setBool('enabled', !!p.on);
+      if ('front' in p) NATIVE.setBool('inject_front_camera', !!p.front);
+      if ('back' in p) NATIVE.setBool('inject_back_camera', !!p.back);
+      if ('vsrc' in p) NATIVE.setStr('frame_source', p.vsrc === 'local' ? 'pattern' : p.vsrc === 'face' ? 'face' : 'whep');
+      if ('asrc' in p) NATIVE.setStr('audio_source', p.asrc === 'mic' ? 'microphone' : p.asrc === 'voice' ? 'voice' : 'whep');
+      if ('faceMode' in p) NATIVE.setStr('face_mode', p.faceMode);
+      if ('selectedVoice' in p) NATIVE.setStr('cloud_voice_id', p.selectedVoice);
+    } catch (e) {}
+  };
+  if (NATIVE && typeof document !== 'undefined') {
+    document.body.style.padding = '0';
+    document.body.style.display = 'block';
+  }
+  const shell = NATIVE ? {
+    width: '100vw',
+    height: '100vh'
+  } : frameStyle;
+  const inner = NATIVE ? {
+    ...screenStyle,
+    borderRadius: 0
+  } : screenStyle;
   return /*#__PURE__*/React.createElement("div", {
-    style: frameStyle
+    style: shell
   }, /*#__PURE__*/React.createElement("div", {
-    style: screenStyle
-  }, /*#__PURE__*/React.createElement("div", {
+    style: inner
+  }, !NATIVE && /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'absolute',
       top: 14,
@@ -1541,18 +1584,18 @@ function App() {
     onClose: () => setStore(false)
   }), tab === 'home' && /*#__PURE__*/React.createElement(Home, {
     state: state,
-    set: set,
+    set: nset,
     openStore: () => setStore(true)
   }), tab === 'face' && /*#__PURE__*/React.createElement(Face, {
     state: state,
-    set: set
+    set: nset
   }), tab === 'voice' && /*#__PURE__*/React.createElement(Voice, {
     state: state,
-    set: set,
+    set: nset,
     voices: voices
   }), tab === 'set' && /*#__PURE__*/React.createElement(Settings, {
     state: state,
-    set: set,
+    set: nset,
     apps: apps,
     setApps: setApps,
     onToggleApp: toggleAppApi
