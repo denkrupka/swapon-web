@@ -84,7 +84,7 @@
               <div style="display:flex;align-items:center;gap:7px;">
                 <div style="display:flex;align-items:center;gap:6px;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.30);padding:4px 4px 4px 11px;border-radius:20px;">
                   <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ balLabel }}</span>
-                  <button style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
+                  <button style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;" onClick="{{ goBal }}">+</button>
                 </div>
               </div>
             </div>
@@ -157,10 +157,10 @@
                 <div style="font-size:13.5px;font-weight:700;color:#E8EAF2;">@aleksandr_k</div>
                 <div style="font-size:11px;color:#6E7A90;font-family:'IBM Plex Mono',monospace;">ID 784120593</div>
               </div>
-              <span style="display:flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;color:#AE9FFF;">Профиль <span style="font-size:16px;">›</span></span>
+              <span style="display:flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;color:#AE9FFF;cursor:pointer;" onClick="{{ appBot }}">Профиль <span style="font-size:16px;">›</span></span>
             </div>
 
-            <button style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:0;border:1px solid rgba(34,158,217,0.4);background:rgba(34,158,217,0.12);color:#5CC8FF;font-size:13.5px;font-weight:700;padding:13px;border-radius:13px;cursor:pointer;">
+            <button style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:0;border:1px solid rgba(34,158,217,0.4);background:rgba(34,158,217,0.12);color:#5CC8FF;font-size:13.5px;font-weight:700;padding:13px;border-radius:13px;cursor:pointer;" onClick="{{ appBot }}">
               <span style="width:8px;height:8px;border-radius:50%;background:#3AD68E;box-shadow:0 0 8px #3AD68E;"></span>
               Авторизован в Telegram-боте
             </button>
@@ -178,7 +178,7 @@
           <div class="applist-scroll" style="flex:1;overflow-y:auto;padding:8px 18px 14px;">
             <div style="display:flex;align-items:center;gap:14px;padding:10px 2px 20px;">
               <div style="width:32px;height:32px;flex:none;margin-right:12px;">{{ logoIcon }}</div><div style="flex:1;font-size:21px;font-weight:800;letter-spacing:-0.01em;">Настройки</div>
-              <button style="display:flex;align-items:center;gap:6px;border:1px solid rgba(34,158,217,0.4);background:rgba(34,158,217,0.12);color:#5CC8FF;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:20px;cursor:pointer;">
+              <button style="display:flex;align-items:center;gap:6px;border:1px solid rgba(34,158,217,0.4);background:rgba(34,158,217,0.12);color:#5CC8FF;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:20px;cursor:pointer;" onClick="{{ appBot }}">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#5CC8FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.4"></path><circle cx="12" cy="16.5" r="0.4" fill="#5CC8FF"></circle></svg>
                 Помощь
               </button>
@@ -265,19 +265,19 @@
               <span onClick="{{ hint.fit.toggle }}" style="{{ qStyle }}">?</span>
             </div>
             <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:4px;gap:4px;margin-bottom:10px;">
-              <div style="flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:700;background:rgba(255,255,255,0.08);color:#E8EAF2;">Целиком</div>
-              <div style="flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:600;color:#9AA3B8;">Заполнить</div>
+              <div style="flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:700;background:rgba(255,255,255,0.08);color:#E8EAF2;{{ fitFull }}" onClick="{{ pickFitFull }}">Целиком</div>
+              <div style="flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:600;color:#9AA3B8;{{ fitFill }}" onClick="{{ pickFitFill }}">Заполнить</div>
             </div>
             <sc-if value="{{ hint.fit.open }}" hint-placeholder-val="{{ false }}">
               <div style="{{ hintBox }}"><span style="{{ hintIcon }}">ℹ</span><div style="{{ hintText }}"><b style="color:#E8EAF2;">Целиком</b> — видео помещается полностью, по краям могут быть чёрные поля. <b style="color:#E8EAF2;">Заполнить</b> — видео заполняет весь кадр, края немного обрезаются.</div></div>
             </sc-if>
 
             <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;">
-              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Прямая подмена камеры</span><span onClick="{{ hint.direct.toggle }}" style="{{ qStyle }}">?</span><div style="margin-left:auto;{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div></div>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Прямая подмена камеры</span><span onClick="{{ hint.direct.toggle }}" style="{{ qStyle }}">?</span><div onClick="{{ tglDirect }}" style="margin-left:auto;{{ directTog }}"><span style="{{ directKnob }}"></span></div></div>
               <sc-if value="{{ hint.direct.open }}" hint-placeholder-val="{{ false }}"><div style="{{ hintRow }}">Подключается к камере напрямую — быстрее и стабильнее, но работает не во всех приложениях.</div></sc-if>
-              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Автоповорот видео</span><span onClick="{{ hint.rotate.toggle }}" style="{{ qStyle }}">?</span><div style="margin-left:auto;{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div></div>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Автоповорот видео</span><span onClick="{{ hint.rotate.toggle }}" style="{{ qStyle }}">?</span><div onClick="{{ tglRotate }}" style="margin-left:auto;{{ rotateTog }}"><span style="{{ rotateKnob }}"></span></div></div>
               <sc-if value="{{ hint.rotate.open }}" hint-placeholder-val="{{ false }}"><div style="{{ hintRow }}">Автоматически поворачивает видео под ориентацию телефона.</div></sc-if>
-              <div style="{{ optRowLast }}"><span style="font-size:13.5px;font-weight:600;">Зеркалить фронтальную камеру</span><span onClick="{{ hint.mirror.toggle }}" style="{{ qStyle }}">?</span><div style="margin-left:auto;{{ toggleSmOff }}"><span style="{{ knobSmOff }}"></span></div></div>
+              <div style="{{ optRowLast }}"><span style="font-size:13.5px;font-weight:600;">Зеркалить фронтальную камеру</span><span onClick="{{ hint.mirror.toggle }}" style="{{ qStyle }}">?</span><div onClick="{{ tglMirror }}" style="margin-left:auto;{{ mirrorTog }}"><span style="{{ mirrorKnob }}"></span></div></div>
               <sc-if value="{{ hint.mirror.open }}" hint-placeholder-val="{{ false }}"><div style="{{ hintRowLast }}">Отражает фронтальную камеру, как в зеркале — привычный вид селфи.</div></sc-if>
             </div>
 
@@ -296,7 +296,7 @@
               <div style="flex:1;">
                 <div style="font-size:20px;font-weight:800;letter-spacing:-0.01em;">Баланс</div>
               </div>
-              <div style="width:34px;height:34px;flex:none;border-radius:11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:17px;color:#C4CBDC;cursor:pointer;">✕</div>
+              <div style="width:34px;height:34px;flex:none;border-radius:11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:17px;color:#C4CBDC;cursor:pointer;" onClick="{{ goHome }}">✕</div>
             </div>
 
             <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:4px;gap:4px;margin:0 20px 14px;">
@@ -405,7 +405,7 @@
               </div>
               </sc-if>
             </div>
-              <button style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;border:none;background:linear-gradient(120deg,#229ED9,#38B6F0);color:#fff;font-size:14px;font-weight:800;padding:12px;border-radius:13px;box-shadow:0 8px 24px rgba(34,158,217,0.32);cursor:pointer;">
+              <button style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;border:none;background:linear-gradient(120deg,#229ED9,#38B6F0);color:#fff;font-size:14px;font-weight:800;padding:12px;border-radius:13px;box-shadow:0 8px 24px rgba(34,158,217,0.32);cursor:pointer;" onClick="{{ appBot }}">
                 <svg viewBox="0 0 24 24" width="19" height="19" fill="#fff"><path d="M21.9 4.3l-3.3 15.6c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1 .5l.36-5.1L18 5.4c.4-.36-.1-.56-.62-.2L6.9 12.06 1.9 10.5c-1.1-.34-1.12-1.1.23-1.62L20.5 2.9c.9-.34 1.7.2 1.4 1.4z"></path></svg>
                 Купить в Telegram
               </button>
@@ -626,7 +626,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     try { var _N = window.SwapOnNative; if (_N) { var _c = JSON.parse(_N.getConfig());
-      this.setState({ __on:_c.enabled, __front:_c.front, __back:_c.back, __bal:_c.balance, __vsrc:_c.videoSource, __asrc:_c.audioSource, faceMode:_c.faceMode||'pro' }); } } catch(e) {}
+      this.setState({ __on:_c.enabled, __front:_c.front, __back:_c.back, __bal:_c.balance, __vsrc:_c.videoSource, __asrc:_c.audioSource, faceMode:_c.faceMode||'pro', __direct:_c.direct, __rotate:_c.rotate, __mirror:_c.mirror, __fit:_c.fit }); } } catch(e) {}
     this._pushTimer = setInterval(() => {
       if (this.state.pushOn) this.setState(s => ({ pushElapsed: s.pushElapsed + 1 }));
     }, 1000);
@@ -800,6 +800,22 @@ class Component extends DCLogic {
       pickVFace: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_source','face'); this.setState({__vsrc:'face'}); },
       fs_voice: (this.state.__asrc==='voice'?"background:rgba(232,193,90,0.22);border:1px solid rgba(232,193,90,0.6);":""),
       pickAVoice: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','voice'); this.setState({__asrc:'voice'}); },
+      goBal: () => this.setState({screen:'bal'}),
+      goHome: () => this.setState({screen:'home'}),
+      appBot: () => { try{ var N=window.SwapOnNative; if(N)N.openBot(); else window.open('https://t.me/swap_on_bot','_blank'); }catch(e){} },
+      tglDirect: () => { var N=window.SwapOnNative; var c=this.state.__direct!==false; if(N)N.setBool('no_hal_camera2',!c); this.setState({__direct:!c}); },
+      directTog: (this.state.__direct===false?toggleSmOff:toggleSm),
+      directKnob: (this.state.__direct===false?knobSmOff:knobSmOn),
+      tglRotate: () => { var N=window.SwapOnNative; var c=this.state.__rotate!==false; if(N)N.setBool('auto_camera_rotation',!c); this.setState({__rotate:!c}); },
+      rotateTog: (this.state.__rotate===false?toggleSmOff:toggleSm),
+      rotateKnob: (this.state.__rotate===false?knobSmOff:knobSmOn),
+      tglMirror: () => { var N=window.SwapOnNative; var c=this.state.__mirror===true; if(N)N.setBool('mirror_front',!c); this.setState({__mirror:!c}); },
+      mirrorTog: (this.state.__mirror===true?toggleSm:toggleSmOff),
+      mirrorKnob: (this.state.__mirror===true?knobSmOn:knobSmOff),
+      fitFull: (this.state.__fit==='fill'?"background:transparent;color:#9AA3B8;":""),
+      fitFill: (this.state.__fit==='fill'?"background:rgba(255,255,255,0.08);color:#E8EAF2;":""),
+      pickFitFull: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_scale_mode','fit'); this.setState({__fit:'fit'}); },
+      pickFitFill: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_scale_mode','fill'); this.setState({__fit:'fill'}); },
 
       showInfo: this.state.showInfo,
       toggleInfo: () => this.setState(s => ({ showInfo: !s.showInfo })),
