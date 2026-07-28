@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="design_doc_mode" content="canvas">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .applist-scroll { scrollbar-width: thin; scrollbar-color: rgba(174,159,255,0.45) transparent; }
+  .applist-scroll::-webkit-scrollbar { width: 5px; }
+  .applist-scroll::-webkit-scrollbar-track { background: transparent; }
+  .applist-scroll::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#AE9FFF,#8E7CFF); border-radius: 10px; }
+  .applist-scroll::-webkit-scrollbar-thumb:hover { background: #AE9FFF; }
+  @keyframes pushPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } }
+  @keyframes pushShimmer { 0% { transform: translateX(-120%); } 100% { transform: translateX(320%); } }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#05070C;background-image:radial-gradient(1200px 700px at 20% -5%, rgba(174,159,255,0.10), transparent 60%),radial-gradient(1000px 700px at 100% 10%, rgba(45,120,255,0.10), transparent 55%);font-family:'Manrope',sans-serif;color:#E8EAF2;padding:72px 64px 96px;">
+
+  <!-- ===== HEADER / BRAND ===== -->
+  <div style="display:flex;align-items:center;gap:32px;margin-bottom:14px;">
+    <div style="width:112px;height:112px;flex:none;">{{ logoIcon }}</div>
+    <div>
+      <div style="font-size:44px;font-weight:800;letter-spacing:-0.02em;">SwapOn</div>
+      <div style="font-size:17px;color:#8A93A8;margin-top:4px;max-width:520px;line-height:1.45;">Замена камеры, лица и голоса в реальном времени</div>
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:#AE9FFF;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.28);padding:4px 10px;border-radius:7px;">v0.9.3</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:#7E8AA0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:4px 10px;border-radius:7px;">Android 17 · Pixel 7</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:#7E8AA0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:4px 10px;border-radius:7px;">KIK Engineering LTD.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== LOGO SHOWCASE ROW ===== -->
+  <div style="display:flex;align-items:center;gap:28px;margin:36px 0 56px;flex-wrap:wrap;">
+    <span style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;">App icon</span>
+    <div style="width:96px;height:96px;">{{ logoIcon }}</div>
+    <div style="width:64px;height:64px;">{{ logoIcon }}</div>
+    <div style="width:40px;height:40px;">{{ logoIcon }}</div>
+    <div style="width:96px;height:96px;border-radius:50%;overflow:hidden;">{{ logoRound }}</div>
+    <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:14px 22px 14px 16px;">
+      <div style="width:44px;height:44px;">{{ logoIcon }}</div>
+      <div style="font-size:26px;font-weight:800;letter-spacing:-0.02em;">SwapOn</div>
+    </div>
+  </div>
+
+  <!-- ===== PHONE SCREENS ===== -->
+  <div style="display:flex;gap:64px;flex-wrap:wrap;">
+
+    <!-- ---------- SCREEN 1: ГЛАВНАЯ ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">01 · Главная</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <!-- punch hole -->
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <sc-if value="{{ showStore }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;z-index:60;background:#090D14;display:flex;flex-direction:column;">
+              <div style="height:34px;"></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:14px 20px 18px;">
+                <div style="flex:1;">
+                  <div style="font-size:20px;font-weight:800;letter-spacing:-0.01em;">Пополнить баланс</div>
+                  <div style="font-size:12px;color:#8A93A8;margin-top:3px;">Оплата минут замены</div>
+                </div>
+                <div onClick="{{ closeStore }}" style="width:34px;height:34px;flex:none;border-radius:11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:17px;color:#C4CBDC;cursor:pointer;">✕</div>
+              </div>
+
+              <div style="margin:0 20px 16px;background:linear-gradient(150deg,rgba(174,159,255,0.14),rgba(45,120,255,0.05));border:1px solid rgba(174,159,255,0.24);border-radius:16px;padding:15px 18px;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:13px;font-weight:600;color:#9AA3B8;">Текущий баланс</span>
+                <span style="font-size:20px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">124 Swaps</span>
+              </div>
+
+              <div style="flex:1;overflow-y:auto;padding:0 20px;display:flex;flex-direction:column;gap:11px;">
+                <sc-for list="{{ packsView }}" as="p" hint-placeholder-count="3">
+                  <div onClick="{{ p.onSelect }}" style="{{ p.cardStyle }}">
+                    <div style="{{ p.radioStyle }}"><span style="{{ p.dotStyle }}"></span></div>
+                    <div style="flex:1;">
+                      <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:17px;font-weight:800;">{{ p.min }} Swaps</span>
+                        <sc-if value="{{ p.hasTag }}" hint-placeholder-val="{{ false }}"><span style="{{ p.tagStyle }}">{{ p.tag }}</span></sc-if>
+                      </div>
+                      <div style="font-size:11.5px;color:#8A93A8;margin-top:2px;">{{ p.per }} $ за SwapOn</div>
+                    </div>
+                    <div style="font-size:16px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ p.price }} $</div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="padding:14px 20px 22px;">
+                <button style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;border:none;background:linear-gradient(120deg,#229ED9,#38B6F0);color:#fff;font-size:15px;font-weight:800;padding:15px;border-radius:14px;box-shadow:0 8px 24px rgba(34,158,217,0.32);cursor:pointer;">
+                  <svg viewBox="0 0 24 24" width="19" height="19" fill="#fff"><path d="M21.9 4.3l-3.3 15.6c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1 .5l.36-5.1L18 5.4c.4-.36-.1-.56-.62-.2L6.9 12.06 1.9 10.5c-1.1-.34-1.12-1.1.23-1.62L20.5 2.9c.9-.34 1.7.2 1.4 1.4z"></path></svg>
+                  Купить в Telegram
+                </button>
+                <div style="text-align:center;font-size:11px;color:#6E7A90;margin-top:9px;">Оплата откроется в Telegram-боте</div>
+              </div>
+            </div>
+          </sc-if>
+          <!-- status bar -->
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;">
+            <span>9:41</span>
+            <div style="display:flex;gap:7px;align-items:center;color:#E8EAF2;">
+              <span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span>
+            </div>
+          </div>
+
+          <div class="applist-scroll" style="flex:1;overflow-y:auto;padding:8px 18px 14px;">
+            <!-- app top bar -->
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 4px 18px;">
+              <div style="width:38px;height:38px;">{{ logoIcon }}</div>
+              <div style="flex:1;">
+                <div style="font-size:21px;font-weight:800;letter-spacing:-0.01em;line-height:1;">SwapOn</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:7px;">
+                <div style="display:flex;align-items:center;gap:6px;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.30);padding:4px 4px 4px 11px;border-radius:20px;">
+                  <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">124 Swaps</span>
+                  <button style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- master module card -->
+            <div style="position:relative;background:linear-gradient(150deg,rgba(174,159,255,0.14),rgba(45,120,255,0.06));border:1px solid rgba(174,159,255,0.26);border-radius:18px;padding:17px 18px;margin-bottom:14px;">
+              <span onClick="{{ toggleInfo }}" style="position:absolute;top:13px;right:14px;width:19px;height:19px;border-radius:50%;background:rgba(174,159,255,0.18);border:1px solid rgba(174,159,255,0.4);color:#CDBFFF;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;">?</span>
+              <div style="display:flex;align-items:center;gap:16px;">
+                <button style="width:64px;height:64px;border-radius:50%;flex:none;border:2px solid rgba(58,214,142,0.55);background:radial-gradient(circle at 50% 40%,rgba(58,214,142,0.28),rgba(58,214,142,0.06));color:#3AD68E;display:flex;align-items:center;justify-content:center;box-shadow:0 0 22px rgba(58,214,142,0.35),inset 0 0 14px rgba(58,214,142,0.15);cursor:pointer;">{{ iconPower }}</button>
+                <div style="flex:1;">
+                  <div style="font-size:22px;font-weight:800;letter-spacing:0.04em;color:#3AD68E;">ON</div>
+                  <div style="font-size:12px;color:#9AA3B8;margin-top:2px;">Нажмите, чтобы выключить</div>
+                </div>
+              </div>
+              <sc-if value="{{ showInfo }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:9px;margin-top:12px;padding:11px 12px;background:rgba(0,0,0,0.28);border:1px solid rgba(174,159,255,0.16);border-radius:12px;">
+                  <span style="color:#AE9FFF;font-size:13px;line-height:1.4;flex:none;">ℹ</span>
+                  <div style="font-size:11.5px;color:#9AA3B8;line-height:1.5;">Когда модуль включён, приложения (камера, мессенджеры, браузер) вместо настоящей камеры видят ваше видео. Чтобы это работало, выберите источник видео в настройках.</div>
+                </div>
+              </sc-if>
+            </div>
+
+            <!-- camera lens toggles -->
+            <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ВЫБЕРИ КАМЕРУ ДЛЯ ЗАМЕНЫ ИЗОБРАЖЕНИЯ</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px;">
+              <div style="background:rgba(45,120,255,0.09);border:1px solid rgba(45,120,255,0.28);border-radius:16px;padding:15px 15px 14px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                  <div style="width:30px;height:30px;border-radius:9px;background:rgba(45,120,255,0.18);display:flex;align-items:center;justify-content:center;">{{ iconFront }}</div>
+                  <div style="{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div>
+                </div>
+                <div style="font-size:14px;font-weight:700;margin-top:11px;">Фронтальная</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:15px 15px 14px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                  <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;">{{ iconBack }}</div>
+                  <div style="{{ toggleSmOff }}"><span style="{{ knobSmOff }}"></span></div>
+                </div>
+                <div style="font-size:14px;font-weight:700;margin-top:11px;color:#C4CBDC;">Основная</div>
+              </div>
+            </div>
+
+            <!-- video source segmented -->
+            <div style="display:flex;align-items:center;gap:8px;margin:0 2px 9px;">
+              <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">ОТКУДА БРАТЬ ВИДЕО</span>
+              <span onClick="{{ hint.source.toggle }}" style="{{ qStyle }}">?</span>
+            </div>
+            <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:4px;gap:4px;margin-bottom:10px;">
+              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;color:#9AA3B8;line-height:1.2;">Локальное видео</div>
+              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:700;background:rgba(45,120,255,0.20);color:#8FC0FF;border:1px solid rgba(45,120,255,0.38);line-height:1.2;">Трансляция</div>
+              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;gap:4px;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;color:#E8C77A;background:rgba(232,193,90,0.07);border:1px solid rgba(232,193,90,0.32);line-height:1.2;"><span style="font-size:10px;">✦</span>Замена лица</div>
+            </div>
+            <sc-if value="{{ hint.source.open }}" hint-placeholder-val="{{ false }}">
+              <div style="{{ hintBox }}"><span style="{{ hintIcon }}">ℹ</span><div style="{{ hintText }}"><b style="color:#E8EAF2;">Локальное видео</b> — берётся файл с телефона. <b style="color:#E8EAF2;">Трансляция</b> — видео приходит по сети с вашего сервера.</div></div>
+            </sc-if>
+
+            <!-- audio source segmented -->
+            <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ОТКУДА БЕРЕМ ЗВУК</div>
+            <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:4px;gap:4px;margin-bottom:16px;">
+              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:700;background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);line-height:1.2;">Звук из видео/трансляции</div>
+              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;color:#9AA3B8;line-height:1.2;">Микрофон телефона</div>
+              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;gap:4px;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;color:#E8C77A;background:rgba(232,193,90,0.07);border:1px solid rgba(232,193,90,0.32);line-height:1.2;"><span style="font-size:10px;">✦</span>Замена голоса</div>
+            </div>
+
+
+
+            <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:20px 2px 9px;">ПРОФИЛЬ</div>
+            <div style="display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:11px 13px;margin-bottom:10px;cursor:pointer;">
+              <div style="width:36px;height:36px;flex:none;border-radius:50%;background:linear-gradient(135deg,#229ED9,#5CC8FF);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;">A</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13.5px;font-weight:700;color:#E8EAF2;">@aleksandr_k</div>
+                <div style="font-size:11px;color:#6E7A90;font-family:'IBM Plex Mono',monospace;">ID 784120593</div>
+              </div>
+              <span style="display:flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;color:#AE9FFF;">Профиль <span style="font-size:16px;">›</span></span>
+            </div>
+
+            <button style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:0;border:1px solid rgba(34,158,217,0.4);background:rgba(34,158,217,0.12);color:#5CC8FF;font-size:13.5px;font-weight:700;padding:13px;border-radius:13px;cursor:pointer;">
+              <span style="width:8px;height:8px;border-radius:50%;background:#3AD68E;box-shadow:0 0 8px #3AD68E;"></span>
+              Авторизован в Telegram-боте
+            </button>
+          </div>
+
+          <div style="height:10px;"></div>
+          {{ navBarHome }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 2: НАСТРОЙКИ ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">02 · Настройки</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;">
+            <span>9:41</span>
+            <div style="display:flex;gap:7px;align-items:center;">
+              <span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span>
+            </div>
+          </div>
+
+          <div class="applist-scroll" style="flex:1;overflow-y:auto;padding:8px 18px 14px;">
+            <div style="display:flex;align-items:center;gap:14px;padding:10px 2px 20px;">
+              <div style="width:34px;height:34px;border-radius:11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);display:flex;align-items:center;justify-content:center;font-size:19px;color:#C4CBDC;">‹</div>
+              <div style="flex:1;font-size:21px;font-weight:800;letter-spacing:-0.01em;">Настройки</div>
+              <button style="display:flex;align-items:center;gap:6px;border:1px solid rgba(34,158,217,0.4);background:rgba(34,158,217,0.12);color:#5CC8FF;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:20px;cursor:pointer;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#5CC8FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.4"></path><circle cx="12" cy="16.5" r="0.4" fill="#5CC8FF"></circle></svg>
+                Помощь
+              </button>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 14px;">
+              <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">ЯЗЫК</span>
+              <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:3px;gap:3px;">
+                <div style="padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:700;background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);">RU</div>
+                <div style="padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:600;color:#9AA3B8;">EN</div>
+              </div>
+            </div>
+
+            <!-- apps for replacement -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin:0 2px 10px;">
+              <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">ПРИЛОЖЕНИЯ ДЛЯ ЗАМЕНЫ</span>
+              <span onClick="{{ toggleAdd }}" style="font-size:12px;font-weight:700;color:#AE9FFF;cursor:pointer;user-select:none;">+ Вручную</span>
+            </div>
+
+            <sc-if value="{{ showAdd }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(174,159,255,0.32);border-radius:13px;padding:11px;margin-bottom:10px;">
+                <input placeholder="Название (напр. Signal)" value="{{ newName }}" onChange="{{ onNewName }}" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:9px 11px;outline:none;color:#E8EAF2;font-family:'Manrope',sans-serif;font-size:13px;" />
+                <input placeholder="com.example.app" value="{{ newPkg }}" onChange="{{ onNewPkg }}" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:9px 11px;outline:none;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;font-size:12px;" />
+                <button onClick="{{ addManual }}" style="border:none;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:12.5px;font-weight:800;padding:10px;border-radius:9px;cursor:pointer;">Добавить в список</button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ hasAvailable }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:11px;">
+                <sc-for list="{{ availableView }}" as="t" hint-placeholder-count="7">
+                  <span onClick="{{ t.onAdd }}" style="display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;color:#CDBFFF;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.3);padding:6px 12px;border-radius:20px;cursor:pointer;user-select:none;"><span style="font-size:14px;line-height:1;">+</span>{{ t.name }}</span>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <div style="display:flex;flex-direction:column;gap:8px;padding-bottom:4px;">
+              <sc-for list="{{ addedView }}" as="a" hint-placeholder-count="3">
+                <div style="{{ a.rowStyle }}">
+                  <sc-if value="{{ a.isEditing }}" hint-placeholder-val="{{ false }}">
+                    <div style="width:100%;display:flex;flex-direction:column;gap:7px;">
+                      <input value="{{ editName }}" onChange="{{ onEditName }}" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;outline:none;color:#E8EAF2;font-family:'Manrope',sans-serif;font-size:13px;" />
+                      <input value="{{ editPkg }}" onChange="{{ onEditPkg }}" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;outline:none;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;font-size:12px;" />
+                      <div style="display:flex;gap:7px;">
+                        <button onClick="{{ saveEdit }}" style="flex:1;border:none;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:12px;font-weight:800;padding:9px;border-radius:8px;cursor:pointer;">Сохранить</button>
+                        <button onClick="{{ a.onRemove }}" style="border:1px solid rgba(255,90,120,0.4);background:rgba(255,90,120,0.1);color:#FF6B85;font-size:12px;font-weight:700;padding:9px 13px;border-radius:8px;cursor:pointer;">Удалить</button>
+                        <button onClick="{{ cancelEdit }}" style="border:1px solid rgba(255,255,255,0.12);background:transparent;color:#9AA3B8;font-size:12px;font-weight:700;padding:9px 13px;border-radius:8px;cursor:pointer;">Отмена</button>
+                      </div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ a.notEditing }}" hint-placeholder-val="{{ true }}">
+                    <span onClick="{{ a.onToggle }}" style="{{ a.dotStyle }}"></span>
+                    <div onClick="{{ a.onToggle }}" style="flex:1;min-width:0;cursor:pointer;">
+                      <div style="{{ a.nameStyle }}">{{ a.name }}</div>
+                    </div>
+                    <span onClick="{{ a.onToggle }}" style="{{ a.tagStyle }}">{{ a.stateLabel }}</span>
+                    <span onClick="{{ a.onEdit }}" style="width:28px;height:28px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(255,255,255,0.06);color:#9AA3B8;font-size:13px;cursor:pointer;user-select:none;">✎</span>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="margin-bottom:11px;">
+              <div style="display:flex;align-items:center;gap:8px;margin:0 2px 9px;">
+                <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">АДРЕС ТРАНСЛЯЦИИ</span>
+                <span onClick="{{ hint.addr.toggle }}" style="{{ qStyle }}">?</span>
+              </div>
+              <div style="background:rgba(0,0,0,0.35);border:1px solid rgba(174,159,255,0.28);border-radius:12px;padding:13px 14px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#CDBFFF;display:flex;align-items:center;gap:8px;">
+                <span style="color:#586A85;">http://</span>127.0.0.1:8889/swap/whep
+              </div>
+              <sc-if value="{{ hint.addr.open }}" hint-placeholder-val="{{ false }}">
+                <div style="{{ hintBox }}"><span style="{{ hintIcon }}">ℹ</span><div style="{{ hintText }}">Ссылка на вашу трансляцию. Приложение подключается к ней и берёт оттуда видео.</div></div>
+              </sc-if>
+            </div>
+
+            <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ФАЙЛ ВИДЕО</div>
+            <div style="display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:11px 13px;margin-bottom:11px;cursor:pointer;">
+              <div style="width:36px;height:36px;flex:none;border-radius:10px;background:rgba(45,120,255,0.15);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#8FC0FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="12" height="12" rx="2"></rect><path d="M15 10l5-3v10l-5-3"></path></svg></div>
+              <div style="flex:1;min-width:0;"><div style="font-size:13.5px;font-weight:700;">clip_swap.mp4</div><div style="font-size:11px;color:#8A93A8;">1080×1920 · 00:42</div></div>
+              <span style="font-size:12.5px;font-weight:700;color:#AE9FFF;">Заменить</span>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:8px;margin:2px 2px 9px;">
+              <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">КАК ВПИСАТЬ ВИДЕО</span>
+              <span onClick="{{ hint.fit.toggle }}" style="{{ qStyle }}">?</span>
+            </div>
+            <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:4px;gap:4px;margin-bottom:10px;">
+              <div style="flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:700;background:rgba(255,255,255,0.08);color:#E8EAF2;">Целиком</div>
+              <div style="flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:600;color:#9AA3B8;">Заполнить</div>
+            </div>
+            <sc-if value="{{ hint.fit.open }}" hint-placeholder-val="{{ false }}">
+              <div style="{{ hintBox }}"><span style="{{ hintIcon }}">ℹ</span><div style="{{ hintText }}"><b style="color:#E8EAF2;">Целиком</b> — видео помещается полностью, по краям могут быть чёрные поля. <b style="color:#E8EAF2;">Заполнить</b> — видео заполняет весь кадр, края немного обрезаются.</div></div>
+            </sc-if>
+
+            <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;">
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Прямая подмена камеры</span><span onClick="{{ hint.direct.toggle }}" style="{{ qStyle }}">?</span><div style="margin-left:auto;{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div></div>
+              <sc-if value="{{ hint.direct.open }}" hint-placeholder-val="{{ false }}"><div style="{{ hintRow }}">Подключается к камере напрямую — быстрее и стабильнее, но работает не во всех приложениях.</div></sc-if>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Автоповорот видео</span><span onClick="{{ hint.rotate.toggle }}" style="{{ qStyle }}">?</span><div style="margin-left:auto;{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div></div>
+              <sc-if value="{{ hint.rotate.open }}" hint-placeholder-val="{{ false }}"><div style="{{ hintRow }}">Автоматически поворачивает видео под ориентацию телефона.</div></sc-if>
+              <div style="{{ optRowLast }}"><span style="font-size:13.5px;font-weight:600;">Зеркалить фронтальную камеру</span><span onClick="{{ hint.mirror.toggle }}" style="{{ qStyle }}">?</span><div style="margin-left:auto;{{ toggleSmOff }}"><span style="{{ knobSmOff }}"></span></div></div>
+              <sc-if value="{{ hint.mirror.open }}" hint-placeholder-val="{{ false }}"><div style="{{ hintRowLast }}">Отражает фронтальную камеру, как в зеркале — привычный вид селфи.</div></sc-if>
+            </div>
+
+
+
+          </div>
+          {{ navBarSettings }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 3: ПОПОЛНЕНИЕ БАЛАНСА ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">03 · Пополнение баланса</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;">
+            <span>9:41</span>
+            <div style="display:flex;gap:7px;align-items:center;">
+              <span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span>
+            </div>
+          </div>
+          <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:12px;padding:14px 20px 18px;">
+              <div style="flex:1;">
+                <div style="font-size:20px;font-weight:800;letter-spacing:-0.01em;">Баланс</div>
+              </div>
+              <div style="width:34px;height:34px;flex:none;border-radius:11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:17px;color:#C4CBDC;cursor:pointer;">✕</div>
+            </div>
+
+            <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:4px;gap:4px;margin:0 20px 14px;">
+              <div onClick="{{ setBalTopup }}" style="{{ balTopupTabStyle }}">Пополнение</div>
+              <div onClick="{{ setBalPrice }}" style="{{ balPriceTabStyle }}">Прайс</div>
+              <div onClick="{{ setBalHistory }}" style="{{ balHistoryTabStyle }}">История</div>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 20px 9px;">
+              <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">{{ balSectionLabel }}</span>
+              <span style="font-size:12px;color:#8A93A8;font-weight:600;">Баланс: <span style="color:#CDBFFF;font-weight:800;font-family:'IBM Plex Mono',monospace;">124 Swaps</span></span>
+            </div>
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:0 20px;display:flex;flex-direction:column;justify-content:{{ balScrollJustify }};gap:11px;">
+              <sc-if value="{{ balTopup }}" hint-placeholder-val="{{ true }}">
+              <sc-for list="{{ packsView }}" as="p" hint-placeholder-count="5">
+                <div style="{{ p.cardStyle }}">
+                  <div style="{{ p.radioStyle }}"><span style="{{ p.dotStyle }}"></span></div>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <span style="white-space:nowrap;font-size:16px;font-weight:800;">{{ p.min }} Swaps</span>
+                      <sc-if value="{{ p.hasTag }}" hint-placeholder-val="{{ false }}"><span style="{{ p.tagStyle }}">{{ p.tag }}</span></sc-if>
+                    </div>
+                    <span style="font-size:10.5px;font-weight:600;color:#7E8AA0;font-family:'IBM Plex Mono',monospace;">{{ p.per }} $/Swaps</span>
+                  </div>
+                  <span style="flex:none;white-space:nowrap;font-size:17px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ p.price }} $</span>
+                </div>
+              </sc-for>
+              </sc-if>
+
+              <sc-if value="{{ balPrice }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div>
+                  <div style="font-size:11px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 7px;">ЗАМЕНА КАМЕРЫ</div>
+                  <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;">
+                    <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <span style="width:7px;height:7px;border-radius:50%;background:#2E7BFF;flex:none;"></span>
+                      <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;font-weight:600;">Видео</span>
+                      <span style="font-size:12.5px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">0,1 Swaps/min</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;">
+                      <span style="width:7px;height:7px;border-radius:50%;background:#5CC8FF;flex:none;"></span>
+                      <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;font-weight:600;">Трансляция</span>
+                      <span style="font-size:12.5px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">0,3 Swaps/min</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:11px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 7px;">ЗАМЕНА ЛИЦА</div>
+                  <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;">
+                    <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <span style="width:7px;height:7px;border-radius:50%;background:#AE9FFF;flex:none;"></span>
+                      <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;font-weight:600;">Замена лица <span style="font-size:10px;font-weight:800;color:#9AA3B8;background:rgba(255,255,255,0.06);padding:1px 6px;border-radius:5px;">LITE</span></span>
+                      <span style="font-size:12.5px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">1 Swaps/min</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;">
+                      <span style="width:7px;height:7px;border-radius:50%;background:#8E7CFF;flex:none;"></span>
+                      <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;font-weight:600;">Замена лица <span style="font-size:10px;font-weight:800;color:#CDBFFF;background:rgba(174,159,255,0.2);border:1px solid rgba(174,159,255,0.35);padding:1px 6px;border-radius:5px;">PRO</span></span>
+                      <span style="font-size:12.5px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">2 Swaps/min</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:11px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 7px;">ЗАМЕНА ГОЛОСА</div>
+                  <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;">
+                    <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
+                      <span style="width:7px;height:7px;border-radius:50%;background:#3AD68E;flex:none;"></span>
+                      <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;font-weight:600;">Готовый голос</span>
+                      <span style="font-size:12.5px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">0,6 Swaps/min</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;">
+                      <span style="width:7px;height:7px;border-radius:50%;background:#E8C77A;flex:none;"></span>
+                      <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;font-weight:600;">Созданный голос</span>
+                      <span style="font-size:12.5px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">1 Swaps/min</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </sc-if>
+
+              <sc-if value="{{ balHistory }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;gap:10px;margin-bottom:4px;">
+                  <div style="flex:1;background:rgba(174,159,255,0.1);border:1px solid rgba(174,159,255,0.24);border-radius:13px;padding:12px;"><div style="font-size:11px;color:#9AA3B8;font-weight:600;">За месяц</div><div style="font-size:17px;font-weight:800;font-family:'IBM Plex Mono',monospace;color:#CDBFFF;margin-top:2px;">312 Swaps</div></div>
+                  <div style="flex:1;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:12px;"><div style="font-size:11px;color:#9AA3B8;font-weight:600;">Сессий</div><div style="font-size:17px;font-weight:800;font-family:'IBM Plex Mono',monospace;margin-top:2px;">27</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:11px 13px;">
+                  <div style="width:32px;height:32px;flex:none;border-radius:10px;background:rgba(174,159,255,0.15);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#CDBFFF" stroke-width="2"><circle cx="12" cy="12" r="7.5"></circle></svg></div>
+                  <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;">Замена лица · PRO</div><div style="font-size:11px;color:#8A93A8;">Сегодня, 14:02 · 18 мин</div></div>
+                  <span style="font-size:13px;font-weight:800;color:#FF6B85;font-family:'IBM Plex Mono',monospace;">−36</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:11px;background:rgba(58,214,142,0.06);border:1px solid rgba(58,214,142,0.22);border-radius:13px;padding:11px 13px;">
+                  <div style="width:32px;height:32px;flex:none;border-radius:10px;background:rgba(58,214,142,0.15);display:flex;align-items:center;justify-content:center;color:#3AD68E;font-size:16px;">+</div>
+                  <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;">Пополнение · Telegram</div><div style="font-size:11px;color:#8A93A8;">Вчера, 20:14</div></div>
+                  <span style="font-size:13px;font-weight:800;color:#3AD68E;font-family:'IBM Plex Mono',monospace;">+120</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:11px 13px;">
+                  <div style="width:32px;height:32px;flex:none;border-radius:10px;background:rgba(232,193,90,0.15);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#E8C77A" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="10" rx="3"></rect><path d="M6 11a6 6 0 0 0 12 0"></path></svg></div>
+                  <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;">Замена голоса</div><div style="font-size:11px;color:#8A93A8;">Вчера, 12:30 · 42 мин</div></div>
+                  <span style="font-size:13px;font-weight:800;color:#FF6B85;font-family:'IBM Plex Mono',monospace;">−42</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:11px 13px;">
+                  <div style="width:32px;height:32px;flex:none;border-radius:10px;background:rgba(45,120,255,0.15);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#8FC0FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="12" height="12" rx="2"></rect><path d="M15 10l5-3v10l-5-3"></path></svg></div>
+                  <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;">Замена камеры · Трансляция</div><div style="font-size:11px;color:#8A93A8;">12 мая, 09:10 · 8 мин</div></div>
+                  <span style="font-size:13px;font-weight:800;color:#FF6B85;font-family:'IBM Plex Mono',monospace;">−2,4</span>
+                </div>
+              </div>
+              </sc-if>
+            </div>
+              <button style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;border:none;background:linear-gradient(120deg,#229ED9,#38B6F0);color:#fff;font-size:14px;font-weight:800;padding:12px;border-radius:13px;box-shadow:0 8px 24px rgba(34,158,217,0.32);cursor:pointer;">
+                <svg viewBox="0 0 24 24" width="19" height="19" fill="#fff"><path d="M21.9 4.3l-3.3 15.6c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1 .5l.36-5.1L18 5.4c.4-.36-.1-.56-.62-.2L6.9 12.06 1.9 10.5c-1.1-.34-1.12-1.1.23-1.62L20.5 2.9c.9-.34 1.7.2 1.4 1.4z"></path></svg>
+                Купить в Telegram
+              </button>
+            </div>
+            </sc-if>
+          </div>
+          {{ navBarHome }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 4: ЗАМЕНА ЛИЦА ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">04 · Замена лица</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;">
+            <span>9:41</span>
+            <div style="display:flex;gap:7px;align-items:center;">
+              <span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span>
+            </div>
+          </div>
+
+          <div class="applist-scroll" style="flex:1;min-height:0;overflow-y:auto;padding:8px 18px 14px;">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 2px 18px;">
+              <div style="flex:1;font-size:21px;font-weight:800;letter-spacing:-0.01em;">Замена лица</div>
+              <div style="display:flex;align-items:center;gap:6px;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.30);padding:4px 4px 4px 11px;border-radius:20px;">
+                <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">124 Swaps</span>
+                <button style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:12px;margin:0 2px 9px;">
+              <span style="width:104px;flex:none;font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">ЛИЦО</span>
+              <span style="flex:1;font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">КАЧЕСТВО</span>
+            </div>
+            <div style="display:flex;gap:12px;margin-bottom:16px;">
+              <div style="width:104px;height:104px;flex:none;border-radius:16px;background:rgba(174,159,255,0.08);border:1.5px dashed rgba(174,159,255,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#AE9FFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
+                <span style="font-size:11px;font-weight:700;color:#AE9FFF;">Загрузить</span>
+              </div>
+              <div style="width:1px;flex:none;background:rgba(255,255,255,0.1);"></div>
+              <div style="flex:1;display:grid;grid-template-rows:1fr 1fr;gap:11px;">
+                <div onClick="{{ setLite }}" style="{{ liteCardStyle }}display:flex;align-items:center;gap:10px;">
+                  <span style="{{ liteRadio }}"><span style="{{ liteDot }}"></span></span>
+                  <span style="font-size:15px;font-weight:800;">LITE</span>
+                  <span style="margin-left:auto;font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">1 Swaps/min</span>
+                </div>
+                <div onClick="{{ setPro }}" style="{{ proCardStyle }}display:flex;align-items:center;gap:10px;">
+                  <span style="{{ proRadio }}"><span style="{{ proDot }}"></span></span>
+                  <span style="font-size:15px;font-weight:800;color:#CDBFFF;">PRO</span>
+                  <span style="margin-left:auto;font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">2 Swaps/min</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- live preview -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin:0 2px 9px;">
+              <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">ПРЕДПРОСМОТР</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#3AD68E;"><span style="width:6px;height:6px;border-radius:50%;background:#3AD68E;box-shadow:0 0 7px #3AD68E;"></span>В реальном времени</span>
+            </div>
+            <div style="position:relative;width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:radial-gradient(120% 120% at 50% 30%,rgba(45,120,255,0.14),rgba(9,13,20,0.9));border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+              <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="rgba(174,159,255,0.5)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg>
+              <span style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:12px;color:#8A93A8;">Загрузите лицо, чтобы увидеть результат</span>
+              <span style="position:absolute;top:10px;left:12px;font-size:10px;font-weight:800;color:#CDBFFF;background:rgba(0,0,0,0.45);padding:3px 8px;border-radius:6px;font-family:'IBM Plex Mono',monospace;">PRO · 2 Swaps/min</span>
+            </div>
+
+            <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">НАСТРОЙКИ ЗАМЕНЫ</div>
+            <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:14px;">
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Плавное смешивание</span><div style="margin-left:auto;{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div></div>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Убрать синеву камеры</span><div style="margin-left:auto;{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div></div>
+              <div style="display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
+                <span style="font-size:13.5px;font-weight:600;flex:none;">Модель</span>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
+                  <span style="font-size:12.5px;font-weight:600;color:#CDBFFF;">Стандартная</span>
+                  <span style="font-size:11px;color:#586A85;">▾</span>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
+                <span style="font-size:13.5px;font-weight:600;flex:none;">Вариант</span>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
+                  <span style="font-size:12.5px;font-weight:600;color:#CDBFFF;">Быстрая · среднее качество</span>
+                  <span style="font-size:11px;color:#586A85;">▾</span>
+                </div>
+              </div>
+              <div style="padding:13px 15px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Непрозрачность наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">85%</span></div>
+                <input type="range" min="0" max="100" value="85" style="width:100%;accent-color:#AE9FFF;" />
+              </div>
+              <div style="padding:13px 15px 15px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Резкость наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">40%</span></div>
+                <input type="range" min="0" max="100" value="40" style="width:100%;accent-color:#AE9FFF;" />
+              </div>
+            </div>
+
+            <sc-if value="{{ facePro }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">УЛУЧШЕНИЕ ЛИЦА · PRO</div>
+              <div style="background:linear-gradient(150deg,rgba(174,159,255,0.10),rgba(45,120,255,0.04));border:1px solid rgba(174,159,255,0.22);border-radius:16px;overflow:hidden;margin-bottom:14px;">
+                <div style="display:flex;align-items:center;padding:14px 15px;border-bottom:1px solid rgba(255,255,255,0.06);">
+                  <div style="flex:1;"><div style="font-size:13.5px;font-weight:600;">Улучшение лица</div><div style="font-size:11px;color:#8A93A8;margin-top:2px;">Повышает детализацию и чёткость</div></div>
+                  <div style="{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div>
+                </div>
+                <div style="padding:13px 15px 4px;">
+                  <div style="font-size:13.5px;font-weight:600;margin-bottom:9px;">Модель</div>
+                  <div style="display:flex;flex-wrap:wrap;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:11px;padding:3px;gap:3px;">
+                    <div style="flex:1;min-width:70px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);">Мягкое</div>
+                    <div style="flex:1;min-width:70px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:600;color:#9AA3B8;">Чёткое</div>
+                    <div style="flex:1;min-width:70px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:600;color:#9AA3B8;">Реалистичное</div>
+                    <div style="flex:1;min-width:130px;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:700;color:#B6E86A;background:rgba(118,185,0,0.10);border:1px solid rgba(118,185,0,0.4);"><span style="font-size:10px;">⚡</span>НАИВЫСШЕЕ<span style="font-size:10px;">⚡</span></div>
+                  </div>
+                </div>
+                <div style="padding:13px 15px 15px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Качество</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">4x</span></div>
+                  <input type="range" min="1" max="4" value="4" style="width:100%;accent-color:#AE9FFF;" />
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          {{ navBarFace }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 5: ЗАМЕНА ГОЛОСА ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">05 · Замена голоса</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;">
+            <span>9:41</span>
+            <div style="display:flex;gap:7px;align-items:center;">
+              <span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span>
+            </div>
+          </div>
+
+          <div class="applist-scroll" style="flex:1;min-height:0;overflow-y:auto;padding:8px 18px 14px;">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 2px 18px;">
+              <div style="flex:1;font-size:21px;font-weight:800;letter-spacing:-0.01em;">Замена голоса</div>
+              <div style="display:flex;align-items:center;gap:6px;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.30);padding:4px 4px 4px 11px;border-radius:20px;">
+                <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">124 Swaps</span>
+                <button style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
+              </div>
+            </div>
+
+            <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ГОЛОС</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px;">
+              <div style="background:linear-gradient(150deg,rgba(174,159,255,0.16),rgba(45,120,255,0.06));border:1.5px solid rgba(174,159,255,0.5);border-radius:14px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:9px;cursor:pointer;">
+                <div style="width:44px;height:44px;border-radius:50%;background:rgba(174,159,255,0.2);display:flex;align-items:center;justify-content:center;">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#CDBFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path></svg>
+                </div>
+                <span style="font-size:13.5px;font-weight:700;color:#CDBFFF;">Записать образец</span>
+              </div>
+              <div style="background:rgba(174,159,255,0.08);border:1.5px dashed rgba(174,159,255,0.4);border-radius:14px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:9px;cursor:pointer;">
+                <div style="width:44px;height:44px;border-radius:50%;background:rgba(174,159,255,0.12);display:flex;align-items:center;justify-content:center;">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#AE9FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"></path><path d="M7 9l5-5 5 5"></path><path d="M5 20h14"></path></svg>
+                </div>
+                <span style="font-size:13.5px;font-weight:700;color:#AE9FFF;">Загрузить образцы</span>
+              </div>
+            </div>
+
+            <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:4px;gap:4px;margin-bottom:12px;">
+              <div onClick="{{ setVoiceReady }}" style="{{ voiceReadyTabStyle }}">Готовые голоса</div>
+              <div onClick="{{ setVoiceMine }}" style="{{ voiceMineTabStyle }}">Мои голоса</div>
+            </div>
+
+            <sc-if value="{{ voiceReady }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:8px;margin-bottom:12px;">
+                <input placeholder="ID голоса из ElevenLabs" value="{{ newVoiceId }}" onChange="{{ onNewVoiceId }}" style="flex:1;min-width:0;background:rgba(0,0,0,0.3);border:1px solid rgba(174,159,255,0.3);border-radius:10px;padding:10px 12px;outline:none;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;font-size:12px;" />
+                <button onClick="{{ addVoiceId }}" style="flex:none;border:none;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:12.5px;font-weight:800;padding:0 16px;border-radius:10px;cursor:pointer;">Добавить</button>
+              </div>
+            </sc-if>
+
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+              <sc-for list="{{ voiceList }}" as="v" hint-placeholder-count="3">
+                <div onClick="{{ v.onSelect }}" style="{{ v.rowStyle }}">
+                  <span style="{{ v.radioStyle }}"><span style="{{ v.dotStyle }}"></span></span>
+                  <span style="{{ v.avatarStyle }}">{{ v.initial }}</span>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ v.name }}</div>
+                    <div style="font-size:11px;color:#8A93A8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px;">{{ v.meta }}</div>
+                    <div onClick="{{ v.onCopy }}" style="display:inline-flex;align-items:center;gap:5px;max-width:100%;font-size:10px;color:#6E7A90;font-family:'IBM Plex Mono',monospace;margin-top:2px;cursor:pointer;">
+                      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">ID: {{ v.vid }}</span>
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#8E7CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>
+                    </div>
+                  </div>
+                  <span style="width:30px;height:30px;flex:none;border-radius:50%;background:rgba(174,159,255,0.16);display:flex;align-items:center;justify-content:center;color:#CDBFFF;font-size:11px;">▶</span>
+                </div>
+              </sc-for>
+              <sc-if value="{{ voiceEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="text-align:center;padding:26px 16px;color:#6E7A90;font-size:12.5px;line-height:1.5;">Пока нет своих голосов.<br>Запишите или загрузите образец.</div>
+              </sc-if>
+            </div>
+          </div>
+          {{ navBarVoice }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 6: ПУШ-УВЕДОМЛЕНИЕ ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">06 · Пуш активной сессии</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;inset:0;background:radial-gradient(120% 90% at 30% 10%,rgba(45,120,255,0.18),transparent 55%),radial-gradient(120% 90% at 90% 40%,rgba(174,159,255,0.16),transparent 55%),#0B1220;"></div>
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="position:relative;display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;color:#fff;">
+            <span>9:41</span>
+            <div style="display:flex;gap:7px;align-items:center;">
+              <span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span>
+            </div>
+          </div>
+
+          <div style="position:relative;text-align:center;padding:26px 0 22px;color:#fff;">
+            <div style="font-size:60px;font-weight:300;letter-spacing:-0.02em;line-height:1;">9:41</div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.7);margin-top:6px;">Понедельник, 12 мая</div>
+          </div>
+
+          <div style="position:relative;flex:1;padding:0 14px;">
+            <!-- ongoing notification -->
+            <div style="position:relative;background:linear-gradient(170deg,rgba(26,31,44,0.92),rgba(15,19,28,0.92));backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.09);border-radius:26px;padding:16px 16px 16px;box-shadow:0 18px 50px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.06);overflow:hidden;">
+              <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#AE9FFF,#5CC8FF,#3AD68E);opacity:0.9;"></div>
+              <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,{{ pushGlow }},transparent 70%);"></div>
+
+              <div style="position:relative;display:flex;align-items:center;gap:10px;margin-bottom:15px;">
+                <div style="width:26px;height:26px;">{{ logoIcon }}</div>
+                <span style="font-size:12.5px;font-weight:800;letter-spacing:0.01em;color:#E8EAF2;">SwapOn</span>
+                <span style="font-size:11px;color:#6E7A90;">· сейчас</span>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:7px;background:{{ pushBadgeBg }};border:1px solid {{ pushBadgeBorder }};padding:5px 12px 5px 11px;border-radius:20px;">
+                  <span style="position:relative;width:7px;height:7px;flex:none;"><span style="position:absolute;inset:0;border-radius:50%;background:{{ pushDotColor }};animation:pushPulse 1.8s ease-in-out infinite;"></span><span style="position:absolute;inset:0;border-radius:50%;background:{{ pushDotColor }};"></span></span>
+                  <span style="font-size:11px;font-weight:800;letter-spacing:0.02em;color:{{ pushDotColor }};">{{ pushStateLabel }}</span>
+                </div>
+              </div>
+
+              <!-- hero timer -->
+              <div style="position:relative;background:linear-gradient(150deg,rgba(174,159,255,0.12),rgba(45,120,255,0.04));border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:15px 16px;margin-bottom:14px;display:flex;align-items:flex-end;justify-content:space-between;overflow:hidden;">
+                <div style="position:absolute;top:-30px;left:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(174,159,255,0.22),transparent 70%);"></div>
+                <div style="position:relative;">
+                  <div style="display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;color:#AE9FFF;letter-spacing:0.08em;">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#AE9FFF" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4l2.5 2"></path></svg>
+                    ЗАМЕНА В ЭФИРЕ
+                  </div>
+                  <div style="font-size:42px;font-weight:800;font-family:'IBM Plex Mono',monospace;letter-spacing:-0.02em;line-height:1;margin-top:7px;">{{ pushTime }}</div>
+                </div>
+                <div style="position:relative;text-align:right;">
+                  <div style="font-size:10.5px;font-weight:700;color:#8A93A8;">Использовано</div>
+                  <div style="font-size:20px;font-weight:800;font-family:'IBM Plex Mono',monospace;color:#CDBFFF;margin-top:4px;">{{ pushCost }}</div>
+                </div>
+              </div>
+
+              <!-- balance progress -->
+              <div style="position:relative;margin-bottom:16px;">
+                <div style="position:relative;height:8px;border-radius:20px;background:rgba(255,255,255,0.07);overflow:hidden;">
+                  <div style="height:100%;width:{{ pushPct }};background:linear-gradient(90deg,#3AD68E,#5CC8FF);border-radius:20px;box-shadow:0 0 14px rgba(58,214,142,0.55);position:relative;overflow:hidden;">
+                    <span style="position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);animation:pushShimmer 2.4s linear infinite;"></span>
+                  </div>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10.5px;">
+                  <span style="color:#7E8AA0;">Осталось <b style="color:#3AD68E;font-weight:800;">{{ pushLeft }}</b></span>
+                  <span style="color:#7E8AA0;">Баланс <b style="color:#CDBFFF;font-weight:800;font-family:'IBM Plex Mono',monospace;">{{ pushBalance }} Swaps</b></span>
+                </div>
+              </div>
+
+              <!-- config chips -->
+              <div style="position:relative;display:flex;gap:7px;margin-bottom:16px;">
+                <div style="flex:1;background:rgba(45,120,255,0.1);border:1px solid rgba(45,120,255,0.25);border-radius:13px;padding:10px 11px;">
+                  <div style="display:flex;align-items:center;gap:5px;font-size:9.5px;color:#8FC0FF;font-weight:800;letter-spacing:0.03em;">
+                    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="#8FC0FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><circle cx="12" cy="12" r="3"></circle></svg>КАМЕРА
+                  </div>
+                  <div style="font-size:12px;font-weight:700;color:#E8EAF2;margin-top:5px;">Фронтальная</div>
+                </div>
+                <div style="flex:1;background:rgba(174,159,255,0.1);border:1px solid rgba(174,159,255,0.25);border-radius:13px;padding:10px 11px;">
+                  <div style="display:flex;align-items:center;gap:5px;font-size:9.5px;color:#CDBFFF;font-weight:800;letter-spacing:0.03em;">
+                    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="#CDBFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l5-3v10l-5-3"></path><rect x="3" y="6" width="12" height="12" rx="2"></rect></svg>ВИДЕО
+                  </div>
+                  <div style="font-size:12px;font-weight:700;color:#E8EAF2;margin-top:5px;">Замена лица · PRO</div>
+                </div>
+                <div style="flex:1;background:rgba(232,193,90,0.1);border:1px solid rgba(232,193,90,0.28);border-radius:13px;padding:10px 11px;">
+                  <div style="display:flex;align-items:center;gap:5px;font-size:9.5px;color:#E8C77A;font-weight:800;letter-spacing:0.03em;">
+                    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="#E8C77A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="10" rx="3"></rect><path d="M6 11a6 6 0 0 0 12 0"></path><path d="M12 17v3"></path></svg>ЗВУК
+                  </div>
+                  <div style="font-size:12px;font-weight:700;color:#E8EAF2;margin-top:5px;">Замена голоса · созданный</div>
+                </div>
+              </div>
+
+              <div style="position:relative;display:flex;flex-direction:column;gap:9px;">
+                <div style="display:flex;gap:9px;">
+                  <button onClick="{{ togglePush }}" style="{{ pushBtnStyle }}">{{ pushBtnLabel }}</button>
+                  <button style="flex:none;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:#C4CBDC;font-size:13px;font-weight:700;padding:0 18px;border-radius:13px;cursor:pointer;">Открыть</button>
+                </div>
+                <button style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;border:1px solid rgba(174,159,255,0.4);background:rgba(174,159,255,0.14);color:#CDBFFF;font-size:13.5px;font-weight:800;padding:12px;border-radius:13px;cursor:pointer;">
+                  <span style="font-size:16px;line-height:1;">+</span>Купить Swaps
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 7: ОНБОРДИНГ ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">07 · Онбординг</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 0%,rgba(174,159,255,0.16),transparent 55%),radial-gradient(120% 80% at 50% 100%,rgba(45,120,255,0.12),transparent 55%),#090D14;"></div>
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="position:relative;display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;">
+            <span>9:41</span><span style="font-size:13px;color:#7E8AA0;font-weight:700;cursor:pointer;">Пропустить</span>
+          </div>
+          <div style="position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px;text-align:center;">
+            <div style="width:120px;height:120px;margin-bottom:30px;filter:drop-shadow(0 16px 40px rgba(174,159,255,0.35));">{{ logoIcon }}</div>
+            <div style="font-size:26px;font-weight:800;letter-spacing:-0.02em;line-height:1.15;">Меняйте лицо, голос<br>и камеру на лету</div>
+            <div style="font-size:14px;color:#9AA3B8;line-height:1.55;margin-top:14px;max-width:300px;">SwapOn подставляет ваше видео и голос в другие приложения в реальном времени.</div>
+          </div>
+          <div style="position:relative;padding:0 24px 30px;">
+            <div style="display:flex;justify-content:center;gap:8px;margin-bottom:22px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);"></span>
+              <span style="width:22px;height:8px;border-radius:8px;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);"></span>
+              <span style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);"></span>
+            </div>
+            <button style="width:100%;border:none;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:15px;font-weight:800;padding:15px;border-radius:14px;box-shadow:0 8px 24px rgba(174,159,255,0.28);cursor:pointer;">Продолжить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 8: БАЛАНС ЗАКОНЧИЛСЯ ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">08 · Баланс закончился</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;">
+            <span>9:41</span><div style="display:flex;gap:7px;align-items:center;"><span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px;text-align:center;">
+            <div style="width:84px;height:84px;border-radius:50%;background:rgba(255,90,120,0.12);border:1px solid rgba(255,90,120,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:22px;">
+              <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#FF6B85" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h20v12H2z"></path><path d="M2 11h20"></path><path d="M16 15h3"></path></svg>
+            </div>
+            <div style="font-size:22px;font-weight:800;">Баланс закончился</div>
+            <div style="font-size:14px;color:#9AA3B8;line-height:1.55;margin-top:12px;max-width:290px;">Замена приостановлена. Пополните баланс, чтобы продолжить менять лицо, голос и камеру.</div>
+            <div style="display:inline-flex;align-items:center;gap:7px;margin-top:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:8px 15px;border-radius:20px;">
+              <span style="font-size:13px;color:#8A93A8;">Баланс:</span>
+              <span style="font-size:14px;font-weight:800;color:#FF6B85;font-family:'IBM Plex Mono',monospace;">0 Swaps</span>
+            </div>
+          </div>
+          <div style="padding:0 24px 30px;display:flex;flex-direction:column;gap:10px;">
+            <button style="width:100%;border:none;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:15px;font-weight:800;padding:15px;border-radius:14px;box-shadow:0 8px 24px rgba(174,159,255,0.28);cursor:pointer;">Пополнить баланс</button>
+            <button style="width:100%;border:1px solid rgba(255,255,255,0.12);background:transparent;color:#9AA3B8;font-size:14px;font-weight:700;padding:13px;border-radius:14px;cursor:pointer;">Позже</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 11: ДИАЛОГ + ТОСТ ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">11 · Диалог и тост</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;inset:0;background:rgba(255,255,255,0.02);"></div>
+          <div style="position:absolute;inset:0;background:rgba(5,7,12,0.72);backdrop-filter:blur(3px);"></div>
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="position:relative;display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;color:#fff;">
+            <span>9:41</span><div style="display:flex;gap:7px;align-items:center;"><span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span></div>
+          </div>
+          <!-- toast -->
+          <div style="position:absolute;top:64px;left:20px;right:20px;z-index:30;display:flex;align-items:center;gap:10px;background:rgba(20,24,34,0.95);border:1px solid rgba(58,214,142,0.35);border-radius:14px;padding:13px 15px;box-shadow:0 12px 34px rgba(0,0,0,0.5);">
+            <span style="width:22px;height:22px;flex:none;border-radius:50%;background:rgba(58,214,142,0.2);display:flex;align-items:center;justify-content:center;color:#3AD68E;font-size:12px;">✓</span>
+            <span style="flex:1;font-size:13px;font-weight:600;color:#E8EAF2;">Конфигурация сохранена</span>
+          </div>
+          <!-- confirm dialog -->
+          <div style="position:relative;flex:1;display:flex;align-items:center;justify-content:center;padding:0 26px;">
+            <div style="width:100%;background:linear-gradient(170deg,rgba(26,31,44,0.98),rgba(15,19,28,0.98));border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:22px 20px 18px;box-shadow:0 24px 60px rgba(0,0,0,0.55);text-align:center;">
+              <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,90,120,0.12);border:1px solid rgba(255,90,120,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#FF6B85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M6 6l1 14h10l1-14"></path></svg>
+              </div>
+              <div style="font-size:18px;font-weight:800;">Остановить замену?</div>
+              <div style="font-size:13px;color:#9AA3B8;line-height:1.5;margin-top:8px;">Сессия завершится, списание Swaps прекратится. Вы всегда можете запустить снова.</div>
+              <div style="display:flex;gap:10px;margin-top:20px;">
+                <button style="flex:1;border:1px solid rgba(255,255,255,0.14);background:transparent;color:#C4CBDC;font-size:14px;font-weight:700;padding:12px;border-radius:12px;cursor:pointer;">Отмена</button>
+                <button style="flex:1;border:none;background:linear-gradient(120deg,#FF6B85,#E8557A);color:#fff;font-size:14px;font-weight:800;padding:12px;border-radius:12px;cursor:pointer;">Остановить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 13: ПРОФИЛЬ ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">13 · Профиль</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;">
+            <span>9:41</span><div style="display:flex;gap:7px;align-items:center;"><span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span></div>
+          </div>
+          <div class="applist-scroll" style="flex:1;min-height:0;overflow-y:auto;padding:8px 18px 14px;">
+            <div style="font-size:21px;font-weight:800;padding:10px 2px 18px;">Профиль</div>
+            <div style="display:flex;align-items:center;gap:14px;background:linear-gradient(150deg,rgba(174,159,255,0.13),rgba(45,120,255,0.05));border:1px solid rgba(174,159,255,0.24);border-radius:18px;padding:16px;margin-bottom:16px;">
+              <div style="width:56px;height:56px;flex:none;border-radius:50%;background:linear-gradient(135deg,#229ED9,#5CC8FF);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;">A</div>
+              <div style="flex:1;min-width:0;"><div style="font-size:17px;font-weight:800;">@aleksandr_k</div><div style="font-size:12px;color:#8A93A8;font-family:'IBM Plex Mono',monospace;margin-top:2px;">ID 784120593</div></div>
+              <div style="display:flex;align-items:center;gap:5px;background:rgba(58,214,142,0.12);border:1px solid rgba(58,214,142,0.3);padding:5px 10px;border-radius:20px;"><span style="width:6px;height:6px;border-radius:50%;background:#3AD68E;"></span><span style="font-size:11px;font-weight:700;color:#3AD68E;">Telegram</span></div>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:16px;">
+              <div style="flex:1;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:13px;"><div style="flex:1;min-width:0;"><div style="font-size:11px;color:#8A93A8;font-weight:600;">Баланс</div><div style="font-size:18px;font-weight:800;font-family:'IBM Plex Mono',monospace;color:#CDBFFF;margin-top:3px;">124 Swaps</div></div><button style="width:34px;height:34px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:20px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button></div>
+            </div>
+            <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:16px;">
+              <div style="display:flex;align-items:center;gap:11px;padding:14px 15px;border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#AE9FFF;font-size:15px;">✦</span><span style="flex:1;font-size:13.5px;font-weight:600;">Пригласить друга</span><span style="font-size:18px;color:#586A85;">›</span></div>
+              <div style="display:flex;align-items:center;gap:11px;padding:14px 15px;"><span style="color:#E8C77A;font-size:15px;">%</span><span style="flex:1;font-size:13.5px;font-weight:600;">Ввести промокод</span><span style="font-size:18px;color:#586A85;">›</span></div>
+            </div>
+            <button style="width:100%;border:1px solid rgba(255,90,120,0.35);background:rgba(255,90,120,0.08);color:#FF6B85;font-size:14px;font-weight:700;padding:13px;border-radius:13px;cursor:pointer;">Выйти из аккаунта</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 14: ПРИВЯЗКА TELEGRAM ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">14 · Привязка Telegram</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 0%,rgba(34,158,217,0.2),transparent 55%),#090D14;"></div>
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="position:relative;display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;"><span>9:41</span><div style="display:flex;gap:7px;align-items:center;"><span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span></div></div>
+          <div style="position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px;text-align:center;">
+            <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#229ED9,#38B6F0);display:flex;align-items:center;justify-content:center;margin-bottom:24px;box-shadow:0 16px 40px rgba(34,158,217,0.4);">
+              <svg viewBox="0 0 24 24" width="44" height="44" fill="#fff"><path d="M21.9 4.3l-3.3 15.6c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1 .5l.36-5.1L18 5.4c.4-.36-.1-.56-.62-.2L6.9 12.06 1.9 10.5c-1.1-.34-1.12-1.1.23-1.62L20.5 2.9c.9-.34 1.7.2 1.4 1.4z"></path></svg>
+            </div>
+            <div style="font-size:23px;font-weight:800;">Войдите через Telegram</div>
+            <div style="font-size:14px;color:#9AA3B8;line-height:1.55;margin-top:12px;max-width:290px;">Баланс, оплата и голоса привязаны к вашему Telegram. Подтвердите вход в боте.</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-top:26px;width:100%;text-align:left;">
+              <div style="display:flex;align-items:center;gap:12px;"><span style="width:26px;height:26px;flex:none;border-radius:50%;background:rgba(34,158,217,0.18);color:#5CC8FF;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;">1</span><span style="font-size:13px;color:#C4CBDC;">Откройте @SwapOnBot</span></div>
+              <div style="display:flex;align-items:center;gap:12px;"><span style="width:26px;height:26px;flex:none;border-radius:50%;background:rgba(34,158,217,0.18);color:#5CC8FF;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;">2</span><span style="font-size:13px;color:#C4CBDC;">Нажмите «Подтвердить вход»</span></div>
+            </div>
+          </div>
+          <div style="position:relative;padding:0 24px 30px;">
+            <button style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;border:none;background:linear-gradient(120deg,#229ED9,#38B6F0);color:#fff;font-size:15px;font-weight:800;padding:15px;border-radius:14px;box-shadow:0 8px 24px rgba(34,158,217,0.32);cursor:pointer;">Открыть Telegram</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 15: РЕФЕРАЛЬНАЯ ПРОГРАММА ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">15 · Пригласить друга</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;"><span>9:41</span><div style="display:flex;gap:7px;align-items:center;"><span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span></div></div>
+          <div class="applist-scroll" style="flex:1;min-height:0;overflow-y:auto;padding:8px 18px 14px;">
+            <div style="font-size:21px;font-weight:800;padding:10px 2px 16px;">Пригласить друга</div>
+            <div style="background:linear-gradient(155deg,rgba(174,159,255,0.2),rgba(45,120,255,0.08));border:1px solid rgba(174,159,255,0.3);border-radius:20px;padding:22px 18px;text-align:center;margin-bottom:16px;">
+              <div style="font-size:40px;">🎁</div>
+              <div style="font-size:19px;font-weight:800;margin-top:8px;">Дарите 10 Swaps — <br>получайте 10 Swaps</div>
+              <div style="font-size:13px;color:#C4CBDC;line-height:1.5;margin-top:10px;">Друг получит бонус за регистрацию, а вы — за его первую покупку.</div>
+            </div>
+            <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ВАША ССЫЛКА</div>
+            <div style="display:flex;gap:8px;margin-bottom:16px;">
+              <div style="flex:1;min-width:0;background:rgba(0,0,0,0.3);border:1px solid rgba(174,159,255,0.3);border-radius:12px;padding:13px 14px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#CDBFFF;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">t.me/SwapOnBot?start=r_784120</div>
+              <button style="flex:none;border:none;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:12.5px;font-weight:800;padding:0 16px;border-radius:12px;cursor:pointer;">Копировать</button>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:16px;">
+              <div style="flex:1;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:13px;text-align:center;"><div style="font-size:22px;font-weight:800;font-family:'IBM Plex Mono',monospace;color:#CDBFFF;">6</div><div style="font-size:11px;color:#8A93A8;margin-top:2px;">Приглашено</div></div>
+              <div style="flex:1;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:13px;text-align:center;"><div style="font-size:22px;font-weight:800;font-family:'IBM Plex Mono',monospace;color:#3AD68E;">120</div><div style="font-size:11px;color:#8A93A8;margin-top:2px;">Заработано Swaps</div></div>
+            </div>
+            <button style="width:100%;border:none;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:15px;font-weight:800;padding:14px;border-radius:14px;cursor:pointer;">Поделиться ссылкой</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 16: ПРОМОКОД ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">16 · Промокод</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;"><span>9:41</span><div style="display:flex;gap:7px;align-items:center;"><span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span></div></div>
+          <div style="flex:1;padding:8px 18px 14px;">
+            <div style="display:flex;align-items:center;gap:14px;padding:10px 2px 22px;">
+              <div style="width:34px;height:34px;border-radius:11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);display:flex;align-items:center;justify-content:center;font-size:19px;color:#C4CBDC;">‹</div>
+              <div style="font-size:21px;font-weight:800;">Промокод</div>
+            </div>
+            <div style="width:70px;height:70px;border-radius:18px;background:rgba(232,193,90,0.12);border:1px solid rgba(232,193,90,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#E8C77A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7"></path><path d="M2 7h20v5H2z"></path><path d="M12 22V7"></path><path d="M12 7S9 2 6.5 3.5 8 7 12 7z"></path><path d="M12 7s3-5 5.5-3.5S16 7 12 7z"></path></svg></div>
+            <div style="text-align:center;font-size:16px;font-weight:800;margin-bottom:6px;">Введите промокод</div>
+            <div style="text-align:center;font-size:13px;color:#9AA3B8;line-height:1.5;margin-bottom:20px;">Получите бонусные Swaps на баланс</div>
+            <input placeholder="SWAP-XXXX" style="width:100%;text-align:center;letter-spacing:0.12em;text-transform:uppercase;background:rgba(0,0,0,0.3);border:1.5px solid rgba(174,159,255,0.35);border-radius:14px;padding:15px;outline:none;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;margin-bottom:12px;" />
+            <button style="width:100%;border:none;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:15px;font-weight:800;padding:15px;border-radius:14px;cursor:pointer;">Активировать</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 17: УСПЕШНАЯ ПОКУПКА ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">17 · Успешная покупка</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 25%,rgba(58,214,142,0.2),transparent 55%),#090D14;"></div>
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="position:relative;display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;"><span>9:41</span><div style="display:flex;gap:7px;align-items:center;"><span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span></div></div>
+          <div style="position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px;text-align:center;">
+            <div style="width:96px;height:96px;border-radius:50%;background:rgba(58,214,142,0.15);border:1px solid rgba(58,214,142,0.4);display:flex;align-items:center;justify-content:center;margin-bottom:24px;box-shadow:0 0 50px rgba(58,214,142,0.35);">
+              <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#3AD68E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+            </div>
+            <div style="font-size:24px;font-weight:800;">Оплата прошла</div>
+            <div style="font-size:15px;color:#9AA3B8;margin-top:10px;">На баланс зачислено</div>
+            <div style="font-size:38px;font-weight:800;font-family:'IBM Plex Mono',monospace;color:#3AD68E;margin-top:6px;">+120 Swaps</div>
+            <div style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:10px 16px;border-radius:14px;">
+              <span style="font-size:12px;color:#8A93A8;">Новый баланс:</span><span style="font-size:14px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">244 Swaps</span>
+            </div>
+          </div>
+          <div style="position:relative;padding:0 24px 30px;">
+            <button style="width:100%;border:none;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:15px;font-weight:800;padding:15px;border-radius:14px;cursor:pointer;">Готово</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SCREEN 18: МАЛО БАЛАНСА (PUSH) ---------- -->
+    <div>
+      <div style="font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#59617A;margin-bottom:18px;">18 · Мало баланса</div>
+      <div style="{{ frameStyle }}">
+        <div style="{{ screenStyle }}">
+          <div style="position:absolute;inset:0;background:radial-gradient(120% 90% at 30% 10%,rgba(232,193,90,0.14),transparent 55%),#0B1220;"></div>
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#000;z-index:40;"></div>
+          <div style="position:relative;display:flex;justify-content:space-between;align-items:center;padding:13px 26px 6px;font-size:14px;font-weight:600;color:#fff;"><span>9:41</span><div style="display:flex;gap:7px;align-items:center;"><span style="font-size:12px;">📶</span><span style="font-size:12px;">📡</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;">84%</span></div></div>
+          <div style="position:relative;text-align:center;padding:26px 0 22px;color:#fff;"><div style="font-size:60px;font-weight:300;line-height:1;">9:41</div><div style="font-size:14px;color:rgba(255,255,255,0.7);margin-top:6px;">Понедельник, 12 мая</div></div>
+          <div style="position:relative;flex:1;padding:0 14px;">
+            <div style="background:rgba(20,24,34,0.9);backdrop-filter:blur(20px);border:1px solid rgba(232,193,90,0.3);border-radius:22px;padding:15px 16px;box-shadow:0 14px 44px rgba(0,0,0,0.5);">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                <div style="width:26px;height:26px;">{{ logoIcon }}</div>
+                <span style="font-size:12.5px;font-weight:800;color:#E8EAF2;">SwapOn</span>
+                <span style="font-size:11px;color:#6E7A90;">· сейчас</span>
+                <span style="margin-left:auto;font-size:11px;font-weight:700;color:#E8C77A;background:rgba(232,193,90,0.12);border:1px solid rgba(232,193,90,0.3);padding:4px 10px;border-radius:20px;">Внимание</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:13px;">
+                <div style="width:44px;height:44px;flex:none;border-radius:12px;background:rgba(232,193,90,0.14);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#E8C77A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"></path><path d="M12 17h.01"></path><circle cx="12" cy="12" r="9"></circle></svg></div>
+                <div style="flex:1;"><div style="font-size:15px;font-weight:800;">Баланс заканчивается</div><div style="font-size:12px;color:#9AA3B8;margin-top:2px;">Осталось ~5 мин замены</div></div>
+              </div>
+              <div style="height:7px;border-radius:20px;background:rgba(255,255,255,0.07);overflow:hidden;margin-bottom:6px;"><div style="height:100%;width:12%;background:linear-gradient(90deg,#E8C77A,#FF6B85);border-radius:20px;"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#7E8AA0;margin-bottom:14px;"><span>15 Swaps</span><span>Замена остановится при 0</span></div>
+              <button style="width:100%;border:none;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:13.5px;font-weight:800;padding:12px;border-radius:13px;cursor:pointer;">Пополнить сейчас</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  CATALOG = [
+    { name: 'Telegram', pkg: 'org.telegram.messenger' },
+    { name: 'Chrome',   pkg: 'com.android.chrome' },
+    { name: 'Firefox',  pkg: 'org.mozilla.firefox' },
+    { name: 'Brave',    pkg: 'com.brave.browser' },
+    { name: 'Zoom',     pkg: 'us.zoom.videomeetings' },
+    { name: 'Teams',    pkg: 'com.microsoft.teams' },
+    { name: 'Meet',     pkg: 'com.google.android.apps.tachyon' },
+  ];
+  state = {
+    showInfo: false,
+    showAdd: false,
+    openHints: {},
+    showStore: false,
+    selectedPack: 3,
+    faceMode: 'pro',
+    balTab: 'topup',
+    voiceTab: 'ready',
+    selectedVoice: 'p0',
+    newVoiceId: '',
+    addedVoices: [],
+    voiceSeq: 1,
+    added: [
+      { id: 1, name: 'Chrome',   pkg: 'com.android.chrome',      enabled: true },
+      { id: 2, name: 'Telegram', pkg: 'org.telegram.messenger',  enabled: true },
+    ],
+    nextId: 3,
+    editingId: null,
+    editName: '',
+    editPkg: '',
+    newName: '',
+    newPkg: '',
+    pushOn: true,
+    pushElapsed: 252,
+  };
+
+  componentDidMount() {
+    this._pushTimer = setInterval(() => {
+      if (this.state.pushOn) this.setState(s => ({ pushElapsed: s.pushElapsed + 1 }));
+    }, 1000);
+  }
+  componentWillUnmount() { clearInterval(this._pushTimer); }
+
+  addFromCatalog(app) {
+    this.setState(s => ({
+      added: [...s.added, { id: s.nextId, name: app.name, pkg: app.pkg, enabled: true }],
+      nextId: s.nextId + 1,
+    }));
+  }
+  addManual() {
+    const name = (this.state.newName || '').trim();
+    const pkg = (this.state.newPkg || '').trim();
+    if (!name && !pkg) return;
+    this.setState(s => ({
+      added: [...s.added, { id: s.nextId, name: name || pkg, pkg: pkg || '—', enabled: true }],
+      nextId: s.nextId + 1, newName: '', newPkg: '', showAdd: false,
+    }));
+  }
+  toggleApp(id) {
+    this.setState(s => ({ added: s.added.map(a => a.id === id ? { ...a, enabled: !a.enabled } : a) }));
+  }
+  removeApp(id) {
+    this.setState(s => ({ added: s.added.filter(a => a.id !== id), editingId: null }));
+  }
+  startEdit(a) {
+    this.setState({ editingId: a.id, editName: a.name, editPkg: a.pkg });
+  }
+  saveEdit() {
+    this.setState(s => ({
+      added: s.added.map(a => a.id === s.editingId ? { ...a, name: s.editName.trim() || a.name, pkg: s.editPkg.trim() || a.pkg } : a),
+      editingId: null,
+    }));
+  }
+
+  renderVals() {
+    const R = React.createElement;
+
+    const qStyle = "width:17px;height:17px;border-radius:50%;background:rgba(174,159,255,0.18);border:1px solid rgba(174,159,255,0.4);color:#CDBFFF;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;flex:none;";
+    const hintBox = "display:flex;gap:9px;margin-bottom:11px;padding:11px 12px;background:rgba(0,0,0,0.28);border:1px solid rgba(174,159,255,0.16);border-radius:12px;";
+    const hintIcon = "color:#AE9FFF;font-size:13px;line-height:1.4;flex:none;";
+    const hintText = "font-size:11.5px;color:#9AA3B8;line-height:1.5;";
+    const hintRow = "padding:0 15px 13px;font-size:11.5px;color:#9AA3B8;line-height:1.5;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(0,0,0,0.2);";
+    const hintRowLast = "padding:0 15px 14px;font-size:11.5px;color:#9AA3B8;line-height:1.5;background:rgba(0,0,0,0.2);";
+    const mkHint = (id) => ({
+      open: !!this.state.openHints[id],
+      chevron: this.state.openHints[id] ? '⌄' : '›',
+      toggle: () => this.setState(s => ({ openHints: { ...s.openHints, [id]: !s.openHints[id] } })),
+    });
+    const hint = {
+      source: mkHint('source'), addr: mkHint('addr'), fit: mkHint('fit'),
+      direct: mkHint('direct'), rotate: mkHint('rotate'), mirror: mkHint('mirror'), adv: mkHint('adv'),
+    };
+
+    // ---- Logo mark: swap arrows + two-tone morph orb (camera/face/voice swap) ----
+    const logo = (rounded) => R('svg', {viewBox:'0 0 256 256', width:'100%', height:'100%', style:{display:'block'}},
+      R('defs', null,
+        R('linearGradient', {id:'bg', x1:'0', y1:'0', x2:'1', y2:'1'},
+          R('stop', {offset:'0', stopColor:'#0E1526'}),
+          R('stop', {offset:'1', stopColor:'#070A12'})),
+        R('linearGradient', {id:'arr', x1:'0', y1:'0', x2:'1', y2:'1'},
+          R('stop', {offset:'0', stopColor:'#C6B8FF'}),
+          R('stop', {offset:'1', stopColor:'#8E7CFF'})),
+        R('linearGradient', {id:'orbA', x1:'0', y1:'0', x2:'1', y2:'1'},
+          R('stop', {offset:'0', stopColor:'#5CC8FF'}),
+          R('stop', {offset:'1', stopColor:'#2E5BFF'})),
+        R('linearGradient', {id:'orbB', x1:'0', y1:'0', x2:'1', y2:'1'},
+          R('stop', {offset:'0', stopColor:'#C6B8FF'}),
+          R('stop', {offset:'1', stopColor:'#8E7CFF'}))
+      ),
+      R('rect', {x:'0', y:'0', width:'256', height:'256', rx: rounded ? 128 : 58, fill:'url(#bg)'}),
+      R('rect', {x:'1', y:'1', width:'254', height:'254', rx: rounded ? 128 : 57, fill:'none', stroke:'rgba(174,159,255,0.18)', strokeWidth:'2'}),
+      // outer swap arrows
+      R('path', {d:'M128 44 A84 84 0 0 1 210 110', fill:'none', stroke:'url(#arr)', strokeWidth:'17', strokeLinecap:'round'}),
+      R('path', {d:'M206 78 L214 116 L176 108 Z', fill:'#8E7CFF'}),
+      R('path', {d:'M128 212 A84 84 0 0 1 46 146', fill:'none', stroke:'url(#arr)', strokeWidth:'17', strokeLinecap:'round'}),
+      R('path', {d:'M50 178 L42 140 L80 148 Z', fill:'#C6B8FF'}),
+      // center orb with power-on glyph (Swap + On)
+      R('circle', {cx:'128', cy:'128', r:'50', fill:'url(#orbA)'}),
+      R('circle', {cx:'128', cy:'128', r:'50', fill:'none', stroke:'rgba(255,255,255,0.18)', strokeWidth:'2'}),
+      R('circle', {cx:'128', cy:'132', r:'34', fill:'#0A0F1C'}),
+      R('path', {d:'M110 120 A26 26 0 1 0 146 120', fill:'none', stroke:'#EAF3FF', strokeWidth:'9', strokeLinecap:'round'}),
+      R('path', {d:'M128 108 L128 132', fill:'none', stroke:'#EAF3FF', strokeWidth:'9', strokeLinecap:'round'})
+    );
+
+    // ---- shared style strings ----
+    const frameStyle = "width:392px;height:812px;background:#0a0c12;border-radius:46px;padding:11px;box-shadow:0 40px 90px rgba(0,0,0,0.6),0 0 0 2px #1a1f2b,inset 0 0 0 2px #000;";
+    const screenStyle = "position:relative;width:100%;height:100%;background:#090D14;border-radius:36px;overflow:hidden;display:flex;flex-direction:column;";
+
+    // toggles
+    const toggleOn = "width:52px;height:30px;border-radius:16px;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);display:flex;align-items:center;padding:3px;justify-content:flex-end;flex:none;box-shadow:0 0 14px rgba(174,159,255,0.4);";
+    const knobOn = "width:24px;height:24px;border-radius:50%;background:#fff;display:block;";
+    const toggleSm = "width:42px;height:24px;border-radius:13px;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);display:flex;align-items:center;padding:2.5px;justify-content:flex-end;flex:none;";
+    const knobSmOn = "width:19px;height:19px;border-radius:50%;background:#fff;display:block;";
+    const toggleSmOff = "width:42px;height:24px;border-radius:13px;background:rgba(255,255,255,0.10);display:flex;align-items:center;padding:2.5px;justify-content:flex-start;flex:none;border:1px solid rgba(255,255,255,0.08);";
+    const knobSmOff = "width:19px;height:19px;border-radius:50%;background:#8A93A8;display:block;";
+
+    const pkgRow = "display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:11px 13px;";
+    const pkgDot = "width:7px;height:7px;border-radius:50%;background:#3AD68E;box-shadow:0 0 7px #3AD68E;flex:none;";
+    const pkgTag = "margin-left:auto;font-size:10.5px;font-weight:700;color:#3AD68E;background:rgba(58,214,142,0.12);padding:3px 8px;border-radius:6px;font-family:'IBM Plex Mono',monospace;";
+
+    const optRow = "display:flex;justify-content:space-between;align-items:center;padding:14px 15px;border-bottom:1px solid rgba(255,255,255,0.05);";
+    const optRowLast = "display:flex;justify-content:space-between;align-items:center;padding:14px 15px;";
+
+    // camera icons
+    const iconFront = R('svg', {viewBox:'0 0 24 24', width:18, height:18, fill:'none', stroke:'#5CC8FF', strokeWidth:2, strokeLinecap:'round', strokeLinejoin:'round'},
+      R('circle',{cx:12,cy:12,r:9}), R('circle',{cx:12,cy:12,r:3.2}), R('circle',{cx:12,cy:5.5,r:0.6,fill:'#5CC8FF'}));
+    const iconBack = R('svg', {viewBox:'0 0 24 24', width:18, height:18, fill:'none', stroke:'#8A93A8', strokeWidth:2, strokeLinecap:'round', strokeLinejoin:'round'},
+      R('rect',{x:3,y:6,width:18,height:14,rx:3}), R('circle',{cx:12,cy:13,r:3.6}), R('path',{d:'M8 6l1.5-2h5L16 6'}));
+
+    // nav bars
+    const navItem = (label, iconEl, active) => R('div', {style:{flex:'1', display:'flex', flexDirection:'column', alignItems:'center', gap:'4px'}},
+      R('div', {style:{color: active ? '#AE9FFF' : '#5E677E', display:'flex'}}, iconEl),
+      R('span', {style:{fontSize:'9px', fontWeight: active?700:600, color: active ? '#AE9FFF' : '#5E677E', whiteSpace:'nowrap'}}, label));
+
+    const svgHome = R('svg',{viewBox:'0 0 24 24',width:21,height:21,fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},R('path',{d:'M3 10.5L12 3l9 7.5'}),R('path',{d:'M5 9.5V20h14V9.5'}));
+    const svgSet = R('svg',{viewBox:'0 0 24 24',width:21,height:21,fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},R('circle',{cx:12,cy:12,r:3.2}),R('path',{d:'M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1'}));
+    const svgFace = R('svg',{viewBox:'0 0 24 24',width:21,height:21,fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+      R('circle',{cx:12,cy:12,r:7.5}),
+      R('circle',{cx:9.3,cy:10.5,r:0.4,fill:'currentColor'}),
+      R('circle',{cx:14.7,cy:10.5,r:0.4,fill:'currentColor'}),
+      R('path',{d:'M9 14.5a4 4 0 0 0 6 0'}),
+      R('path',{d:'M2.5 9A9.5 9.5 0 0 1 6 4.2'}),
+      R('path',{d:'M21.5 15A9.5 9.5 0 0 1 18 19.8'}));
+
+    const svgVoice = R('svg',{viewBox:'0 0 24 24',width:21,height:21,fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},
+      R('rect',{x:9,y:2.5,width:6,height:11,rx:3}),
+      R('path',{d:'M6 11a6 6 0 0 0 12 0'}),
+      R('path',{d:'M12 17v3.5'}),
+      R('path',{d:'M2.5 8A9.5 9.5 0 0 1 5.5 4'}),
+      R('path',{d:'M21.5 8A9.5 9.5 0 0 0 18.5 4'}));
+
+    const makeNav = (active) => R('div', {style:{display:'flex', padding:'12px 14px 22px', borderTop:'1px solid rgba(255,255,255,0.06)', background:'rgba(9,13,20,0.9)', backdropFilter:'blur(8px)'}},
+      navItem('Главная', svgHome, active==='home'),
+      navItem('Замена лица', svgFace, active==='face'),
+      navItem('Замена голоса', svgVoice, active==='voice'),
+      navItem('Настройки', svgSet, active==='set')
+    );
+
+    return {
+      showInfo: this.state.showInfo,
+      toggleInfo: () => this.setState(s => ({ showInfo: !s.showInfo })),
+      showAdd: this.state.showAdd,
+      toggleAdd: () => this.setState(s => ({ showAdd: !s.showAdd })),
+
+      // manual add
+      newName: this.state.newName,
+      newPkg: this.state.newPkg,
+      onNewName: (e) => this.setState({ newName: e.target.value }),
+      onNewPkg: (e) => this.setState({ newPkg: e.target.value }),
+      addManual: () => this.addManual(),
+
+      // edit
+      editName: this.state.editName,
+      editPkg: this.state.editPkg,
+      onEditName: (e) => this.setState({ editName: e.target.value }),
+      onEditPkg: (e) => this.setState({ editPkg: e.target.value }),
+      saveEdit: () => this.saveEdit(),
+      cancelEdit: () => this.setState({ editingId: null }),
+
+      // available catalog tags (not yet added)
+      hasAvailable: this.CATALOG.some(c => !this.state.added.some(a => a.pkg === c.pkg)),
+      availableView: this.CATALOG
+        .filter(c => !this.state.added.some(a => a.pkg === c.pkg))
+        .map(c => ({ name: c.name, onAdd: () => this.addFromCatalog(c) })),
+
+      // added list
+      addedView: this.state.added.map(a => {
+        const editing = this.state.editingId === a.id;
+        const on = a.enabled;
+        return {
+          name: a.name, pkg: a.pkg,
+          isEditing: editing, notEditing: !editing,
+          stateLabel: on ? 'вкл' : 'выкл',
+          rowStyle: "display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.035);border:1px solid " + (on ? "rgba(58,214,142,0.22)" : "rgba(255,255,255,0.07)") + ";border-radius:12px;padding:11px 11px 11px 13px;",
+          dotStyle: "width:7px;height:7px;border-radius:50%;flex:none;cursor:pointer;background:" + (on ? "#3AD68E;box-shadow:0 0 7px #3AD68E" : "#404A5E"),
+          nameStyle: "font-size:13.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:" + (on ? "#E8EAF2" : "#8A93A8"),
+          tagStyle: on
+            ? "flex:none;font-size:10.5px;font-weight:700;color:#3AD68E;background:rgba(58,214,142,0.12);padding:3px 8px;border-radius:6px;font-family:'IBM Plex Mono',monospace;cursor:pointer;"
+            : "flex:none;font-size:10.5px;font-weight:700;color:#7E8AA0;background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:6px;font-family:'IBM Plex Mono',monospace;cursor:pointer;",
+          onToggle: () => this.toggleApp(a.id),
+          onEdit: () => this.startEdit(a),
+          onRemove: () => this.removeApp(a.id),
+        };
+      }),
+      qStyle, hintBox, hintIcon, hintText, hintRow, hintRowLast, hint,
+      showStore: this.state.showStore,
+      openStore: () => this.setState({ showStore: true }),
+      closeStore: () => this.setState({ showStore: false }),
+      packsView: [
+        { min: 10, price: '20', per: '2.00', tag: '' },
+        { min: 30, price: '50', per: '1.67', tag: '' },
+        { min: 60, price: '80', per: '1.33', tag: '' },
+        { min: 120, price: '140', per: '1.17', tag: 'Популярно' },
+        { min: 300, price: '300', per: '1.00', tag: 'Выгодно' },
+      ].map((p, i) => {
+        const sel = this.state.selectedPack === i;
+        const accent = p.tag === 'Популярно' ? { c: '174,159,255', txt: '#CDBFFF' } : p.tag === 'Выгодно' ? { c: '232,193,90', txt: '#E8C77A' } : null;
+        const baseBg = accent ? "rgba(" + accent.c + ",0.08)" : "rgba(255,255,255,0.035)";
+        const baseBorder = accent ? "rgba(" + accent.c + ",0.35)" : "rgba(255,255,255,0.08)";
+        return {
+          min: p.min, price: p.price, per: p.per, tag: p.tag, hasTag: !!p.tag,
+          onSelect: () => this.setState({ selectedPack: i }),
+          cardStyle: "display:flex;align-items:center;gap:13px;border-radius:14px;padding:14px 15px;cursor:pointer;background:" + (sel ? "linear-gradient(150deg,rgba(174,159,255,0.16),rgba(45,120,255,0.06))" : baseBg) + ";border:1.5px solid " + (sel ? "rgba(174,159,255,0.55)" : baseBorder) + ";",
+          radioStyle: "width:22px;height:22px;flex:none;border-radius:50%;border:2px solid " + (sel ? "#AE9FFF" : "rgba(255,255,255,0.2)") + ";display:flex;align-items:center;justify-content:center;",
+          dotStyle: sel ? "width:11px;height:11px;border-radius:50%;background:#AE9FFF;display:block;" : "display:none;",
+          tagStyle: accent
+            ? "flex:none;white-space:nowrap;font-size:10px;font-weight:800;color:" + accent.txt + ";background:rgba(" + accent.c + ",0.18);border:1px solid rgba(" + accent.c + ",0.45);padding:2px 8px;border-radius:20px;letter-spacing:0.02em;"
+            : "flex:none;white-space:nowrap;font-size:10px;font-weight:800;color:#CDBFFF;background:rgba(174,159,255,0.2);border:1px solid rgba(174,159,255,0.35);padding:2px 8px;border-radius:20px;letter-spacing:0.02em;",
+        };
+      }),
+      logoIcon: logo(false),
+      logoRound: logo(true),
+      frameStyle, screenStyle,
+      toggleOn, knobOn, toggleSm, knobSmOn, toggleSmOff, knobSmOff,
+      pkgRow, pkgDot, pkgTag, optRow, optRowLast,
+      iconFront, iconBack,
+      iconPower: R('svg',{viewBox:'0 0 24 24',width:28,height:28,fill:'none',stroke:'currentColor',strokeWidth:2.4,strokeLinecap:'round',strokeLinejoin:'round'},R('path',{d:'M12 3v9'}),R('path',{d:'M6.3 6.6a8 8 0 1 0 11.4 0'})),
+      navBarHome: makeNav('home'),
+      navBarSettings: makeNav('set'),
+      navBarFace: makeNav('face'),
+      navBarVoice: makeNav('voice'),
+      ...(() => {
+        const rate = 3; // Замена лица PRO (2) + Замена голоса созданный (1)
+        const balance = 124;
+        const on = this.state.pushOn;
+        const el = this.state.pushElapsed;
+        const mm = String(Math.floor(el / 60)).padStart(2, '0');
+        const ss = String(el % 60).padStart(2, '0');
+        const spent = (el / 60) * rate;
+        const leftSecTotal = Math.max(0, Math.round((balance - spent) / rate * 60));
+        const leftMin = Math.floor(leftSecTotal / 60);
+        const leftSec = leftSecTotal % 60;
+        return {
+          pushRate: rate,
+          pushBalance: Math.max(0, (balance - spent)).toFixed(1),
+          pushTime: mm + ':' + ss,
+          pushCost: spent.toFixed(1) + ' Swaps',
+          pushLeft: leftMin + ' мин ' + leftSec + ' сек',
+          pushPct: Math.max(0, Math.min(100, ((balance - spent) / balance) * 100)).toFixed(1) + '%',
+          togglePush: () => this.setState(s => ({ pushOn: !s.pushOn })),
+          pushStateLabel: on ? 'Активно' : 'Пауза',
+          pushDotColor: on ? '#3AD68E' : '#E8C77A',
+          pushGlow: on ? 'rgba(58,214,142,0.28)' : 'rgba(232,193,90,0.22)',
+          pushBadgeBg: on ? 'rgba(58,214,142,0.1)' : 'rgba(232,193,90,0.1)',
+          pushBadgeBorder: on ? 'rgba(58,214,142,0.3)' : 'rgba(232,193,90,0.3)',
+          pushBtnLabel: on ? 'Остановить' : 'Возобновить',
+          pushBtnStyle: on
+            ? "flex:1;border:1px solid rgba(255,90,120,0.4);background:rgba(255,90,120,0.12);color:#FF6B85;font-size:13px;font-weight:800;padding:11px;border-radius:12px;cursor:pointer;"
+            : "flex:1;border:none;background:linear-gradient(120deg,#3AD68E,#2EBFA0);color:#06120C;font-size:13px;font-weight:800;padding:11px;border-radius:12px;cursor:pointer;",
+        };
+      })(),
+      voiceReady: this.state.voiceTab === 'ready',
+      setVoiceReady: () => this.setState({ voiceTab: 'ready' }),
+      setVoiceMine: () => this.setState({ voiceTab: 'mine' }),
+      voiceReadyTabStyle: "flex:1;text-align:center;padding:8px 0;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.voiceTab === 'ready' ? "background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);" : "color:#9AA3B8;"),
+      voiceMineTabStyle: "flex:1;text-align:center;padding:8px 0;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.voiceTab === 'mine' ? "background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);" : "color:#9AA3B8;"),
+      newVoiceId: this.state.newVoiceId,
+      onNewVoiceId: (e) => this.setState({ newVoiceId: e.target.value }),
+      addVoiceId: () => {
+        const id = (this.state.newVoiceId || '').trim();
+        if (!id) return;
+        const v = { id: 'v' + this.state.voiceSeq, name: 'Импортированный голос', meta: 'ElevenLabs', initial: 'E', vid: id, custom: true };
+        this.setState(s => ({ addedVoices: [...s.addedVoices, v], voiceSeq: s.voiceSeq + 1, newVoiceId: '', selectedVoice: v.id, voiceTab: 'mine' }));
+      },
+      voiceList: (() => {
+        const presets = [
+          { id: 'p0', name: 'Adam', meta: 'Мужской · Глубокий', initial: 'A', vid: 'pNInz6obpgDQGcFmaJgB' },
+          { id: 'p1', name: 'Bella', meta: 'Женский · Мягкий', initial: 'B', vid: 'EXAVITQu4vr4xnSDxMaL' },
+          { id: 'p2', name: 'Antoni', meta: 'Робот · Нейтральный', initial: 'A', vid: 'ErXwobaYiN019PkySvjV' },
+        ];
+        const src = this.state.voiceTab === 'ready' ? presets : this.state.addedVoices;
+        return src.map(v => {
+          const sel = this.state.selectedVoice === v.id;
+          return {
+            name: v.name, meta: v.meta, initial: v.initial, vid: v.vid,
+            onSelect: () => this.setState({ selectedVoice: v.id }),
+            onCopy: (e) => { if (e && e.stopPropagation) e.stopPropagation(); try { navigator.clipboard && navigator.clipboard.writeText(v.vid); } catch (err) {} },
+            rowStyle: "display:flex;align-items:center;gap:11px;border-radius:13px;padding:11px 13px;cursor:pointer;background:" + (sel ? "linear-gradient(150deg,rgba(174,159,255,0.14),rgba(45,120,255,0.05))" : "rgba(255,255,255,0.035)") + ";border:1.5px solid " + (sel ? "rgba(174,159,255,0.45)" : "rgba(255,255,255,0.08)") + ";",
+            radioStyle: "width:20px;height:20px;flex:none;border-radius:50%;border:2px solid " + (sel ? "#AE9FFF" : "rgba(255,255,255,0.2)") + ";display:flex;align-items:center;justify-content:center;",
+            dotStyle: sel ? "width:9px;height:9px;border-radius:50%;background:#AE9FFF;display:block;" : "display:none;",
+            avatarStyle: "width:34px;height:34px;flex:none;border-radius:50%;background:linear-gradient(135deg,#8E7CFF,#5CC8FF);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;",
+          };
+        });
+      })(),
+      voiceEmpty: this.state.voiceTab === 'mine' && this.state.addedVoices.length === 0,
+      balTopup: this.state.balTab === 'topup',
+      balPrice: this.state.balTab === 'price',
+      balHistory: this.state.balTab === 'history',
+      balScrollJustify: this.state.balTab === 'history' ? 'flex-start' : 'center',
+      balSectionLabel: this.state.balTab === 'topup' ? 'ВЫБЕРИТЕ ПАКЕТ' : this.state.balTab === 'price' ? 'СПИСАНИЕ ЗА МИНУТУ' : 'ОПЕРАЦИИ',
+      setBalTopup: () => this.setState({ balTab: 'topup' }),
+      setBalPrice: () => this.setState({ balTab: 'price' }),
+      setBalHistory: () => this.setState({ balTab: 'history' }),
+      balTopupTabStyle: "flex:1;text-align:center;padding:8px 0;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.balTab === 'topup' ? "background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);" : "color:#9AA3B8;"),
+      balPriceTabStyle: "flex:1;text-align:center;padding:8px 0;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.balTab === 'price' ? "background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);" : "color:#9AA3B8;"),
+      balHistoryTabStyle: "flex:1;text-align:center;padding:8px 0;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.balTab === 'history' ? "background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);" : "color:#9AA3B8;"),
+      facePro: this.state.faceMode === 'pro',
+      faceLite: this.state.faceMode === 'lite',
+      setLite: () => this.setState({ faceMode: 'lite' }),
+      setPro: () => this.setState({ faceMode: 'pro' }),
+      liteCardStyle: "background:" + (this.state.faceMode === 'lite' ? "linear-gradient(150deg,rgba(174,159,255,0.16),rgba(45,120,255,0.06))" : "rgba(255,255,255,0.035)") + ";border:1.5px solid " + (this.state.faceMode === 'lite' ? "rgba(174,159,255,0.5)" : "rgba(255,255,255,0.08)") + ";border-radius:14px;padding:11px 14px;cursor:pointer;",
+      proCardStyle: "background:" + (this.state.faceMode === 'pro' ? "linear-gradient(150deg,rgba(174,159,255,0.16),rgba(45,120,255,0.06))" : "rgba(255,255,255,0.035)") + ";border:1.5px solid " + (this.state.faceMode === 'pro' ? "rgba(174,159,255,0.5)" : "rgba(255,255,255,0.08)") + ";border-radius:14px;padding:11px 14px;cursor:pointer;",
+      liteRadio: "width:18px;height:18px;border-radius:50%;border:2px solid " + (this.state.faceMode === 'lite' ? "#AE9FFF" : "rgba(255,255,255,0.2)") + ";display:flex;align-items:center;justify-content:center;",
+      proRadio: "width:18px;height:18px;border-radius:50%;border:2px solid " + (this.state.faceMode === 'pro' ? "#AE9FFF" : "rgba(255,255,255,0.2)") + ";display:flex;align-items:center;justify-content:center;",
+      liteDot: this.state.faceMode === 'lite' ? "width:9px;height:9px;border-radius:50%;background:#AE9FFF;display:block;" : "display:none;",
+      proDot: this.state.faceMode === 'pro' ? "width:9px;height:9px;border-radius:50%;background:#AE9FFF;display:block;" : "display:none;",
+      faceCost: this.state.faceMode === 'pro' ? '2 SwapOn' : '1 SwapOn',
+    };
+  }
+}
+</script>
+</body>
+</html>
+
+
