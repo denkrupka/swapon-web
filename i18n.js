@@ -110,7 +110,9 @@
     "Бонус за приглашение": "Referral bonus", "Бонус": "Bonus", "Корректировка": "Adjustment", "Возврат": "Refund",
     "Пополнение · Telegram": "Top up · Telegram",
     "Мужской · Глубокий": "Male · Deep", "Женский · Мягкий": "Female · Soft", "Робот · Нейтральный": "Robot · Neutral",
-    "Не авторизован": "Not signed in", "Гость": "Guest"
+    "Не авторизован": "Not signed in", "Гость": "Guest",
+    "Главная": "Home", "Пополнить": "Top up", "Выбрать": "Choose", "Загрузить фото лица": "Upload a face photo",
+    "Будет подставлено вместо вашего": "Will replace yours", "Стандартная · среднее качество": "Standard · medium quality"
   };
   // substring replacements for strings with variable parts (dates, counts)
   var PH = [
