@@ -807,7 +807,8 @@ class Component extends DCLogic {
       R('rect',{x:3,y:6,width:18,height:14,rx:3}), R('circle',{cx:12,cy:13,r:3.6}), R('path',{d:'M8 6l1.5-2h5L16 6'}));
 
     // nav bars
-    const navItem = (label, iconEl, active) => R('div', {style:{flex:'1', display:'flex', flexDirection:'column', alignItems:'center', gap:'4px'}},
+    const __navScreen = { 'Главная':'home', 'Замена лица':'face', 'Замена голоса':'voice', 'Настройки':'set' };
+    const navItem = (label, iconEl, active) => R('div', {onClick:()=>this.setState({screen: __navScreen[label] || 'home'}), style:{flex:'1', display:'flex', flexDirection:'column', alignItems:'center', gap:'4px', cursor:'pointer'}},
       R('div', {style:{color: active ? '#AE9FFF' : '#5E677E', display:'flex'}}, iconEl),
       R('span', {style:{fontSize:'9px', fontWeight: active?700:600, color: active ? '#AE9FFF' : '#5E677E', whiteSpace:'nowrap'}}, label));
 
