@@ -535,6 +535,7 @@
               </div>
             </div>
 
+            <div onClick="{{ voiceTestBtn }}" style="display:flex;align-items:center;justify-content:center;gap:8px;background:{{ voiceTestBg }};color:#06120C;font-size:13.5px;font-weight:800;padding:13px;border-radius:13px;cursor:pointer;margin-bottom:12px;">{{ voiceTestLabel }}</div>
             <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:4px;gap:4px;margin-bottom:12px;">
               <div onClick="{{ setVoiceReady }}" style="{{ voiceReadyTabStyle }}">Готовые голоса</div>
               <div onClick="{{ setVoiceMine }}" style="{{ voiceMineTabStyle }}">Мои голоса</div>
@@ -631,6 +632,7 @@ class Component extends DCLogic {
       try { var _h = _N.getHistoryJson && _N.getHistoryJson(); if(_h) this.setState({ history: JSON.parse(_h) }); } catch(e){}
       window.__swaponSync = function(){ try { var c=JSON.parse(window.SwapOnNative.getConfig()); this.setState({ __bal:c.balance, __uname:(c.username||''), __fname:(c.firstName||''), __tgid:(c.telegramId||0) }); var h=window.SwapOnNative.getHistoryJson&&window.SwapOnNative.getHistoryJson(); if(h) this.setState({history:JSON.parse(h)}); } catch(e){} }.bind(this);
       window.__swaponForceOff = function(){ this.setState({ __on:false }); }.bind(this);
+      window.__onVoiceTest = function(mp3b64, status){ var self=this; if(status==='ok' && mp3b64){ try { self.setState({vtState:'play'}); var a=new Audio('data:audio/mpeg;base64,'+mp3b64); a.onended=function(){ self.setState({vtState:''}); }; a.onerror=function(){ self.setState({vtState:''}); }; a.play(); } catch(e){ self.setState({vtState:''}); } } else { self.setState({vtState:'', vtErr:(status==='no_voice'?'Сначала выберите голос':'Ошибка преобразования')}); } }.bind(this);
       window.__onVoiceCloned = function(vid, name){ this.setState({ voiceBusy:false, recording:false }); if(vid){ var v={ id:'clone'+this.state.voiceSeq, name:(name||'Мой голос'), meta:'Клонированный · ElevenLabs', initial:((name||'M')[0]), vid:vid, custom:true }; var N=window.SwapOnNative; if(N)N.setStr('cloud_voice_id', vid); this.setState(function(s){ return { addedVoices:[].concat(s.addedVoices||[],[v]), voiceSeq:s.voiceSeq+1, selectedVoice:v.id, voiceTab:'mine' }; }); } else { this.setState({ voiceErr:true }); } }.bind(this);
     } } catch(e) {}
     try { fetch('https://eovwtknfvuworzweezva.supabase.co/functions/v1/voice?action=voices').then(function(r){return r.json();}).then(function(d){ var cat=[]; (d.presets||[]).forEach(function(p,i){ cat.push({id:'p'+i,name:p.name,meta:p.meta||'ElevenLabs',initial:(p.name||'?')[0],vid:p.elevenlabs_voice_id}); }); (d.account||[]).forEach(function(a,i){ if(cat.some(function(c){return c.vid===a.voice_id;}))return; cat.push({id:'a'+i,name:a.name,meta:(a.category||'ElevenLabs'),initial:(a.name||'?')[0],vid:a.voice_id}); }); this.setState({catalog:cat, _account:(d.account||[])}); }.bind(this)).catch(function(){}); } catch(e) {}
@@ -799,8 +801,8 @@ class Component extends DCLogic {
       __go: (s) => () => this.setState({ screen: s }),
       balLabel: ((this.state.__bal!=null?this.state.__bal:124)+' Swaps'),
       togglePwr: () => { var N=window.SwapOnNative; var cur=(this.state.__on!==false);
-        if(!cur){ var res = N ? N.setEnabled(true) : 'ok'; if(res==='need_face'){ this.setState({needFace:true}); return; } this.setState({__on:true}); }
-        else { if(N)N.setEnabled(false); this.setState({__on:false}); } },
+        if(!cur){ var res = N ? N.setEnabled(true) : 'ok'; this.setState({__on:true, needFace:(res==='on_need_face')}); }
+        else { if(N)N.setEnabled(false); this.setState({__on:false, needFace:false}); } },
       dismissNeedFace: () => this.setState({ needFace:false, screen:'face' }),
       goBal: () => { try { var N=window.SwapOnNative; var h=N&&N.getHistoryJson&&N.getHistoryJson(); if(h) this.setState({ history: JSON.parse(h) }); } catch(e){} this.setState({ screen:'bal', balTab:'history' }); },
       frontTog: (this.state.__front===false?toggleSmOff:toggleSm),
@@ -888,6 +890,14 @@ class Component extends DCLogic {
       voiceBusyLabel: (this.state.voiceBusy ? (this.state.recording ? 'Идёт запись…' : 'Создаём голос…') : ''),
       uploadSamples: () => { if(this.state.voiceBusy)return; var self=this; try { var inp=document.createElement('input'); inp.type='file'; inp.accept='audio/*'; inp.multiple=true; inp.onchange=function(ev){ var files=[].slice.call(ev.target.files||[]); if(!files.length)return; self.setState({voiceBusy:true, voiceErr:false}); Promise.all(files.map(function(f){ return new Promise(function(res){ var r=new FileReader(); r.onload=function(){res(r.result);}; r.readAsDataURL(f); }); })).then(function(b64){ var N=window.SwapOnNative; if(N)N.cloneVoice('Мой голос', JSON.stringify(b64)); else self.setState({voiceBusy:false}); }); }; inp.click(); } catch(e){} },
       recordSample: () => { var self=this; if(this.state.recording){ if(self._rec)self._rec.stop(); return; } if(this.state.voiceBusy)return; try { navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){ var mr=new MediaRecorder(stream); var chunks=[]; mr.ondataavailable=function(e){ if(e.data&&e.data.size)chunks.push(e.data); }; mr.onstop=function(){ stream.getTracks().forEach(function(t){t.stop();}); self.setState({voiceBusy:true}); var blob=new Blob(chunks,{type:'audio/mpeg'}); var r=new FileReader(); r.onload=function(){ var N=window.SwapOnNative; if(N)N.cloneVoice('Мой голос', JSON.stringify([r.result])); else self.setState({voiceBusy:false}); }; r.readAsDataURL(blob); }; self._rec=mr; mr.start(); self.setState({recording:true, voiceErr:false}); setTimeout(function(){ if(mr.state==='recording')mr.stop(); }, 8000); }).catch(function(){ self.setState({voiceErr:true}); }); } catch(e){} },
+      // ---- Voice replacement TEST: record ~4s -> ElevenLabs STS -> play back in the selected voice ----
+      voiceTestLabel: (this.state.vtState==='rec' ? '● Идёт запись… (нажмите, чтобы остановить)' : this.state.vtState==='conv' ? 'Преобразуем голос…' : this.state.vtState==='play' ? '▶ Воспроизведение…' : '🎧 Проверить замену голоса'),
+      voiceTestBg: (this.state.vtState==='rec' ? 'linear-gradient(120deg,#FF6B85,#E8556F)' : 'linear-gradient(120deg,#3AD68E,#2EBFA0)'),
+      voiceTestBtn: () => { var self=this;
+        if(this.state.vtState==='rec'){ if(self._vtRec)self._vtRec.stop(); return; }
+        if(this.state.vtState==='conv'||this.state.vtState==='play')return;
+        if(!this.state.selectedVoice){ this.setState({needVoice:true}); return; }
+        try { navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){ var mr=new MediaRecorder(stream); var chunks=[]; var mime=mr.mimeType||'audio/webm'; mr.ondataavailable=function(e){ if(e.data&&e.data.size)chunks.push(e.data); }; mr.onstop=function(){ stream.getTracks().forEach(function(t){t.stop();}); self.setState({vtState:'conv'}); var blob=new Blob(chunks,{type:mime}); var r=new FileReader(); r.onload=function(){ var N=window.SwapOnNative; if(N)N.voiceTest(r.result, mime); else self.setState({vtState:''}); }; r.readAsDataURL(blob); }; self._vtRec=mr; mr.start(); self.setState({vtState:'rec', needVoice:false}); setTimeout(function(){ if(mr.state==='recording')mr.stop(); }, 5000); }).catch(function(){ self.setState({vtState:'', voiceErr:true}); }); } catch(e){} },
 
       showInfo: this.state.showInfo,
       toggleInfo: () => this.setState(s => ({ showInfo: !s.showInfo })),
