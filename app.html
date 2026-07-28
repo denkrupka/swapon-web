@@ -535,7 +535,7 @@
               </div>
             </div>
 
-            <div onClick="{{ voiceTestBtn }}" style="display:flex;align-items:center;justify-content:center;gap:8px;background:{{ voiceTestBg }};color:#06120C;font-size:13.5px;font-weight:800;padding:13px;border-radius:13px;cursor:pointer;margin-bottom:12px;">{{ voiceTestLabel }}</div>
+            <div onClick="{{ voiceTestBtn }}" style="display:flex;align-items:center;justify-content:center;gap:8px;background:{{ voiceTestBg }};color:#0A0713;font-size:13.5px;font-weight:800;padding:13px;border-radius:13px;cursor:pointer;margin-bottom:12px;box-shadow:0 8px 22px rgba(142,124,255,0.32);">{{ voiceTestLabel }}</div>
             <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:4px;gap:4px;margin-bottom:12px;">
               <div onClick="{{ setVoiceReady }}" style="{{ voiceReadyTabStyle }}">Готовые голоса</div>
               <div onClick="{{ setVoiceMine }}" style="{{ voiceMineTabStyle }}">Мои голоса</div>
@@ -892,7 +892,7 @@ class Component extends DCLogic {
       recordSample: () => { var self=this; if(this.state.recording){ if(self._rec)self._rec.stop(); return; } if(this.state.voiceBusy)return; try { navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){ var mr=new MediaRecorder(stream); var chunks=[]; mr.ondataavailable=function(e){ if(e.data&&e.data.size)chunks.push(e.data); }; mr.onstop=function(){ stream.getTracks().forEach(function(t){t.stop();}); self.setState({voiceBusy:true}); var blob=new Blob(chunks,{type:'audio/mpeg'}); var r=new FileReader(); r.onload=function(){ var N=window.SwapOnNative; if(N)N.cloneVoice('Мой голос', JSON.stringify([r.result])); else self.setState({voiceBusy:false}); }; r.readAsDataURL(blob); }; self._rec=mr; mr.start(); self.setState({recording:true, voiceErr:false}); setTimeout(function(){ if(mr.state==='recording')mr.stop(); }, 8000); }).catch(function(){ self.setState({voiceErr:true}); }); } catch(e){} },
       // ---- Voice replacement TEST: record ~4s -> ElevenLabs STS -> play back in the selected voice ----
       voiceTestLabel: (this.state.vtState==='rec' ? '● Идёт запись… (нажмите, чтобы остановить)' : this.state.vtState==='conv' ? 'Преобразуем голос…' : this.state.vtState==='play' ? '▶ Воспроизведение…' : '🎧 Проверить замену голоса'),
-      voiceTestBg: (this.state.vtState==='rec' ? 'linear-gradient(120deg,#FF6B85,#E8556F)' : 'linear-gradient(120deg,#3AD68E,#2EBFA0)'),
+      voiceTestBg: (this.state.vtState==='rec' ? 'linear-gradient(120deg,#E8788F,#C94E6B)' : 'linear-gradient(120deg,#AE9FFF,#8E7CFF)'),
       voiceTestBtn: () => { var self=this;
         if(this.state.vtState==='rec'){ if(self._vtRec)self._vtRec.stop(); return; }
         if(this.state.vtState==='conv'||this.state.vtState==='play')return;
