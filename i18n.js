@@ -112,7 +112,8 @@
     "Мужской · Глубокий": "Male · Deep", "Женский · Мягкий": "Female · Soft", "Робот · Нейтральный": "Robot · Neutral",
     "Не авторизован": "Not signed in", "Гость": "Guest",
     "Главная": "Home", "Пополнить": "Top up", "Выбрать": "Choose", "Загрузить фото лица": "Upload a face photo",
-    "Будет подставлено вместо вашего": "Will replace yours", "Стандартная · среднее качество": "Standard · medium quality"
+    "Будет подставлено вместо вашего": "Will replace yours", "Стандартная · среднее качество": "Standard · medium quality",
+    "вкл": "on", "выкл": "off", "Клонированный голос": "Cloned voice", "Мужской": "Male", "Женский": "Female"
   };
   // substring replacements for strings with variable parts (dates, counts)
   var PH = [
