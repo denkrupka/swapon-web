@@ -625,8 +625,8 @@ class Component extends DCLogic {
   };
 
   componentDidMount() {
-    try { var _N = window.SwapOnNative; if (_N) { var _c = JSON.parse(_N.getConfig());
-      this.setState({ __on:_c.enabled, __front:_c.front, __back:_c.back, __bal:_c.balance, __vsrc:_c.videoSource, __asrc:_c.audioSource, faceMode:_c.faceMode||'pro' }); } } catch(e) {}
+    try { var _N = window.SwapOnNative; console.log('DBG bridge='+(typeof _N)+' cfg='+(_N?_N.getConfig():'<none>')); if (_N) { var _c = JSON.parse(_N.getConfig());
+      this.setState({ __on:_c.enabled, __front:_c.front, __back:_c.back, __bal:_c.balance, __vsrc:_c.videoSource, __asrc:_c.audioSource, faceMode:_c.faceMode||'pro' }); } } catch(e) { console.log('DBG mount err '+e); }
     this._pushTimer = setInterval(() => {
       if (this.state.pushOn) this.setState(s => ({ pushElapsed: s.pushElapsed + 1 }));
     }, 1000);
