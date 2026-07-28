@@ -254,9 +254,9 @@
             </div>
 
             <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ФАЙЛ ВИДЕО</div>
-            <div style="display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:11px 13px;margin-bottom:11px;cursor:pointer;">
+            <div onClick="{{ pickVideo }}" style="display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:11px 13px;margin-bottom:11px;cursor:pointer;">
               <div style="width:36px;height:36px;flex:none;border-radius:10px;background:rgba(45,120,255,0.15);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#8FC0FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="12" height="12" rx="2"></rect><path d="M15 10l5-3v10l-5-3"></path></svg></div>
-              <div style="flex:1;min-width:0;"><div style="font-size:13.5px;font-weight:700;">clip_swap.mp4</div><div style="font-size:11px;color:#8A93A8;">1080×1920 · 00:42</div></div>
+              <div style="flex:1;min-width:0;"><div style="font-size:13.5px;font-weight:700;">{{ videoName }}</div><div style="font-size:11px;color:#8A93A8;">{{ videoMeta }}</div></div>
               <span style="font-size:12.5px;font-weight:700;color:#AE9FFF;">Заменить</span>
             </div>
 
@@ -265,8 +265,8 @@
               <span onClick="{{ hint.fit.toggle }}" style="{{ qStyle }}">?</span>
             </div>
             <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:4px;gap:4px;margin-bottom:10px;">
-              <div style="flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:700;background:rgba(255,255,255,0.08);color:#E8EAF2;">Целиком</div>
-              <div style="flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:600;color:#9AA3B8;">Заполнить</div>
+              <div onClick="{{ pickFitFull }}" style="{{ fitFullStyle }}">Целиком</div>
+              <div onClick="{{ pickFitFill }}" style="{{ fitFillStyle }}">Заполнить</div>
             </div>
             <sc-if value="{{ hint.fit.open }}" hint-placeholder-val="{{ false }}">
               <div style="{{ hintBox }}"><span style="{{ hintIcon }}">ℹ</span><div style="{{ hintText }}"><b style="color:#E8EAF2;">Целиком</b> — видео помещается полностью, по краям могут быть чёрные поля. <b style="color:#E8EAF2;">Заполнить</b> — видео заполняет весь кадр, края немного обрезаются.</div></div>
@@ -423,7 +423,7 @@
             <div style="display:flex;align-items:center;gap:12px;padding:10px 2px 18px;"><div style="width:32px;height:32px;flex:none;margin-right:12px;">{{ logoIcon }}</div>
               <div style="flex:1;font-size:21px;font-weight:800;letter-spacing:-0.01em;">Замена лица</div>
               <div style="display:flex;align-items:center;gap:6px;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.30);padding:4px 4px 4px 11px;border-radius:20px;">
-                <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">124 Swaps</span>
+                <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ balLabel }}</span>
                 <button style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
               </div>
             </div>
@@ -526,7 +526,7 @@
             <div style="display:flex;align-items:center;gap:12px;padding:10px 2px 18px;"><div style="width:32px;height:32px;flex:none;margin-right:12px;">{{ logoIcon }}</div>
               <div style="flex:1;font-size:21px;font-weight:800;letter-spacing:-0.01em;">Замена голоса</div>
               <div style="display:flex;align-items:center;gap:6px;background:rgba(174,159,255,0.12);border:1px solid rgba(174,159,255,0.30);padding:4px 4px 4px 11px;border-radius:20px;">
-                <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">124 Swaps</span>
+                <span style="font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ balLabel }}</span>
                 <button style="width:24px;height:24px;flex:none;border:none;border-radius:50%;background:linear-gradient(120deg,#AE9FFF,#8E7CFF);color:#0A0713;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">+</button>
               </div>
             </div>
@@ -835,6 +835,13 @@ class Component extends DCLogic {
       emSoftStyle: emCellStyle(this.state.fEnhModel, 'soft'), pickEmSoft: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','soft'); this.setState({fEnhModel:'soft'}); },
       emSharpStyle: emCellStyle(this.state.fEnhModel, 'sharp'), pickEmSharp: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','sharp'); this.setState({fEnhModel:'sharp'}); },
       emRealStyle: emCellStyle(this.state.fEnhModel, 'real'), pickEmReal: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','real'); this.setState({fEnhModel:'real'}); },
+      // ---- Settings: video file picker + fit mode ----
+      videoName: (this.state.videoName||'clip_swap.mp4'), videoMeta: (this.state.videoMeta||'1080×1920 · 00:42'),
+      pickVideo: () => { try { var inp=document.createElement('input'); inp.type='file'; inp.accept='video/*'; inp.onchange=(ev)=>{ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var N=window.SwapOnNative; if(N){N.setStr('video_file_name',f.name); N.setStr('frame_source','pattern');} this.setState({videoName:f.name, videoMeta:(Math.round(f.size/104857.6)/10+' МБ'), __vsrc:'pattern'}); }; inp.click(); } catch(e){} },
+      fitFullStyle: "flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:"+((this.state.__fit==='fill')?"600;color:#9AA3B8;":"700;background:rgba(255,255,255,0.08);color:#E8EAF2;"),
+      fitFillStyle: "flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:13px;font-weight:"+((this.state.__fit==='fill')?"700;background:rgba(255,255,255,0.08);color:#E8EAF2;":"600;color:#9AA3B8;"),
+      pickFitFull: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_scale_mode','fit'); this.setState({__fit:'fit'}); },
+      pickFitFill: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_scale_mode','fill'); this.setState({__fit:'fill'}); },
 
       showInfo: this.state.showInfo,
       toggleInfo: () => this.setState(s => ({ showInfo: !s.showInfo })),
