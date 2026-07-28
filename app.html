@@ -187,8 +187,8 @@
             <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 14px;">
               <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">ЯЗЫК</span>
               <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:3px;gap:3px;">
-                <div style="padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:700;background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);">RU</div>
-                <div style="padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:600;color:#9AA3B8;">EN</div>
+                <div onClick="{{ pickLangRu }}" style="{{ langRuStyle }}">RU</div>
+                <div onClick="{{ pickLangEn }}" style="{{ langEnStyle }}">EN</div>
               </div>
             </div>
 
@@ -246,7 +246,7 @@
                 <span onClick="{{ hint.addr.toggle }}" style="{{ qStyle }}">?</span>
               </div>
               <div style="background:rgba(0,0,0,0.35);border:1px solid rgba(174,159,255,0.28);border-radius:12px;padding:13px 14px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#CDBFFF;display:flex;align-items:center;gap:8px;">
-                <span style="color:#586A85;">http://</span>127.0.0.1:8889/swap/whep
+                <input value="{{ addrVal }}" onChange="{{ onAddr }}" placeholder="http://127.0.0.1:8889/swap/whep" style="flex:1;min-width:0;background:transparent;border:none;outline:none;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;font-size:12.5px;" />
               </div>
               <sc-if value="{{ hint.addr.open }}" hint-placeholder-val="{{ false }}">
                 <div style="{{ hintBox }}"><span style="{{ hintIcon }}">ℹ</span><div style="{{ hintText }}">Ссылка на вашу трансляцию. Приложение подключается к ней и берёт оттуда видео.</div></div>
@@ -273,11 +273,11 @@
             </sc-if>
 
             <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;">
-              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Прямая подмена камеры</span><span onClick="{{ hint.direct.toggle }}" style="{{ qStyle }}">?</span><div style="margin-left:auto;{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div></div>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Прямая подмена камеры</span><span onClick="{{ hint.direct.toggle }}" style="{{ qStyle }}">?</span><div onClick="{{ tglDirect }}" style="margin-left:auto;{{ dirTog }}"><span style="{{ dirKnob }}"></span></div></div>
               <sc-if value="{{ hint.direct.open }}" hint-placeholder-val="{{ false }}"><div style="{{ hintRow }}">Подключается к камере напрямую — быстрее и стабильнее, но работает не во всех приложениях.</div></sc-if>
-              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Автоповорот видео</span><span onClick="{{ hint.rotate.toggle }}" style="{{ qStyle }}">?</span><div style="margin-left:auto;{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div></div>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Автоповорот видео</span><span onClick="{{ hint.rotate.toggle }}" style="{{ qStyle }}">?</span><div onClick="{{ tglRotate }}" style="margin-left:auto;{{ rotTog }}"><span style="{{ rotKnob }}"></span></div></div>
               <sc-if value="{{ hint.rotate.open }}" hint-placeholder-val="{{ false }}"><div style="{{ hintRow }}">Автоматически поворачивает видео под ориентацию телефона.</div></sc-if>
-              <div style="{{ optRowLast }}"><span style="font-size:13.5px;font-weight:600;">Зеркалить фронтальную камеру</span><span onClick="{{ hint.mirror.toggle }}" style="{{ qStyle }}">?</span><div style="margin-left:auto;{{ toggleSmOff }}"><span style="{{ knobSmOff }}"></span></div></div>
+              <div style="{{ optRowLast }}"><span style="font-size:13.5px;font-weight:600;">Зеркалить фронтальную камеру</span><span onClick="{{ hint.mirror.toggle }}" style="{{ qStyle }}">?</span><div onClick="{{ tglMirror }}" style="margin-left:auto;{{ mirTog }}"><span style="{{ mirKnob }}"></span></div></div>
               <sc-if value="{{ hint.mirror.open }}" hint-placeholder-val="{{ false }}"><div style="{{ hintRowLast }}">Отражает фронтальную камеру, как в зеркале — привычный вид селфи.</div></sc-if>
             </div>
 
@@ -433,7 +433,7 @@
               <span style="flex:1;font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">КАЧЕСТВО</span>
             </div>
             <div style="display:flex;gap:12px;margin-bottom:16px;">
-              <div style="width:104px;height:104px;flex:none;border-radius:16px;background:rgba(174,159,255,0.08);border:1.5px dashed rgba(174,159,255,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;">
+              <div onClick="{{ pickFace }}" style="width:104px;height:104px;flex:none;border-radius:16px;background:rgba(174,159,255,0.08);border:1.5px dashed rgba(174,159,255,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;">
                 <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#AE9FFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
                 <span style="font-size:11px;font-weight:700;color:#AE9FFF;">Загрузить</span>
               </div>
@@ -465,29 +465,29 @@
 
             <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">НАСТРОЙКИ ЗАМЕНЫ</div>
             <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:14px;">
-              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Плавное смешивание</span><div style="margin-left:auto;{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div></div>
-              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Убрать синеву камеры</span><div style="margin-left:auto;{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div></div>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Плавное смешивание</span><div onClick="{{ tglBlend }}" style="margin-left:auto;{{ fBlendTog }}"><span style="{{ fBlendKnob }}"></span></div></div>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Убрать синеву камеры</span><div onClick="{{ tglDeblue }}" style="margin-left:auto;{{ fDeblueTog }}"><span style="{{ fDeblueKnob }}"></span></div></div>
               <div style="display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
                 <span style="font-size:13.5px;font-weight:600;flex:none;">Модель</span>
-                <div style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
-                  <span style="font-size:12.5px;font-weight:600;color:#CDBFFF;">Стандартная</span>
+                <div onClick="{{ cycModel }}" style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
+                  <span style="font-size:12.5px;font-weight:600;color:#CDBFFF;">{{ fModelVal }}</span>
                   <span style="font-size:11px;color:#586A85;">▾</span>
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
                 <span style="font-size:13.5px;font-weight:600;flex:none;">Вариант</span>
-                <div style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
-                  <span style="font-size:12.5px;font-weight:600;color:#CDBFFF;">Быстрая · среднее качество</span>
+                <div onClick="{{ cycVariant }}" style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
+                  <span style="font-size:12.5px;font-weight:600;color:#CDBFFF;">{{ fVariantVal }}</span>
                   <span style="font-size:11px;color:#586A85;">▾</span>
                 </div>
               </div>
               <div style="padding:13px 15px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Непрозрачность наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">85%</span></div>
-                <input type="range" min="0" max="100" value="85" style="width:100%;accent-color:#AE9FFF;" />
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Непрозрачность наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fOpacityLabel }}</span></div>
+                <input type="range" min="0" max="100" value="{{ fOpacityVal }}" onChange="{{ onOpacity }}" style="width:100%;accent-color:#AE9FFF;" />
               </div>
               <div style="padding:13px 15px 15px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Резкость наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">40%</span></div>
-                <input type="range" min="0" max="100" value="40" style="width:100%;accent-color:#AE9FFF;" />
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Резкость наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fSharpLabel }}</span></div>
+                <input type="range" min="0" max="100" value="{{ fSharpVal }}" onChange="{{ onSharp }}" style="width:100%;accent-color:#AE9FFF;" />
               </div>
             </div>
 
@@ -496,20 +496,20 @@
               <div style="background:linear-gradient(150deg,rgba(174,159,255,0.10),rgba(45,120,255,0.04));border:1px solid rgba(174,159,255,0.22);border-radius:16px;overflow:hidden;margin-bottom:14px;">
                 <div style="display:flex;align-items:center;padding:14px 15px;border-bottom:1px solid rgba(255,255,255,0.06);">
                   <div style="flex:1;"><div style="font-size:13.5px;font-weight:600;">Улучшение лица</div><div style="font-size:11px;color:#8A93A8;margin-top:2px;">Повышает детализацию и чёткость</div></div>
-                  <div style="{{ toggleSm }}"><span style="{{ knobSmOn }}"></span></div>
+                  <div onClick="{{ tglEnhance }}" style="{{ fEnhanceTog }}"><span style="{{ fEnhanceKnob }}"></span></div>
                 </div>
                 <div style="padding:13px 15px 4px;">
                   <div style="font-size:13.5px;font-weight:600;margin-bottom:9px;">Модель</div>
                   <div style="display:flex;flex-wrap:wrap;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:11px;padding:3px;gap:3px;">
-                    <div style="flex:1;min-width:70px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);">Мягкое</div>
-                    <div style="flex:1;min-width:70px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:600;color:#9AA3B8;">Чёткое</div>
-                    <div style="flex:1;min-width:70px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:600;color:#9AA3B8;">Реалистичное</div>
+                    <div onClick="{{ pickEmSoft }}" style="{{ emSoftStyle }}">Мягкое</div>
+                    <div onClick="{{ pickEmSharp }}" style="{{ emSharpStyle }}">Чёткое</div>
+                    <div onClick="{{ pickEmReal }}" style="{{ emRealStyle }}">Реалистичное</div>
                     <div style="flex:1;min-width:130px;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:700;color:#B6E86A;background:rgba(118,185,0,0.10);border:1px solid rgba(118,185,0,0.4);"><span style="font-size:10px;">⚡</span>НАИВЫСШЕЕ<span style="font-size:10px;">⚡</span></div>
                   </div>
                 </div>
                 <div style="padding:13px 15px 15px;">
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Качество</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">4x</span></div>
-                  <input type="range" min="1" max="4" value="4" style="width:100%;accent-color:#AE9FFF;" />
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Качество</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fQualLabel }}</span></div>
+                  <input type="range" min="1" max="4" value="{{ fQualVal }}" onChange="{{ onQual }}" style="width:100%;accent-color:#AE9FFF;" />
                 </div>
               </div>
             </sc-if>
@@ -626,7 +626,8 @@ class Component extends DCLogic {
 
   componentDidMount() {
     try { var _N = window.SwapOnNative; if (_N) { var _c = JSON.parse(_N.getConfig());
-      this.setState({ __on:_c.enabled, __front:_c.front, __back:_c.back, __bal:_c.balance, __vsrc:_c.videoSource, __asrc:_c.audioSource, faceMode:_c.faceMode||'pro' }); } } catch(e) {}
+      this.setState({ __on:_c.enabled, __front:_c.front, __back:_c.back, __bal:_c.balance, __vsrc:_c.videoSource, __asrc:_c.audioSource, faceMode:_c.faceMode||'pro',
+        __direct:_c.direct, __rotate:_c.rotate, __mirror:_c.mirror, __fit:_c.fit, __addr:(_c.whepUrl||''), __lang:(_c.lang||'RU') }); } } catch(e) {}
     this._pushTimer = setInterval(() => {
       if (this.state.pushOn) this.setState(s => ({ pushElapsed: s.pushElapsed + 1 }));
     }, 1000);
@@ -666,6 +667,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const R = React.createElement;
+    const emCellStyle = (cur, key) => { var on = ((cur||'soft')===key); return 'flex:1;min-width:70px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:'+(on?700:600)+';cursor:pointer;'+(on?'background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);':'color:#9AA3B8;border:1px solid transparent;'); };
 
     const qStyle = "width:17px;height:17px;border-radius:50%;background:rgba(174,159,255,0.18);border:1px solid rgba(174,159,255,0.4);color:#CDBFFF;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;flex:none;";
     const hintBox = "display:flex;gap:9px;margin-bottom:11px;padding:11px 12px;background:rgba(0,0,0,0.28);border:1px solid rgba(174,159,255,0.16);border-radius:12px;";
@@ -796,6 +798,43 @@ class Component extends DCLogic {
       as_mic: (this.state.__asrc==='microphone'?"font-weight:700;background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;"),
       pickAStream: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','whep'); this.setState({__asrc:'whep'}); },
       pickAMic: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','microphone'); this.setState({__asrc:'microphone'}); },
+      // ---- Settings: engine toggles (live) ----
+      dirTog: (this.state.__direct===false?toggleSmOff:toggleSm), dirKnob: (this.state.__direct===false?knobSmOff:knobSmOn),
+      tglDirect: () => { var N=window.SwapOnNative; var c=(this.state.__direct!==false); if(N)N.setBool('no_hal_camera2',!c); this.setState({__direct:!c}); },
+      rotTog: (this.state.__rotate===false?toggleSmOff:toggleSm), rotKnob: (this.state.__rotate===false?knobSmOff:knobSmOn),
+      tglRotate: () => { var N=window.SwapOnNative; var c=(this.state.__rotate!==false); if(N)N.setBool('auto_camera_rotation',!c); this.setState({__rotate:!c}); },
+      mirTog: (this.state.__mirror===true?toggleSm:toggleSmOff), mirKnob: (this.state.__mirror===true?knobSmOn:knobSmOff),
+      tglMirror: () => { var N=window.SwapOnNative; var c=(this.state.__mirror===true); if(N)N.setBool('mirror_front',!c); this.setState({__mirror:!c}); },
+      // ---- Settings: translation address (WHEP url) editable ----
+      addrVal: (this.state.__addr!=null?this.state.__addr:''),
+      onAddr: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('whep_url', v); this.setState({__addr:v}); },
+      // ---- Settings: language (persist; full translation pending) ----
+      langRuStyle: "padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.__lang!=='EN'?"background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;border:1px solid transparent;"),
+      langEnStyle: "padding:5px 14px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;" + (this.state.__lang==='EN'?"background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;border:1px solid transparent;"),
+      pickLangRu: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','RU'); this.setState({__lang:'RU'}); },
+      pickLangEn: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','EN'); this.setState({__lang:'EN'}); },
+      // ---- Face: photo upload (native file picker -> data URL -> engine) ----
+      pickFace: () => { try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); }; rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
+      // ---- Face: replacement settings (live + persist) ----
+      fBlendTog: (this.state.fBlend===false?toggleSmOff:toggleSm), fBlendKnob: (this.state.fBlend===false?knobSmOff:knobSmOn),
+      tglBlend: () => { var N=window.SwapOnNative; var c=(this.state.fBlend!==false); if(N)N.setBool('face_blend',!c); this.setState({fBlend:!c}); },
+      fDeblueTog: (this.state.fDeblue===false?toggleSmOff:toggleSm), fDeblueKnob: (this.state.fDeblue===false?knobSmOff:knobSmOn),
+      tglDeblue: () => { var N=window.SwapOnNative; var c=(this.state.fDeblue!==false); if(N)N.setBool('face_deblue',!c); this.setState({fDeblue:!c}); },
+      fModelVal: (this.state.fModel||'Стандартная'),
+      cycModel: () => { var o=['Стандартная','Лёгкая','Тяжёлая']; var cur=this.state.fModel||o[0]; var nx=o[(o.indexOf(cur)+1)%o.length]; var N=window.SwapOnNative; if(N)N.setStr('face_model',nx); this.setState({fModel:nx}); },
+      fVariantVal: (this.state.fVariant||'Быстрая · среднее качество'),
+      cycVariant: () => { var o=['Быстрая · среднее качество','Баланс','Медленная · макс. качество']; var cur=this.state.fVariant||o[0]; var nx=o[(o.indexOf(cur)+1)%o.length]; var N=window.SwapOnNative; if(N)N.setStr('face_variant',nx); this.setState({fVariant:nx}); },
+      fOpacityVal: (this.state.fOpacity!=null?this.state.fOpacity:85), fOpacityLabel: ((this.state.fOpacity!=null?this.state.fOpacity:85)+'%'),
+      onOpacity: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_opacity',String(v)); this.setState({fOpacity:v}); },
+      fSharpVal: (this.state.fSharp!=null?this.state.fSharp:40), fSharpLabel: ((this.state.fSharp!=null?this.state.fSharp:40)+'%'),
+      onSharp: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_sharpness',String(v)); this.setState({fSharp:v}); },
+      fEnhanceTog: (this.state.fEnhance===false?toggleSmOff:toggleSm), fEnhanceKnob: (this.state.fEnhance===false?knobSmOff:knobSmOn),
+      tglEnhance: () => { var N=window.SwapOnNative; var c=(this.state.fEnhance!==false); if(N)N.setBool('face_enhance',!c); this.setState({fEnhance:!c}); },
+      fQualVal: (this.state.fQual!=null?this.state.fQual:4), fQualLabel: ((this.state.fQual!=null?this.state.fQual:4)+'x'),
+      onQual: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_quality',String(v)); this.setState({fQual:v}); },
+      emSoftStyle: emCellStyle(this.state.fEnhModel, 'soft'), pickEmSoft: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','soft'); this.setState({fEnhModel:'soft'}); },
+      emSharpStyle: emCellStyle(this.state.fEnhModel, 'sharp'), pickEmSharp: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','sharp'); this.setState({fEnhModel:'sharp'}); },
+      emRealStyle: emCellStyle(this.state.fEnhModel, 'real'), pickEmReal: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','real'); this.setState({fEnhModel:'real'}); },
 
       showInfo: this.state.showInfo,
       toggleInfo: () => this.setState(s => ({ showInfo: !s.showInfo })),
