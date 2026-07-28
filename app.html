@@ -134,7 +134,7 @@
             <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:4px;gap:4px;margin-bottom:10px;">
               <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;line-height:1.2;{{ vs_local }}" onClick="{{ pickVLocal }}">Локальное видео</div>
               <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;line-height:1.2;{{ vs_stream }}" onClick="{{ pickVStream }}">Трансляция</div>
-              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;gap:4px;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;color:#E8C77A;background:rgba(232,193,90,0.07);border:1px solid rgba(232,193,90,0.32);line-height:1.2;"><span style="font-size:10px;">✦</span>Замена лица</div>
+              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;gap:4px;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;color:#E8C77A;background:rgba(232,193,90,0.07);border:1px solid rgba(232,193,90,0.32);line-height:1.2;{{ fs_face }}" onClick="{{ pickVFace }}"><span style="font-size:10px;">✦</span>Замена лица</div>
             </div>
             <sc-if value="{{ hint.source.open }}" hint-placeholder-val="{{ false }}">
               <div style="{{ hintBox }}"><span style="{{ hintIcon }}">ℹ</span><div style="{{ hintText }}"><b style="color:#E8EAF2;">Локальное видео</b> — берётся файл с телефона. <b style="color:#E8EAF2;">Трансляция</b> — видео приходит по сети с вашего сервера.</div></div>
@@ -145,7 +145,7 @@
             <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:4px;gap:4px;margin-bottom:16px;">
               <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;line-height:1.2;{{ as_stream }}" onClick="{{ pickAStream }}">Звук из видео/трансляции</div>
               <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;line-height:1.2;{{ as_mic }}" onClick="{{ pickAMic }}">Микрофон телефона</div>
-              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;gap:4px;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;color:#E8C77A;background:rgba(232,193,90,0.07);border:1px solid rgba(232,193,90,0.32);line-height:1.2;"><span style="font-size:10px;">✦</span>Замена голоса</div>
+              <div style="flex:1;min-height:42px;display:flex;align-items:center;justify-content:center;gap:4px;text-align:center;padding:4px;border-radius:10px;font-size:12px;font-weight:600;color:#E8C77A;background:rgba(232,193,90,0.07);border:1px solid rgba(232,193,90,0.32);line-height:1.2;{{ fs_voice }}" onClick="{{ pickAVoice }}"><span style="font-size:10px;">✦</span>Замена голоса</div>
             </div>
 
 
@@ -796,6 +796,10 @@ class Component extends DCLogic {
       as_mic: (this.state.__asrc==='microphone'?"font-weight:700;background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);":"color:#9AA3B8;"),
       pickAStream: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','whep'); this.setState({__asrc:'whep'}); },
       pickAMic: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','microphone'); this.setState({__asrc:'microphone'}); },
+      fs_face: (this.state.__vsrc==='face'?"background:rgba(232,193,90,0.22);border:1px solid rgba(232,193,90,0.6);":""),
+      pickVFace: () => { var N=window.SwapOnNative; if(N)N.setStr('frame_source','face'); this.setState({__vsrc:'face'}); },
+      fs_voice: (this.state.__asrc==='voice'?"background:rgba(232,193,90,0.22);border:1px solid rgba(232,193,90,0.6);":""),
+      pickAVoice: () => { var N=window.SwapOnNative; if(N)N.setStr('audio_source','voice'); this.setState({__asrc:'voice'}); },
 
       showInfo: this.state.showInfo,
       toggleInfo: () => this.setState(s => ({ showInfo: !s.showInfo })),
