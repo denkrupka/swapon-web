@@ -432,7 +432,7 @@
               <span style="flex:1;font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">КАЧЕСТВО</span>
             </div>
             <div style="display:flex;gap:12px;margin-bottom:16px;">
-              <div onClick="{{ pickFace }}" style="{{ faceBoxStyle }}">
+              <div onClick="{{ pickFace }}" style="{{ faceBoxStyle }}"><img src="{{ faceThumbSrc }}" style="{{ faceThumbImgStyle }}" />
                 <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#AE9FFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
                 <span style="font-size:11px;font-weight:700;color:#AE9FFF;">Загрузить</span>
               </div>
@@ -1136,7 +1136,9 @@ class Component extends DCLogic {
       facePrevVidStyle: (this.state.whepLive ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:4;background:#000;' : 'display:none;'),
       facePrevImgStyle: ((this.state.facePreview && !this.state.whepLive) ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;' : 'display:none;'),
       facePrevLive: ((this.state.whepLive||this.state.facePreview) ? 'display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#3AD68E;' : 'display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#8A93A8;'),
-      faceBoxStyle: 'width:104px;height:104px;flex:none;border-radius:16px;background:' + (this.state.faceThumb ? ('#000 center/cover no-repeat url('+this.state.faceThumb+')') : 'rgba(174,159,255,0.08)') + ';border:1.5px ' + (this.state.faceThumb?'solid rgba(174,159,255,0.7)':'dashed rgba(174,159,255,0.4)') + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;overflow:hidden;',
+      faceBoxStyle: 'position:relative;width:104px;height:104px;flex:none;border-radius:16px;background:' + (this.state.faceThumb ? '#000' : 'rgba(174,159,255,0.08)') + ';border:1.5px ' + (this.state.faceThumb?'solid rgba(174,159,255,0.7)':'dashed rgba(174,159,255,0.4)') + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;overflow:hidden;',
+      faceThumbSrc: (this.state.faceThumb||''),
+      faceThumbImgStyle: (this.state.faceThumb ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;' : 'display:none;'),
       cycModel: () => { var i=FACE_MODELS.findIndex(m=>m.name===(this.state.fModel||FACE_MODELS[0].name)); var nm=FACE_MODELS[(i+1)%FACE_MODELS.length]; var v0=nm.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',nm.name); N.setStr('face_model_engine',nm.orig); N.setStr('face_variant',v0.name); N.setStr('face_variant_file',v0.file);} this.setState({fModel:nm.name, fVariant:v0.name, fModelKey:nm.model}, ()=>this.__pushFaceParams()); },
       fVariantVal: (this.state.fVariant||FACE_MODELS[0].variants[0].name),
       cycVariant: () => { var m=FACE_MODELS.find(function(x){return x.name===(this.state.fModel||FACE_MODELS[0].name);}.bind(this))||FACE_MODELS[0]; var vi=m.variants.findIndex(function(v){return v.name===(this.state.fVariant||m.variants[0].name);}.bind(this)); var nv=m.variants[(vi+1)%m.variants.length]; var N=window.SwapOnNative; if(N){N.setStr('face_variant',nv.name); N.setStr('face_variant_file',nv.file);} this.setState({fVariant:nv.name}); },
