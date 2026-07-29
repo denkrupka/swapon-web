@@ -669,6 +669,8 @@ class Component extends DCLogic {
   componentWillUnmount() { clearInterval(this._pushTimer); }
 
   syncTargets(list) { try { var a = list || this.state.added; var pkgs = a.filter(function(x){return x.enabled;}).map(function(x){return x.pkg;}).filter(function(p){return p && p !== '—';}).join(','); var N=window.SwapOnNative; if(N)N.setStr('config_target_packages', pkgs); } catch(e){} }
+  __faceParams() { var s=this.state; return { mouth_mask:true, color_correction:(s.fBlend!==false), enhance:!!s.fEnhance, opacity:((s.fOpacity!=null?s.fOpacity:85)/100), sharpness:((s.fSharp!=null?s.fSharp:0)/100), many_faces:false }; }
+  __pushFaceParams() { try { var N=window.SwapOnNative; if(N&&N.setFaceParams) N.setFaceParams(JSON.stringify(this.__faceParams())); } catch(e){} }
   __syncEngine() { try { var s=this.state; var N=window.SwapOnNative; if(!N)return; var vmap={local:'pattern',stream:'whep',face:'face'}; var amap={video:'whep',voice:'voice',mic:'microphone'}; var vOn=(s.videoOn!==false), aOn=(s.audioOn!==false); N.setBool('inject_front_camera', !!(vOn && s.camFront)); N.setBool('inject_back_camera', !!(vOn && s.camBack)); N.setStr('frame_source', vmap[s.videoSrc]||'whep'); N.setBool('video_replace', vOn); N.setBool('audio_replace', aOn); N.setStr('audio_source', aOn ? (amap[s.audioSrc]||'whep') : 'microphone'); } catch(e){} }
   addFromCatalog(app) {
     this.setState(s => ({
@@ -1096,10 +1098,10 @@ class Component extends DCLogic {
       pickLangRu: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','RU'); window.__i18nLang='RU'; this.setState({__lang:'RU'}); try{ location.reload(); }catch(e){} },
       pickLangEn: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','EN'); window.__i18nLang='EN'; this.setState({__lang:'EN'}); try{ location.reload(); }catch(e){} },
       // ---- Face: photo upload (native file picker -> data URL -> engine) ----
-      pickFace: () => { try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); }; rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
+      pickFace: () => { var self=this; try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); if(N&&N.setFaceSource)N.setFaceSource(rd.result, JSON.stringify(self.__faceParams())); self.setState({faceUploading:false,faceUploaded:true}); }; self.setState({faceUploading:true}); rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
       // ---- Face: replacement settings (live + persist) ----
       fBlendTog: (this.state.fBlend===false?toggleSmOff:toggleSm), fBlendKnob: (this.state.fBlend===false?knobSmOff:knobSmOn),
-      tglBlend: () => { var N=window.SwapOnNative; var c=(this.state.fBlend!==false); if(N)N.setBool('face_blend',!c); this.setState({fBlend:!c}); },
+      tglBlend: () => { var N=window.SwapOnNative; var c=(this.state.fBlend!==false); if(N)N.setBool('face_blend',!c); this.setState({fBlend:!c}, ()=>this.__pushFaceParams()); },
       fDeblueTog: (this.state.fDeblue===false?toggleSmOff:toggleSm), fDeblueKnob: (this.state.fDeblue===false?knobSmOff:knobSmOn),
       tglDeblue: () => { var N=window.SwapOnNative; var c=(this.state.fDeblue!==false); if(N)N.setBool('face_deblue',!c); this.setState({fDeblue:!c}); },
       fModelVal: (this.state.fModel||FACE_MODELS[0].name),
@@ -1107,11 +1109,11 @@ class Component extends DCLogic {
       fVariantVal: (this.state.fVariant||FACE_MODELS[0].variants[0].name),
       cycVariant: () => { var m=FACE_MODELS.find(function(x){return x.name===(this.state.fModel||FACE_MODELS[0].name);}.bind(this))||FACE_MODELS[0]; var vi=m.variants.findIndex(function(v){return v.name===(this.state.fVariant||m.variants[0].name);}.bind(this)); var nv=m.variants[(vi+1)%m.variants.length]; var N=window.SwapOnNative; if(N){N.setStr('face_variant',nv.name); N.setStr('face_variant_file',nv.file);} this.setState({fVariant:nv.name}); },
       fOpacityVal: (this.state.fOpacity!=null?this.state.fOpacity:85), fOpacityLabel: ((this.state.fOpacity!=null?this.state.fOpacity:85)+'%'),
-      onOpacity: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_opacity',String(v)); this.setState({fOpacity:v}); },
+      onOpacity: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_opacity',String(v)); this.setState({fOpacity:v}, ()=>this.__pushFaceParams()); },
       fSharpVal: (this.state.fSharp!=null?this.state.fSharp:40), fSharpLabel: ((this.state.fSharp!=null?this.state.fSharp:40)+'%'),
-      onSharp: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_sharpness',String(v)); this.setState({fSharp:v}); },
+      onSharp: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_sharpness',String(v)); this.setState({fSharp:v}, ()=>this.__pushFaceParams()); },
       fEnhanceTog: (this.state.fEnhance===false?toggleSmOff:toggleSm), fEnhanceKnob: (this.state.fEnhance===false?knobSmOff:knobSmOn),
-      tglEnhance: () => { var N=window.SwapOnNative; var c=(this.state.fEnhance!==false); if(N)N.setBool('face_enhance',!c); this.setState({fEnhance:!c}); },
+      tglEnhance: () => { var N=window.SwapOnNative; var c=(this.state.fEnhance!==false); if(N)N.setBool('face_enhance',!c); this.setState({fEnhance:!c}, ()=>this.__pushFaceParams()); },
       fQualVal: (this.state.fQual!=null?this.state.fQual:4), fQualLabel: ((this.state.fQual!=null?this.state.fQual:4)+'x'),
       onQual: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_quality',String(v)); this.setState({fQual:v}); },
       emSoftStyle: emCellStyle(this.state.fEnhModel, 'soft'), pickEmSoft: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Мягкое'); this.setState({fEnhModel:'soft'}); },
