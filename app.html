@@ -644,7 +644,7 @@ class Component extends DCLogic {
         moduleOn:(_c.enabled!==false), videoOn:(_c.videoReplace!==false), audioOn:(_c.audioReplace!==false),
         camFront:(_c.front!==false), camBack:(_c.back===true),
         videoSrc:({pattern:'local',whep:'stream',face:'face'}[_c.videoSource]||'stream'),
-        audioSrc:(_c.audioSource==='voice'?'voice':'video') };
+        audioSrc:(_c.audioSource==='voice'?'voice':'video'), curVoiceId:(_c.voiceId||'') };
       if(_c.faceModel) _st.fModel=_c.faceModel; if(_c.faceVariant) _st.fVariant=_c.faceVariant;
       if(_c.faceOpacity) _st.fOpacity=_c.faceOpacity; if(_c.faceSharpness) _st.fSharp=_c.faceSharpness;
       if(_c.faceEnhanceModel) _st.fEnhModel=_c.faceEnhanceModel; if(_c.faceQuality) _st.fQual=_c.faceQuality;
@@ -1008,10 +1008,10 @@ class Component extends DCLogic {
         ];
         const src = this.state.voiceTab === 'ready' ? ((this.state.catalog && this.state.catalog.length) ? this.state.catalog : presets) : this.state.addedVoices;
         return src.map(v => {
-          const sel = this.state.selectedVoice === v.id;
+          const sel = this.state.selectedVoice ? (this.state.selectedVoice === v.id) : (this.state.curVoiceId && this.state.curVoiceId === v.vid);
           return {
             name: v.name, meta: v.meta, initial: v.initial, vid: v.vid,
-            onSelect: () => { var N=window.SwapOnNative; if(N)N.setStr('cloud_voice_id', v.vid); this.setState({ selectedVoice: v.id }); },
+            onSelect: () => { var N=window.SwapOnNative; if(N)N.setStr('cloud_voice_id', v.vid); this.setState({ selectedVoice: v.id, curVoiceId: v.vid }); },
             onCopy: (e) => { if (e && e.stopPropagation) e.stopPropagation(); try { navigator.clipboard && navigator.clipboard.writeText(v.vid); } catch (err) {} },
             onPlay: (e) => { if (e && e.stopPropagation) e.stopPropagation(); try { if(this._prev){this._prev.pause();} this._prev = new Audio('https://eovwtknfvuworzweezva.supabase.co/functions/v1/voice?action=preview&voice_id='+encodeURIComponent(v.vid)); this._prev.play(); } catch (err) {} },
             rowStyle: "display:flex;align-items:center;gap:11px;border-radius:13px;padding:11px 13px;cursor:pointer;background:" + (sel ? "linear-gradient(150deg,rgba(174,159,255,0.14),rgba(45,120,255,0.05))" : "rgba(255,255,255,0.035)") + ";border:1.5px solid " + (sel ? "rgba(174,159,255,0.45)" : "rgba(255,255,255,0.08)") + ";",
@@ -1103,7 +1103,7 @@ class Component extends DCLogic {
       fDeblueTog: (this.state.fDeblue===false?toggleSmOff:toggleSm), fDeblueKnob: (this.state.fDeblue===false?knobSmOff:knobSmOn),
       tglDeblue: () => { var N=window.SwapOnNative; var c=(this.state.fDeblue!==false); if(N)N.setBool('face_deblue',!c); this.setState({fDeblue:!c}); },
       fModelVal: (this.state.fModel||FACE_MODELS[0].name),
-      cycModel: () => { var i=FACE_MODELS.findIndex(m=>m.name===(this.state.fModel||FACE_MODELS[0].name)); console.log('CYCMODEL i='+i+' names='+FACE_MODELS.map(function(m){return m.name;}).join('|')+' fModel='+this.state.fModel); var nm=FACE_MODELS[(i+1)%FACE_MODELS.length]; var v0=nm.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',nm.name); N.setStr('face_model_engine',nm.orig); N.setStr('face_variant',v0.name); N.setStr('face_variant_file',v0.file);} this.setState({fModel:nm.name, fVariant:v0.name}); },
+      cycModel: () => { var i=FACE_MODELS.findIndex(m=>m.name===(this.state.fModel||FACE_MODELS[0].name)); var nm=FACE_MODELS[(i+1)%FACE_MODELS.length]; var v0=nm.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',nm.name); N.setStr('face_model_engine',nm.orig); N.setStr('face_variant',v0.name); N.setStr('face_variant_file',v0.file);} this.setState({fModel:nm.name, fVariant:v0.name}); },
       fVariantVal: (this.state.fVariant||FACE_MODELS[0].variants[0].name),
       cycVariant: () => { var m=FACE_MODELS.find(function(x){return x.name===(this.state.fModel||FACE_MODELS[0].name);}.bind(this))||FACE_MODELS[0]; var vi=m.variants.findIndex(function(v){return v.name===(this.state.fVariant||m.variants[0].name);}.bind(this)); var nv=m.variants[(vi+1)%m.variants.length]; var N=window.SwapOnNative; if(N){N.setStr('face_variant',nv.name); N.setStr('face_variant_file',nv.file);} this.setState({fVariant:nv.name}); },
       fOpacityVal: (this.state.fOpacity!=null?this.state.fOpacity:85), fOpacityLabel: ((this.state.fOpacity!=null?this.state.fOpacity:85)+'%'),
