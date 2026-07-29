@@ -432,7 +432,7 @@
               <span style="flex:1;font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">КАЧЕСТВО</span>
             </div>
             <div style="display:flex;gap:12px;margin-bottom:16px;">
-              <div onClick="{{ pickFace }}" style="width:104px;height:104px;flex:none;border-radius:16px;background:rgba(174,159,255,0.08);border:1.5px dashed rgba(174,159,255,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;">
+              <div onClick="{{ pickFace }}" style="{{ faceBoxStyle }}">
                 <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#AE9FFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
                 <span style="font-size:11px;font-weight:700;color:#AE9FFF;">Загрузить</span>
               </div>
@@ -669,7 +669,7 @@ class Component extends DCLogic {
   componentWillUnmount() { clearInterval(this._pushTimer); }
 
   syncTargets(list) { try { var a = list || this.state.added; var pkgs = a.filter(function(x){return x.enabled;}).map(function(x){return x.pkg;}).filter(function(p){return p && p !== '—';}).join(','); var N=window.SwapOnNative; if(N)N.setStr('config_target_packages', pkgs); } catch(e){} }
-  __faceParams() { var s=this.state; return { mouth_mask:true, color_correction:(s.fBlend!==false), enhance:!!s.fEnhance, opacity:((s.fOpacity!=null?s.fOpacity:85)/100), sharpness:((s.fSharp!=null?s.fSharp:0)/100), many_faces:false }; }
+  __faceParams() { var s=this.state; return { mouth_mask:true, color_correction:(s.fBlend!==false), enhance:!!s.fEnhance, opacity:((s.fOpacity!=null?s.fOpacity:85)/100), sharpness:((s.fSharp!=null?s.fSharp:0)/100), many_faces:false, model:(s.fModelKey||'inswapper') }; }
   __pushFaceParams() { try { var N=window.SwapOnNative; if(N&&N.setFaceParams) N.setFaceParams(JSON.stringify(this.__faceParams())); } catch(e){} }
   __syncEngine() { try { var s=this.state; var N=window.SwapOnNative; if(!N)return; var vmap={local:'pattern',stream:'whep',face:'face'}; var amap={video:'whep',voice:'voice',mic:'microphone'}; var vOn=(s.videoOn!==false), aOn=(s.audioOn!==false); N.setBool('inject_front_camera', !!(vOn && s.camFront)); N.setBool('inject_back_camera', !!(vOn && s.camBack)); N.setStr('frame_source', vmap[s.videoSrc]||'whep'); N.setBool('video_replace', vOn); N.setBool('audio_replace', aOn); N.setStr('audio_source', aOn ? (amap[s.audioSrc]||'whep') : 'microphone'); } catch(e){} }
   addFromCatalog(app) {
@@ -707,9 +707,9 @@ class Component extends DCLogic {
     const R = React.createElement;
     const emCellStyle = (cur, key) => { var on = ((cur||'soft')===key); return 'flex:1;min-width:70px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:'+(on?700:600)+';cursor:pointer;'+(on?'background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);':'color:#9AA3B8;border:1px solid transparent;'); };
     const FACE_MODELS = [
-      {name:'Стандартная', orig:'InSwapper (InsightFace)', variants:[{name:'Быстрая',file:'inswapper_128_fp16'},{name:'Точная',file:'inswapper_128'}]},
-      {name:'Высокое разрешение', orig:'SimSwap', variants:[{name:'Обычное',file:'simswap_224'},{name:'Чёткое HD',file:'simswap_512'}]},
-      {name:'Стабильная (для видео)', orig:'GHOST', variants:[{name:'Плавная',file:'ghost_unet_2'},{name:'Максимум',file:'ghost_unet_3'}]}
+      {name:'Стандартная', orig:'InSwapper 128', model:'inswapper', variants:[{name:'Баланс',file:'inswapper'}]},
+      {name:'HyperSwap (макс. качество)', orig:'HyperSwap 256', model:'hyperswap', variants:[{name:'Максимум',file:'hyperswap'}]},
+      {name:'ReSwapper', orig:'ReSwapper 256', model:'reswapper', variants:[{name:'256',file:'reswapper'}]}
     ];
     const _txTitle = (t) => { var m=t.meta||{}; if(t.kind==='topup')return 'Пополнение · Telegram'; if(t.kind==='referral')return 'Бонус за приглашение'; if(t.kind==='bonus')return 'Бонус'; if(t.kind==='admin')return 'Корректировка'; if(t.kind==='refund')return 'Возврат'; var s=m.state||m.mode||''; if(s==='face'||s==='faceswap')return 'Замена лица'; if(s==='voice')return 'Замена голоса'; if(s==='background'||s==='idle')return 'Фоновый режим'; return 'Замена камеры'; };
     const _txWhen = (iso) => { try { var d=new Date(iso); var now=new Date(); var hh=('0'+d.getHours()).slice(-2), mm=('0'+d.getMinutes()).slice(-2); var sameDay=d.toDateString()===now.toDateString(); var yd=new Date(now); yd.setDate(now.getDate()-1); if(sameDay)return 'Сегодня, '+hh+':'+mm; if(d.toDateString()===yd.toDateString())return 'Вчера, '+hh+':'+mm; var mon=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'][d.getMonth()]; return d.getDate()+' '+mon+', '+hh+':'+mm; } catch(e){ return ''; } };
@@ -1098,14 +1098,15 @@ class Component extends DCLogic {
       pickLangRu: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','RU'); window.__i18nLang='RU'; this.setState({__lang:'RU'}); try{ location.reload(); }catch(e){} },
       pickLangEn: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','EN'); window.__i18nLang='EN'; this.setState({__lang:'EN'}); try{ location.reload(); }catch(e){} },
       // ---- Face: photo upload (native file picker -> data URL -> engine) ----
-      pickFace: () => { var self=this; try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); if(N&&N.setFaceSource)N.setFaceSource(rd.result, JSON.stringify(self.__faceParams())); self.setState({faceUploading:false,faceUploaded:true}); }; self.setState({faceUploading:true}); rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
+      pickFace: () => { var self=this; try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); if(N&&N.setFaceSource)N.setFaceSource(rd.result, JSON.stringify(self.__faceParams())); self.setState({faceUploading:false,faceUploaded:true,faceThumb:rd.result}); }; self.setState({faceUploading:true}); rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
       // ---- Face: replacement settings (live + persist) ----
       fBlendTog: (this.state.fBlend===false?toggleSmOff:toggleSm), fBlendKnob: (this.state.fBlend===false?knobSmOff:knobSmOn),
       tglBlend: () => { var N=window.SwapOnNative; var c=(this.state.fBlend!==false); if(N)N.setBool('face_blend',!c); this.setState({fBlend:!c}, ()=>this.__pushFaceParams()); },
       fDeblueTog: (this.state.fDeblue===false?toggleSmOff:toggleSm), fDeblueKnob: (this.state.fDeblue===false?knobSmOff:knobSmOn),
       tglDeblue: () => { var N=window.SwapOnNative; var c=(this.state.fDeblue!==false); if(N)N.setBool('face_deblue',!c); this.setState({fDeblue:!c}); },
       fModelVal: (this.state.fModel||FACE_MODELS[0].name),
-      cycModel: () => { var i=FACE_MODELS.findIndex(m=>m.name===(this.state.fModel||FACE_MODELS[0].name)); var nm=FACE_MODELS[(i+1)%FACE_MODELS.length]; var v0=nm.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',nm.name); N.setStr('face_model_engine',nm.orig); N.setStr('face_variant',v0.name); N.setStr('face_variant_file',v0.file);} this.setState({fModel:nm.name, fVariant:v0.name}); },
+      faceBoxStyle: 'width:104px;height:104px;flex:none;border-radius:16px;background:' + (this.state.faceThumb ? ('#000 center/cover no-repeat url('+this.state.faceThumb+')') : 'rgba(174,159,255,0.08)') + ';border:1.5px ' + (this.state.faceThumb?'solid rgba(174,159,255,0.7)':'dashed rgba(174,159,255,0.4)') + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;overflow:hidden;',
+      cycModel: () => { var i=FACE_MODELS.findIndex(m=>m.name===(this.state.fModel||FACE_MODELS[0].name)); var nm=FACE_MODELS[(i+1)%FACE_MODELS.length]; var v0=nm.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',nm.name); N.setStr('face_model_engine',nm.orig); N.setStr('face_variant',v0.name); N.setStr('face_variant_file',v0.file);} this.setState({fModel:nm.name, fVariant:v0.name, fModelKey:nm.model}, ()=>this.__pushFaceParams()); },
       fVariantVal: (this.state.fVariant||FACE_MODELS[0].variants[0].name),
       cycVariant: () => { var m=FACE_MODELS.find(function(x){return x.name===(this.state.fModel||FACE_MODELS[0].name);}.bind(this))||FACE_MODELS[0]; var vi=m.variants.findIndex(function(v){return v.name===(this.state.fVariant||m.variants[0].name);}.bind(this)); var nv=m.variants[(vi+1)%m.variants.length]; var N=window.SwapOnNative; if(N){N.setStr('face_variant',nv.name); N.setStr('face_variant_file',nv.file);} this.setState({fVariant:nv.name}); },
       fOpacityVal: (this.state.fOpacity!=null?this.state.fOpacity:85), fOpacityLabel: ((this.state.fOpacity!=null?this.state.fOpacity:85)+'%'),
