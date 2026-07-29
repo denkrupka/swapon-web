@@ -456,7 +456,7 @@
               <span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">ПРЕДПРОСМОТР</span>
               <span style="{{ facePrevLive }}"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 7px currentColor;"></span>В реальном времени</span>
             </div>
-            <div style="position:relative;width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:radial-gradient(120% 120% at 50% 30%,rgba(45,120,255,0.14),rgba(9,13,20,0.9));border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><img src="{{ facePrevSrc }}" style="{{ facePrevImgStyle }}" />
+            <div style="position:relative;width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:radial-gradient(120% 120% at 50% 30%,rgba(45,120,255,0.14),rgba(9,13,20,0.9));border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><video id="swPrevVid" autoplay playsinline muted style="{{ facePrevVidStyle }}"></video><img src="{{ facePrevSrc }}" style="{{ facePrevImgStyle }}" />
               <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="rgba(174,159,255,0.5)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg>
               <span style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:12px;color:#8A93A8;">Загрузите лицо, чтобы увидеть результат</span>
               <span style="position:absolute;top:10px;left:12px;font-size:10px;font-weight:800;color:#CDBFFF;background:rgba(0,0,0,0.45);padding:3px 8px;border-radius:6px;font-family:'IBM Plex Mono',monospace;">PRO · 2 Swaps/min</span>
@@ -644,7 +644,8 @@ class Component extends DCLogic {
         moduleOn:(_c.enabled!==false), videoOn:(_c.videoReplace!==false), audioOn:(_c.audioReplace!==false),
         camFront:(_c.front!==false), camBack:(_c.back===true),
         videoSrc:({pattern:'local',whep:'stream',face:'face'}[_c.videoSource]||'stream'),
-        audioSrc:(_c.audioSource==='voice'?'voice':'video'), curVoiceId:(_c.voiceId||'') };
+        audioSrc:(_c.audioSource==='voice'?'voice':'video'), curVoiceId:(_c.voiceId||''),
+        faceOutUrl:(_c.faceOutUrl||''), iceServers:(_c.iceServers||[]) };
       if(_c.faceModel) _st.fModel=_c.faceModel; if(_c.faceVariant) _st.fVariant=_c.faceVariant;
       if(_c.faceOpacity) _st.fOpacity=_c.faceOpacity; if(_c.faceSharpness) _st.fSharp=_c.faceSharpness;
       if(_c.faceEnhanceModel) _st.fEnhModel=_c.faceEnhanceModel; if(_c.faceQuality) _st.fQual=_c.faceQuality;
@@ -656,9 +657,32 @@ class Component extends DCLogic {
       try { var _h = _N.getHistoryJson && _N.getHistoryJson(); if(_h) this.setState({ history: JSON.parse(_h) }); } catch(e){}
       window.__swaponSync = function(){ try { var c=JSON.parse(window.SwapOnNative.getConfig()); this.setState({ __bal:c.balance, __uname:(c.username||''), __fname:(c.firstName||''), __tgid:(c.telegramId||0) }); var h=window.SwapOnNative.getHistoryJson&&window.SwapOnNative.getHistoryJson(); if(h) this.setState({history:JSON.parse(h)}); } catch(e){} }.bind(this);
       window.__swaponForceOff = function(){ this.setState({ __on:false }); }.bind(this);
-      // live face-swap preview: native pushes the latest swapped frame here
-      window.__facePreview = function(url){ try { console.log('DBG __facePreview len='+(url?url.length:0)); if(url && url.length>40){ this.setState({facePreview:url, facePreviewTs:Date.now()}); } } catch(e){ console.log('DBG __facePreview err '+e); } }.bind(this);
-      this._facePrevTimer = setInterval(function(){ try { console.log('DBG poll screen='+this.state.screen+' has='+!!(window.SwapOnNative&&window.SwapOnNative.requestFacePreview)); if(this.state.screen==='face'){ var N=window.SwapOnNative; if(N && N.requestFacePreview) N.requestFacePreview(); } if(this.state.facePreviewTs && (Date.now()-this.state.facePreviewTs)>6000 && this.state.facePreview){ this.setState({facePreview:''}); } } catch(e){} }.bind(this), 1300);
+      // live face-swap preview: WHEP video (smooth) with a snapshot fallback pushed by native
+      window.__facePreview = function(url){ try { if(url && url.length>40){ this.setState({facePreview:url, facePreviewTs:Date.now()}); } } catch(e){} }.bind(this);
+      window.__whepStart = function(){ try {
+        var self=this; if(self._whepPc) return; var url=self.state.faceOutUrl; if(!url || typeof RTCPeerConnection==='undefined') return;
+        var pc=new RTCPeerConnection({iceServers:(self.state.iceServers||[]), iceTransportPolicy:'relay', bundlePolicy:'max-bundle'}); self._whepPc=pc;
+        pc.addTransceiver('video',{direction:'recvonly'}); pc.addTransceiver('audio',{direction:'recvonly'});
+        pc.ontrack=function(e){ var v=document.getElementById('swPrevVid'); if(v && e.streams && e.streams[0]){ if(v.srcObject!==e.streams[0]){ v.srcObject=e.streams[0]; if(v.play) v.play().catch(function(){}); } self.setState({whepLive:true}); } };
+        pc.onconnectionstatechange=function(){ var st=pc.connectionState; if(st==='failed'||st==='closed'||st==='disconnected'){ self.setState({whepLive:false}); } };
+        pc.createOffer().then(function(o){ return pc.setLocalDescription(o); }).then(function(){
+          return new Promise(function(res){ if(pc.iceGatheringState==='complete'){res();return;} var to=setTimeout(res,3500); pc.addEventListener('icegatheringstatechange',function(){ if(pc.iceGatheringState==='complete'){clearTimeout(to);res();} }); });
+        }).then(function(){ return fetch(url,{method:'POST',headers:{'Content-Type':'application/sdp'},body:pc.localDescription.sdp}); })
+          .then(function(r){ if(!r.ok) throw new Error('whep '+r.status); return r.text(); })
+          .then(function(ans){ return pc.setRemoteDescription({type:'answer',sdp:ans}); })
+          .catch(function(e){ console.log('DBG whep err '+e); if(self.__whepStop) self.__whepStop(); });
+      } catch(e){ console.log('DBG whep ex '+e); } }.bind(this);
+      window.__whepStop = function(){ try { if(this._whepPc){ this._whepPc.close(); this._whepPc=null; } var v=document.getElementById('swPrevVid'); if(v){ try{v.srcObject=null;}catch(e){} } this.setState({whepLive:false}); } catch(e){} }.bind(this);
+      this.__whepStop = window.__whepStop;
+      this._facePrevTimer = setInterval(function(){ try {
+        if(this.state.screen==='face'){
+          if(!this._whepPc && window.__whepStart) window.__whepStart();
+          if(!this.state.whepLive){ var N=window.SwapOnNative; if(N && N.requestFacePreview) N.requestFacePreview(); }
+        } else {
+          if(this._whepPc && window.__whepStop) window.__whepStop();
+        }
+        if(this.state.facePreviewTs && (Date.now()-this.state.facePreviewTs)>6000 && this.state.facePreview){ this.setState({facePreview:''}); }
+      } catch(e){} }.bind(this), 1300);
       window.__vtRecording = function(){ this.setState({vtState:'rec'}); }.bind(this);
       window.__vtConverting = function(){ this.setState({vtState:'conv'}); }.bind(this);
       window.__onVoiceTest = function(mp3b64, status){ var self=this; if(status==='ok' && mp3b64){ try { self.setState({vtState:'play', vtErr:''}); var a=new Audio('data:audio/mpeg;base64,'+mp3b64); a.onended=function(){ self.setState({vtState:''}); }; a.onerror=function(){ self.setState({vtState:''}); }; a.play(); } catch(e){ self.setState({vtState:''}); } } else { self.setState({vtState:'', vtErr:(status==='no_voice'?'Сначала выберите голос':status==='rec_err'?'Не удалось записать':'Ошибка преобразования')}); } }.bind(this);
@@ -1109,8 +1133,9 @@ class Component extends DCLogic {
       tglDeblue: () => { var N=window.SwapOnNative; var c=(this.state.fDeblue!==false); if(N)N.setBool('face_deblue',!c); this.setState({fDeblue:!c}); },
       fModelVal: (this.state.fModel||FACE_MODELS[0].name),
       facePrevSrc: (this.state.facePreview||''),
-      facePrevImgStyle: (this.state.facePreview ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;' : 'display:none;'),
-      facePrevLive: (this.state.facePreview ? 'display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#3AD68E;' : 'display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#8A93A8;'),
+      facePrevVidStyle: (this.state.whepLive ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:4;background:#000;' : 'display:none;'),
+      facePrevImgStyle: ((this.state.facePreview && !this.state.whepLive) ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;' : 'display:none;'),
+      facePrevLive: ((this.state.whepLive||this.state.facePreview) ? 'display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#3AD68E;' : 'display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#8A93A8;'),
       faceBoxStyle: 'width:104px;height:104px;flex:none;border-radius:16px;background:' + (this.state.faceThumb ? ('#000 center/cover no-repeat url('+this.state.faceThumb+')') : 'rgba(174,159,255,0.08)') + ';border:1.5px ' + (this.state.faceThumb?'solid rgba(174,159,255,0.7)':'dashed rgba(174,159,255,0.4)') + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;overflow:hidden;',
       cycModel: () => { var i=FACE_MODELS.findIndex(m=>m.name===(this.state.fModel||FACE_MODELS[0].name)); var nm=FACE_MODELS[(i+1)%FACE_MODELS.length]; var v0=nm.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',nm.name); N.setStr('face_model_engine',nm.orig); N.setStr('face_variant',v0.name); N.setStr('face_variant_file',v0.file);} this.setState({fModel:nm.name, fVariant:v0.name, fModelKey:nm.model}, ()=>this.__pushFaceParams()); },
       fVariantVal: (this.state.fVariant||FACE_MODELS[0].variants[0].name),
