@@ -646,6 +646,7 @@ class Component extends DCLogic {
         videoSrc:({pattern:'local',whep:'stream',face:'face'}[_c.videoSource]||'stream'),
         audioSrc:(_c.audioSource==='voice'?'voice':'video'), curVoiceId:(_c.voiceId||''),
         faceOutUrl:(_c.faceOutUrl||''), iceServers:(_c.iceServers||[]) };
+      try { var _ft=localStorage.getItem('sw_faceThumb'); if(_ft){ _st.faceThumb=_ft; _st.faceUploaded=true; } } catch(e){}
       if(_c.faceModel) _st.fModel=_c.faceModel; if(_c.faceVariant) _st.fVariant=_c.faceVariant;
       if(_c.faceOpacity) _st.fOpacity=_c.faceOpacity; if(_c.faceSharpness) _st.fSharp=_c.faceSharpness;
       if(_c.faceEnhanceModel) _st.fEnhModel=_c.faceEnhanceModel; if(_c.faceQuality) _st.fQual=_c.faceQuality;
@@ -1125,7 +1126,7 @@ class Component extends DCLogic {
       pickLangRu: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','RU'); window.__i18nLang='RU'; this.setState({__lang:'RU'}); try{ location.reload(); }catch(e){} },
       pickLangEn: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','EN'); window.__i18nLang='EN'; this.setState({__lang:'EN'}); try{ location.reload(); }catch(e){} },
       // ---- Face: photo upload (native file picker -> data URL -> engine) ----
-      pickFace: () => { var self=this; try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); if(N&&N.setFaceSource)N.setFaceSource(rd.result, JSON.stringify(self.__faceParams())); self.setState({faceUploading:false,faceUploaded:true,faceThumb:rd.result}); }; self.setState({faceUploading:true}); rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
+      pickFace: () => { var self=this; try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); if(N&&N.setFaceSource)N.setFaceSource(rd.result, JSON.stringify(self.__faceParams())); try{ localStorage.setItem('sw_faceThumb', rd.result); }catch(e){} self.setState({faceUploading:false,faceUploaded:true,faceThumb:rd.result}); }; self.setState({faceUploading:true}); rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
       // ---- Face: replacement settings (live + persist) ----
       fBlendTog: (this.state.fBlend===false?toggleSmOff:toggleSm), fBlendKnob: (this.state.fBlend===false?knobSmOff:knobSmOn),
       tglBlend: () => { var N=window.SwapOnNative; var c=(this.state.fBlend!==false); if(N)N.setBool('face_blend',!c); this.setState({fBlend:!c}, ()=>this.__pushFaceParams()); },
