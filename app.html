@@ -674,8 +674,9 @@ class Component extends DCLogic {
         // so direct UDP connects; the old co-located TURN is dead. whepLive flips true only
         // when real frames arrive (onloadeddata/onresize), never on bare track negotiation.
         var pc=new RTCPeerConnection({iceServers:(self.state.iceServers||[]), iceTransportPolicy:'all', bundlePolicy:'max-bundle'}); self._whepPc=pc;
+        self._whepStartedAt=Date.now(); self._whepLastFrameAt=0;
         pc.addTransceiver('video',{direction:'recvonly'}); pc.addTransceiver('audio',{direction:'recvonly'});
-        pc.ontrack=function(e){ var v=document.getElementById('swPrevVid'); if(v && e.streams && e.streams[0]){ if(v.srcObject!==e.streams[0]){ v.srcObject=e.streams[0]; v.onloadeddata=function(){ if(v.videoWidth>0) self.setState({whepLive:true}); }; v.onresize=function(){ if(v.videoWidth>0) self.setState({whepLive:true}); }; if(v.play) v.play().catch(function(){}); } } };
+        pc.ontrack=function(e){ var v=document.getElementById('swPrevVid'); if(v && e.streams && e.streams[0]){ if(v.srcObject!==e.streams[0]){ v.srcObject=e.streams[0]; v.onloadeddata=function(){ if(v.videoWidth>0) self.setState({whepLive:true}); }; v.onresize=function(){ if(v.videoWidth>0) self.setState({whepLive:true}); }; v.ontimeupdate=function(){ if(self._whepPc===pc) self._whepLastFrameAt=Date.now(); }; if(v.requestVideoFrameCallback){ var mark=function(){ if(self._whepPc!==pc)return; self._whepLastFrameAt=Date.now(); v.requestVideoFrameCallback(mark); }; v.requestVideoFrameCallback(mark); } if(v.play) v.play().catch(function(){}); } } };
         pc.onconnectionstatechange=function(){ var st=pc.connectionState; if(st==='disconnected'){ self.setState({whepLive:false}); } if(st==='failed'||st==='closed'){ self.setState({whepLive:false}); if(self._whepPc===pc){ try{pc.close();}catch(e){} self._whepPc=null; } } };
         pc.createOffer().then(function(o){ return pc.setLocalDescription(o); }).then(function(){
           return new Promise(function(res){ if(pc.iceGatheringState==='complete'){res();return;} var to=setTimeout(res,3500); pc.addEventListener('icegatheringstatechange',function(){ if(pc.iceGatheringState==='complete'){clearTimeout(to);res();} }); });
@@ -684,7 +685,7 @@ class Component extends DCLogic {
           .then(function(ans){ return pc.setRemoteDescription({type:'answer',sdp:ans}); })
           .catch(function(e){ console.log('DBG whep err '+e); if(self._whepPc===pc){ try{pc.close();}catch(x){} self._whepPc=null; } });  // null it so the timer retries
       } catch(e){ console.log('DBG whep ex '+e); } }.bind(this);
-      window.__whepStop = function(){ try { if(this._whepPc){ this._whepPc.close(); this._whepPc=null; } var v=document.getElementById('swPrevVid'); if(v){ try{v.srcObject=null;}catch(e){} } this.setState({whepLive:false}); } catch(e){} }.bind(this);
+      window.__whepStop = function(){ try { if(this._whepPc){ this._whepPc.close(); this._whepPc=null; } this._whepStartedAt=0; this._whepLastFrameAt=0; var v=document.getElementById('swPrevVid'); if(v){ try{v.srcObject=null;}catch(e){} } this.setState({whepLive:false}); } catch(e){} }.bind(this);
       this.__whepStop = window.__whepStop;
       // Live toggle: start/stop own-camera publish (native) + WHEP playback.
       window.__toggleLive = function(){ try {
@@ -696,6 +697,7 @@ class Component extends DCLogic {
         if(this.state.screen==='face'){
           if(this.state.liveOn){
             if(!this._whepPc && window.__whepStart) window.__whepStart();   // keep WHEP alive while live
+            else if(this._whepPc){ var now=Date.now(), frameAge=this._whepLastFrameAt?(now-this._whepLastFrameAt):0, startAge=this._whepStartedAt?(now-this._whepStartedAt):0; if((frameAge>4000)||(!this._whepLastFrameAt&&startAge>8000)){ console.log('DBG WHEP_WATCHDOG reconnect frameAge='+frameAge+' startAge='+startAge); if(this.__whepStop)this.__whepStop(); var self=this; setTimeout(function(){ if(self.state.liveOn&&window.__whepStart)window.__whepStart(); },250); } }
           } else {
             var N=window.SwapOnNative; if(N && N.requestFacePreview) N.requestFacePreview();   // free still
           }
