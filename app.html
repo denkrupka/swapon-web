@@ -648,7 +648,11 @@ class Component extends DCLogic {
       if(_c.videoFileName) { _st.videoName=_c.videoFileName; _st.videoMeta='Выбранный файл'; }
       // populate the apps-for-replacement list from the engine's target packages
       try { if(_c.targetPackages){ var self=this; var pk=_c.targetPackages.split(',').map(function(x){return x.trim();}).filter(Boolean); var nm={}; (this.CATALOG||[]).forEach(function(c){ nm[c.pkg]=c.name; }); _st.added = pk.map(function(p,i){ return { id:i+1, name:(nm[p]||p), pkg:p, enabled:true }; }); _st.nextId = pk.length+1; } } catch(e){}
-      this.setState(_st, function(){ var self=this; setTimeout(function(){ self.__pushFaceParams(); }, 400); });
+      // The GPU service already owns the last applied config. Hydrate the UI from
+      // native storage, but do not re-submit it during component construction: the
+      // DC runtime has not attached prototype methods yet at this lifecycle point.
+      // Every actual control change calls __pushFaceParams explicitly.
+      this.setState(_st);
       try { window.__i18nLang = (_c.lang||'RU'); if(window.__applyI18n) window.__applyI18n(); } catch(e){}
       try { var _h = _N.getHistoryJson && _N.getHistoryJson(); if(_h) this.setState({ history: JSON.parse(_h) }); } catch(e){}
       window.__swaponSync = function(){ try { var c=JSON.parse(window.SwapOnNative.getConfig()); this.setState({ __bal:c.balance, __uname:(c.username||''), __fname:(c.firstName||''), __tgid:(c.telegramId||0) }); var h=window.SwapOnNative.getHistoryJson&&window.SwapOnNative.getHistoryJson(); if(h) this.setState({history:JSON.parse(h)}); } catch(e){} }.bind(this);
