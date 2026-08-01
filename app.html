@@ -357,14 +357,9 @@
                 <div>
                   <div style="font-size:11px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 7px;">ЗАМЕНА ЛИЦА</div>
                   <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;">
-                    <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
-                      <span style="width:7px;height:7px;border-radius:50%;background:#AE9FFF;flex:none;"></span>
-                      <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;font-weight:600;">Замена лица <span style="font-size:10px;font-weight:800;color:#9AA3B8;background:rgba(255,255,255,0.06);padding:1px 6px;border-radius:5px;">LITE</span></span>
-                      <span style="font-size:12.5px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">1 Swaps/min</span>
-                    </div>
                     <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;">
                       <span style="width:7px;height:7px;border-radius:50%;background:#8E7CFF;flex:none;"></span>
-                      <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;font-weight:600;">Замена лица <span style="font-size:10px;font-weight:800;color:#CDBFFF;background:rgba(174,159,255,0.2);border:1px solid rgba(174,159,255,0.35);padding:1px 6px;border-radius:5px;">PRO</span></span>
+                      <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;font-weight:600;">Замена лица · ручной режим</span>
                       <span style="font-size:12.5px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">2 Swaps/min</span>
                     </div>
                   </div>
@@ -429,7 +424,7 @@
 
             <div style="display:flex;gap:12px;margin:0 2px 9px;">
               <span style="width:104px;flex:none;font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">ЛИЦО</span>
-              <span style="flex:1;font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">КАЧЕСТВО</span>
+              <span style="flex:1;font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">РУЧНАЯ НАСТРОЙКА</span>
             </div>
             <div style="display:flex;gap:12px;margin-bottom:16px;">
               <div onClick="{{ pickFace }}" style="{{ faceBoxStyle }}"><img src="{{ faceThumbSrc }}" style="{{ faceThumbImgStyle }}" />
@@ -437,17 +432,8 @@
                 <span style="font-size:11px;font-weight:700;color:#AE9FFF;">Загрузить</span>
               </div>
               <div style="width:1px;flex:none;background:rgba(255,255,255,0.1);"></div>
-              <div style="flex:1;display:grid;grid-template-rows:1fr 1fr;gap:11px;">
-                <div onClick="{{ setLite }}" style="{{ liteCardStyle }}display:flex;align-items:center;gap:10px;">
-                  <span style="{{ liteRadio }}"><span style="{{ liteDot }}"></span></span>
-                  <span style="font-size:15px;font-weight:800;">LITE</span>
-                  <span style="margin-left:auto;font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">1 Swaps/min</span>
-                </div>
-                <div onClick="{{ setPro }}" style="{{ proCardStyle }}display:flex;align-items:center;gap:10px;">
-                  <span style="{{ proRadio }}"><span style="{{ proDot }}"></span></span>
-                  <span style="font-size:15px;font-weight:800;color:#CDBFFF;">PRO</span>
-                  <span style="margin-left:auto;font-size:12px;font-weight:800;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">2 Swaps/min</span>
-                </div>
+              <div style="flex:1;display:flex;align-items:center;padding:13px 14px;border-radius:14px;background:linear-gradient(145deg,rgba(174,159,255,0.12),rgba(45,120,255,0.05));border:1px solid rgba(174,159,255,0.24);">
+                <div><div style="font-size:13.5px;font-weight:750;color:#E8E5FF;">Без готовых пресетов</div><div style="font-size:11.5px;line-height:1.45;color:#8A93A8;margin-top:5px;">Выберите модель, вариант и обработку ниже — каждый параметр применяется отдельно.</div></div>
               </div>
             </div>
 
@@ -459,26 +445,27 @@
             <div style="position:relative;width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:radial-gradient(120% 120% at 50% 30%,rgba(45,120,255,0.14),rgba(9,13,20,0.9));border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><video id="swPrevVid" autoplay playsinline muted style="{{ facePrevVidStyle }}"></video><img src="{{ facePrevSrc }}" style="{{ facePrevImgStyle }}" />
               <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="rgba(174,159,255,0.5)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="{{ facePrevIconStyle }}"><circle cx="12" cy="10" r="4"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg>
               <span style="{{ facePrevHintStyle }}">{{ facePrevHint }}</span>
-              <span style="position:absolute;top:10px;left:12px;font-size:10px;font-weight:800;color:#CDBFFF;background:rgba(0,0,0,0.45);padding:3px 8px;border-radius:6px;font-family:'IBM Plex Mono',monospace;">PRO · 2 Swaps/min</span>
+              <span style="position:absolute;top:10px;left:12px;font-size:10px;font-weight:800;color:#CDBFFF;background:rgba(0,0,0,0.45);padding:3px 8px;border-radius:6px;font-family:'IBM Plex Mono',monospace;">{{ faceModeBadge }}</span>
               <div onClick="{{ toggleLive }}" style="{{ liveBtnStyle }}">{{ liveBtnLabel }}</div>
             </div>
 
-            <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">НАСТРОЙКИ ЗАМЕНЫ</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin:0 2px 9px;"><span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">НАСТРОЙКИ ЗАМЕНЫ</span><span style="font-size:10.5px;font-weight:700;{{ faceApplyStyle }}">{{ faceApplyLabel }}</span></div>
             <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:14px;">
-              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Плавное смешивание</span><div onClick="{{ tglBlend }}" style="margin-left:auto;{{ fBlendTog }}"><span style="{{ fBlendKnob }}"></span></div></div>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Плавное смешивание <span style="font-size:10.5px;color:#8A93A8;">· медленнее</span></span><div onClick="{{ tglBlend }}" style="margin-left:auto;{{ fBlendTog }}"><span style="{{ fBlendKnob }}"></span></div></div>
               <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Убрать синеву камеры</span><div onClick="{{ tglDeblue }}" style="margin-left:auto;{{ fDeblueTog }}"><span style="{{ fDeblueKnob }}"></span></div></div>
-              <div style="display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
-                <span style="font-size:13.5px;font-weight:600;flex:none;">Модель</span>
-                <div onClick="{{ cycModel }}" style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
-                  <span style="font-size:12.5px;font-weight:600;color:#CDBFFF;">{{ fModelVal }}</span>
-                  <span style="font-size:11px;color:#586A85;">▾</span>
+              <div style="padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div style="font-size:13.5px;font-weight:600;margin-bottom:9px;">Модель подмены</div>
+                <div style="display:flex;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:3px;gap:3px;">
+                  <div onClick="{{ pickInSwapper }}" style="{{ inSwapperStyle }}">InSwapper 128</div>
+                  <div onClick="{{ pickHyperSwap }}" style="{{ hyperSwapStyle }}">HyperSwap 256</div>
                 </div>
               </div>
-              <div style="display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
-                <span style="font-size:13.5px;font-weight:600;flex:none;">Вариант</span>
-                <div onClick="{{ cycVariant }}" style="margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:7px 11px;cursor:pointer;">
-                  <span style="font-size:12.5px;font-weight:600;color:#CDBFFF;">{{ fVariantVal }}</span>
-                  <span style="font-size:11px;color:#586A85;">▾</span>
+              <div style="padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Вариант модели</span><span style="font-size:10.5px;color:#8A93A8;">{{ variantHint }}</span></div>
+                <div style="display:flex;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:3px;gap:3px;">
+                  <div onClick="{{ pickVarA }}" style="{{ varAStyle }}">{{ varALabel }}</div>
+                  <div onClick="{{ pickVarB }}" style="{{ varBStyle }}">{{ varBLabel }}</div>
+                  <div onClick="{{ pickVarC }}" style="{{ varCStyle }}">{{ varCLabel }}</div>
                 </div>
               </div>
               <div style="padding:13px 15px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
@@ -491,8 +478,7 @@
               </div>
             </div>
 
-            <sc-if value="{{ facePro }}" hint-placeholder-val="{{ true }}">
-              <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">УЛУЧШЕНИЕ ЛИЦА · PRO</div>
+              <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ДОПОЛНИТЕЛЬНОЕ УЛУЧШЕНИЕ</div>
               <div style="background:linear-gradient(150deg,rgba(174,159,255,0.10),rgba(45,120,255,0.04));border:1px solid rgba(174,159,255,0.22);border-radius:16px;overflow:hidden;margin-bottom:14px;">
                 <div style="display:flex;align-items:center;padding:14px 15px;border-bottom:1px solid rgba(255,255,255,0.06);">
                   <div style="flex:1;"><div style="font-size:13.5px;font-weight:600;">Улучшение лица</div><div style="font-size:11px;color:#8A93A8;margin-top:2px;">Повышает детализацию и чёткость</div></div>
@@ -501,18 +487,14 @@
                 <div style="padding:13px 15px 4px;">
                   <div style="font-size:13.5px;font-weight:600;margin-bottom:9px;">Модель</div>
                   <div style="display:flex;flex-wrap:wrap;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:11px;padding:3px;gap:3px;">
-                    <div onClick="{{ pickEmSoft }}" style="{{ emSoftStyle }}">Мягкое</div>
-                    <div onClick="{{ pickEmSharp }}" style="{{ emSharpStyle }}">Чёткое</div>
-                    <div onClick="{{ pickEmReal }}" style="{{ emRealStyle }}">Реалистичное</div>
-                    <div onClick="{{ pickEmTop }}" style="{{ emTopStyle }}"><span style="font-size:10px;">⚡</span>НАИВЫСШЕЕ<span style="font-size:10px;">⚡</span></div>
+                    <div style="flex:1;text-align:center;padding:9px 6px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);">GFPGAN 1.4 · 1024px</div>
                   </div>
                 </div>
                 <div style="padding:13px 15px 15px;">
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Качество</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fQualLabel }}</span></div>
-                  <input type="range" min="1" max="4" value="{{ fQualVal }}" onChange="{{ onQual }}" style="width:100%;accent-color:#AE9FFF;" />
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Интенсивность GFPGAN</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fQualLabel }}</span></div>
+                  <input type="range" min="0" max="100" value="{{ fQualVal }}" onChange="{{ onQual }}" style="width:100%;accent-color:#AE9FFF;" />
                 </div>
               </div>
-            </sc-if>
           </div>
           {{ navBarFace }}
         </div>
@@ -604,7 +586,12 @@ class Component extends DCLogic {
     screen: "home",
     liveOn: false,
     whepLive: false,
-    facePreview: '',
+    facePreview: "",
+    fBlend: false,
+    fDeblue: false,
+    fEnhance: false,
+    fEnhModel: "gfpgan_1024",
+    faceApplyState: "",
     showInfo: false,
     videoOn: true,
     audioOn: true,
@@ -649,30 +636,30 @@ class Component extends DCLogic {
         camFront:(_c.front!==false), camBack:(_c.back===true),
         videoSrc:({pattern:'local',whep:'stream',face:'face'}[_c.videoSource]||'stream'),
         audioSrc:(_c.audioSource==='voice'?'voice':'video'), curVoiceId:(_c.voiceId||''),
-        faceOutUrl:(_c.faceOutUrl||''), iceServers:(_c.iceServers||[]) };
+        faceOutUrl:(_c.faceOutUrl||''), iceServers:(_c.iceServers||[]),
+        fModelKey:(_c.faceModelKey||'inswapper_128_fp16'),
+        fVariantKey:(_c.faceVariantKey||'tensorrt_fp16') };
       try { var _ft=localStorage.getItem('sw_faceThumb'); if(_ft){ _st.faceThumb=_ft; _st.faceUploaded=true; } } catch(e){}
-      if(_c.faceModel) _st.fModel=_c.faceModel; if(_c.faceVariant) _st.fVariant=_c.faceVariant;
+      var _fm=FACE_MODELS.find(function(m){return m.model===_st.fModelKey;})||FACE_MODELS[0];
+      var _fv=_fm.variants.find(function(v){return v.file===_st.fVariantKey;})||_fm.variants[0];
+      _st.fModel=_fm.name; _st.fVariant=_fv.name; _st.fModelKey=_fm.model; _st.fVariantKey=_fv.file;
       if(_c.faceOpacity) _st.fOpacity=_c.faceOpacity; if(_c.faceSharpness) _st.fSharp=_c.faceSharpness;
-      if(_c.faceEnhanceModel) _st.fEnhModel=_c.faceEnhanceModel; if(_c.faceQuality) _st.fQual=_c.faceQuality;
+      if(_c.faceEnhanceModel) _st.fEnhModel=_c.faceEnhanceModel; if(_c.faceQuality){ var _q=Number(_c.faceQuality); _st.fQual=(_q<=4?_q*25:_q); }
       if(_c.videoFileName) { _st.videoName=_c.videoFileName; _st.videoMeta='Выбранный файл'; }
       // populate the apps-for-replacement list from the engine's target packages
       try { if(_c.targetPackages){ var self=this; var pk=_c.targetPackages.split(',').map(function(x){return x.trim();}).filter(Boolean); var nm={}; (this.CATALOG||[]).forEach(function(c){ nm[c.pkg]=c.name; }); _st.added = pk.map(function(p,i){ return { id:i+1, name:(nm[p]||p), pkg:p, enabled:true }; }); _st.nextId = pk.length+1; } } catch(e){}
-      this.setState(_st);
+      this.setState(_st, function(){ var self=this; setTimeout(function(){ self.__pushFaceParams(); }, 400); });
       try { window.__i18nLang = (_c.lang||'RU'); if(window.__applyI18n) window.__applyI18n(); } catch(e){}
       try { var _h = _N.getHistoryJson && _N.getHistoryJson(); if(_h) this.setState({ history: JSON.parse(_h) }); } catch(e){}
       window.__swaponSync = function(){ try { var c=JSON.parse(window.SwapOnNative.getConfig()); this.setState({ __bal:c.balance, __uname:(c.username||''), __fname:(c.firstName||''), __tgid:(c.telegramId||0) }); var h=window.SwapOnNative.getHistoryJson&&window.SwapOnNative.getHistoryJson(); if(h) this.setState({history:JSON.parse(h)}); } catch(e){} }.bind(this);
       window.__swaponForceOff = function(){ this.setState({ __on:false }); }.bind(this);
-      // In-app preview. Default = FREE still snapshot polled from the server (last
-      // swapped frame). "Live" = publish this phone's own camera (native
-      // CameraPushService -> cam_in) and play the swapped /swap stream over WHEP for a
-      // true real-time preview. Live costs GPU, so it runs only while toggled on.
+      // In-app preview: a free still snapshot by default. Live explicitly
+      // publishes this phone's camera and plays /swap through direct WHEP.
       window.__facePreview = function(url){ try { if(url && url.length>40){ this.setState({facePreview:url, facePreviewTs:Date.now()}); } } catch(e){} }.bind(this);
-      window.__onLivePermission = function(granted){ try { if(!granted){ if(this.__whepStop)this.__whepStop(); this.setState({liveOn:false, whepLive:false}); } } catch(e){} }.bind(this);
+      window.__onFaceSet = function(ok){ try { this.setState({faceUploading:false,faceApplyState:(ok?'ok':'error')}); if(ok){ var self=this; clearTimeout(this._faceApplyClear); this._faceApplyClear=setTimeout(function(){ self.setState({faceApplyState:''}); },3500); } } catch(e){} }.bind(this);
+      window.__onLivePermission = function(granted){ try { if(!granted){ if(this.__whepStop)this.__whepStop(); this.setState({liveOn:false,whepLive:false}); } } catch(e){} }.bind(this);
       window.__whepStart = function(){ try {
         var self=this; if(self._whepPc) return; var url=self.state.faceOutUrl; if(!url || typeof RTCPeerConnection==='undefined') return;
-        // 'all' (not 'relay'): the server advertises its public host (webrtcAdditionalHosts)
-        // so direct UDP connects; the old co-located TURN is dead. whepLive flips true only
-        // when real frames arrive (onloadeddata/onresize), never on bare track negotiation.
         var pc=new RTCPeerConnection({iceServers:(self.state.iceServers||[]), iceTransportPolicy:'all', bundlePolicy:'max-bundle'}); self._whepPc=pc;
         self._whepStartedAt=Date.now(); self._whepLastFrameAt=0;
         pc.addTransceiver('video',{direction:'recvonly'}); pc.addTransceiver('audio',{direction:'recvonly'});
@@ -683,24 +670,20 @@ class Component extends DCLogic {
         }).then(function(){ return fetch(url,{method:'POST',headers:{'Content-Type':'application/sdp'},body:pc.localDescription.sdp}); })
           .then(function(r){ if(!r.ok) throw new Error('whep '+r.status); return r.text(); })
           .then(function(ans){ return pc.setRemoteDescription({type:'answer',sdp:ans}); })
-          .catch(function(e){ console.log('DBG whep err '+e); if(self._whepPc===pc){ try{pc.close();}catch(x){} self._whepPc=null; } });  // null it so the timer retries
+          .catch(function(e){ console.log('DBG whep err '+e); if(self._whepPc===pc){ try{pc.close();}catch(x){} self._whepPc=null; } });
       } catch(e){ console.log('DBG whep ex '+e); } }.bind(this);
       window.__whepStop = function(){ try { if(this._whepPc){ this._whepPc.close(); this._whepPc=null; } this._whepStartedAt=0; this._whepLastFrameAt=0; var v=document.getElementById('swPrevVid'); if(v){ try{v.srcObject=null;}catch(e){} } this.setState({whepLive:false}); } catch(e){} }.bind(this);
       this.__whepStop = window.__whepStop;
-      // Live toggle: start/stop own-camera publish (native) + WHEP playback.
-      window.__toggleLive = function(){ try {
-        var self=this; var N=window.SwapOnNative;
-        if(self.state.liveOn){ self.setState({liveOn:false, whepLive:false, facePreview:''}); if(N&&N.stopLivePreview)N.stopLivePreview(); if(self.__whepStop)self.__whepStop(); }
-        else { self.setState({liveOn:true, whepLive:false, facePreview:''}); if(N&&N.startLivePreview)N.startLivePreview(); if(window.__whepStart)window.__whepStart(); }
+      window.__toggleLive = function(){ try { var self=this; var N=window.SwapOnNative;
+        if(self.state.liveOn){ self.setState({liveOn:false,whepLive:false,facePreview:''}); if(N&&N.stopLivePreview)N.stopLivePreview(); if(self.__whepStop)self.__whepStop(); }
+        else { self.setState({liveOn:true,whepLive:false,facePreview:''}); if(N&&N.startLivePreview)N.startLivePreview(); if(window.__whepStart)window.__whepStart(); }
       } catch(e){} }.bind(this);
       this._facePrevTimer = setInterval(function(){ try {
         if(this.state.screen==='face'){
           if(this.state.liveOn){
-            if(!this._whepPc && window.__whepStart) window.__whepStart();   // keep WHEP alive while live
+            if(!this._whepPc && window.__whepStart) window.__whepStart();
             else if(this._whepPc){ var now=Date.now(), frameAge=this._whepLastFrameAt?(now-this._whepLastFrameAt):0, startAge=this._whepStartedAt?(now-this._whepStartedAt):0; if((frameAge>4000)||(!this._whepLastFrameAt&&startAge>8000)){ console.log('DBG WHEP_WATCHDOG reconnect frameAge='+frameAge+' startAge='+startAge); if(this.__whepStop)this.__whepStop(); var self=this; setTimeout(function(){ if(self.state.liveOn&&window.__whepStart)window.__whepStart(); },250); } }
-          } else {
-            var N=window.SwapOnNative; if(N && N.requestFacePreview) N.requestFacePreview();   // free still
-          }
+          } else { var N=window.SwapOnNative; if(N&&N.requestFacePreview)N.requestFacePreview(); }
         } else {
           if(this.state.liveOn){ var N2=window.SwapOnNative; if(N2&&N2.stopLivePreview)N2.stopLivePreview(); this.setState({liveOn:false}); }
           if(this._whepPc && window.__whepStop) window.__whepStop();
@@ -717,11 +700,14 @@ class Component extends DCLogic {
       if (this.state.pushOn) this.setState(s => ({ pushElapsed: s.pushElapsed + 1 }));
     }, 1000);
   }
-  componentWillUnmount() { clearInterval(this._pushTimer); }
+  componentWillUnmount() { clearInterval(this._pushTimer); clearInterval(this._facePrevTimer); clearTimeout(this._faceParamTimer); clearTimeout(this._faceApplyClear); try{if(this._whepPc)this._whepPc.close();}catch(e){} try{var N=window.SwapOnNative;if(N&&N.stopLivePreview)N.stopLivePreview();}catch(e){} }
 
   syncTargets(list) { try { var a = list || this.state.added; var pkgs = a.filter(function(x){return x.enabled;}).map(function(x){return x.pkg;}).filter(function(p){return p && p !== '—';}).join(','); var N=window.SwapOnNative; if(N)N.setStr('config_target_packages', pkgs); } catch(e){} }
-  __faceParams() { var s=this.state; return { mouth_mask:true, color_correction:(s.fBlend!==false), enhance:!!s.fEnhance, opacity:((s.fOpacity!=null?s.fOpacity:85)/100), sharpness:((s.fSharp!=null?s.fSharp:0)/100), many_faces:false, model:(s.fModelKey||'inswapper') }; }
-  __pushFaceParams() { try { var N=window.SwapOnNative; if(N&&N.setFaceParams) N.setFaceParams(JSON.stringify(this.__faceParams())); } catch(e){} }
+  __selectedFaceModel() { var key=this.state.fModelKey||'inswapper_128_fp16'; return FACE_MODELS.find(function(m){return m.model===key;})||FACE_MODELS[0]; }
+  __selectFaceModel(model) { if(!model)return; var variant=model.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',model.name); N.setStr('face_model_engine',model.orig); N.setStr('face_model_key',model.model); N.setStr('face_variant',variant.name); N.setStr('face_variant_file',variant.file);} this.setState({fModel:model.name,fModelKey:model.model,fVariant:variant.name,fVariantKey:variant.file},()=>this.__pushFaceParams()); }
+  __selectFaceVariant(variant) { if(!variant)return; var N=window.SwapOnNative; if(N){N.setStr('face_variant',variant.name); N.setStr('face_variant_file',variant.file);} this.setState({fVariant:variant.name,fVariantKey:variant.file},()=>this.__pushFaceParams()); }
+  __faceParams() { var s=this.state; var q=Number(s.fQual!=null?s.fQual:100); var model=this.__selectedFaceModel(); var variant=model.variants.find(function(v){return v.file===(s.fVariantKey||'');})||model.variants[0]; return { schema:2, mouth_mask:true, mouth_mask_size:0, poisson_blend:(s.fBlend===true), color_correction:(s.fDeblue===true), enhance:(s.fEnhance===true), enhancer:'gfpgan_1024', enhance_strength:Math.max(0,Math.min(1,q/100)), quality:q, opacity:(Number(s.fOpacity!=null?s.fOpacity:85)/100), sharpness:(Number(s.fSharp!=null?s.fSharp:40)/100), many_faces:false, model:model.model, variant:variant.file }; }
+  __pushFaceParams() { try { var N=window.SwapOnNative; if(!N||!N.setFaceParams)return; clearTimeout(this._faceParamTimer); this.setState({faceApplyState:'sending'}); var self=this; this._faceParamTimer=setTimeout(function(){ N.setFaceParams(JSON.stringify(self.__faceParams())); },220); } catch(e){ this.setState({faceApplyState:'error'}); } }
   __syncEngine() { try { var s=this.state; var N=window.SwapOnNative; if(!N)return; var vmap={local:'pattern',stream:'whep',face:'face'}; var amap={video:'whep',voice:'voice',mic:'microphone'}; var vOn=(s.videoOn!==false), aOn=(s.audioOn!==false); N.setBool('inject_front_camera', !!(vOn && s.camFront)); N.setBool('inject_back_camera', !!(vOn && s.camBack)); N.setStr('frame_source', vmap[s.videoSrc]||'whep'); N.setBool('video_replace', vOn); N.setBool('audio_replace', aOn); N.setStr('audio_source', aOn ? (amap[s.audioSrc]||'whep') : 'microphone'); } catch(e){} }
   addFromCatalog(app) {
     this.setState(s => ({
@@ -756,12 +742,12 @@ class Component extends DCLogic {
 
   renderVals() {
     const R = React.createElement;
-    const emCellStyle = (cur, key) => { var on = ((cur||'soft')===key); return 'flex:1;min-width:70px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:'+(on?700:600)+';cursor:pointer;'+(on?'background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);':'color:#9AA3B8;border:1px solid transparent;'); };
     const FACE_MODELS = [
-      {name:'Стандартная', orig:'InSwapper 128', model:'inswapper', variants:[{name:'Баланс',file:'inswapper'}]},
-      {name:'HyperSwap (макс. качество)', orig:'HyperSwap 256', model:'hyperswap', variants:[{name:'Максимум',file:'hyperswap'}]},
-      {name:'ReSwapper', orig:'ReSwapper 256', model:'reswapper', variants:[{name:'256',file:'reswapper'}]}
+      {name:'InSwapper 128', orig:'InSwapper 128 FP16', model:'inswapper_128_fp16', variants:[{name:'TensorRT FP16',file:'tensorrt_fp16'}]},
+      {name:'HyperSwap 256', orig:'HyperSwap 256 ONNX', model:'hyperswap_256', variants:[{name:'1A',file:'hyperswap_1a_256'},{name:'1B',file:'hyperswap_1b_256'},{name:'1C',file:'hyperswap_1c_256'}]}
     ];
+    const faceSegmentStyle = (on) => 'flex:1;text-align:center;padding:9px 5px;border-radius:8px;font-size:12px;font-weight:'+(on?700:600)+';cursor:pointer;'+(on?'background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);':'color:#8A93A8;border:1px solid transparent;');
+    const faceVariantStyle = (first,current,model,key) => { var hyper=model==='hyperswap_256'; var actual=first?(hyper?'hyperswap_1a_256':'tensorrt_fp16'):key; var enabled=first||hyper; var on=current===actual||(!current&&first); return 'flex:1;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:'+(on?700:600)+';cursor:'+(enabled?'pointer':'default')+';'+(on?'background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);':enabled?'color:#8A93A8;border:1px solid transparent;':'color:#454B5A;border:1px solid transparent;'); };
     const _txTitle = (t) => { var m=t.meta||{}; if(t.kind==='topup')return 'Пополнение · Telegram'; if(t.kind==='referral')return 'Бонус за приглашение'; if(t.kind==='bonus')return 'Бонус'; if(t.kind==='admin')return 'Корректировка'; if(t.kind==='refund')return 'Возврат'; var s=m.state||m.mode||''; if(s==='face'||s==='faceswap')return 'Замена лица'; if(s==='voice')return 'Замена голоса'; if(s==='background'||s==='idle')return 'Фоновый режим'; return 'Замена камеры'; };
     const _txWhen = (iso) => { try { var d=new Date(iso); var now=new Date(); var hh=('0'+d.getHours()).slice(-2), mm=('0'+d.getMinutes()).slice(-2); var sameDay=d.toDateString()===now.toDateString(); var yd=new Date(now); yd.setDate(now.getDate()-1); if(sameDay)return 'Сегодня, '+hh+':'+mm; if(d.toDateString()===yd.toDateString())return 'Вчера, '+hh+':'+mm; var mon=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'][d.getMonth()]; return d.getDate()+' '+mon+', '+hh+':'+mm; } catch(e){ return ''; } };
     const _txFmt = (n) => { var v=Math.round(Math.abs(n)*10)/10; return (String(v).replace('.',',')); };
@@ -1149,47 +1135,54 @@ class Component extends DCLogic {
       pickLangRu: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','RU'); window.__i18nLang='RU'; this.setState({__lang:'RU'}); try{ location.reload(); }catch(e){} },
       pickLangEn: () => { var N=window.SwapOnNative; if(N)N.setStr('lang','EN'); window.__i18nLang='EN'; this.setState({__lang:'EN'}); try{ location.reload(); }catch(e){} },
       // ---- Face: photo upload (native file picker -> data URL -> engine) ----
-      pickFace: () => { var self=this; try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); if(N&&N.setFaceSource)N.setFaceSource(rd.result, JSON.stringify(self.__faceParams())); try{ localStorage.setItem('sw_faceThumb', rd.result); }catch(e){} self.setState({faceUploading:false,faceUploaded:true,faceThumb:rd.result}); }; self.setState({faceUploading:true}); rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
+      pickFace: () => { var self=this; try { var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.onchange=function(ev){ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var rd=new FileReader(); rd.onload=function(){ var N=window.SwapOnNative; if(N)N.setStr('face_image', rd.result); if(N&&N.setFaceSource)N.setFaceSource(rd.result, JSON.stringify(self.__faceParams())); try{ localStorage.setItem('sw_faceThumb', rd.result); }catch(e){} self.setState({faceUploaded:true,faceThumb:rd.result,faceApplyState:'sending'}); }; self.setState({faceUploading:true,faceApplyState:'sending'}); rd.readAsDataURL(f); }; inp.click(); } catch(e){} },
       // ---- Face: replacement settings (live + persist) ----
       fBlendTog: (this.state.fBlend===false?toggleSmOff:toggleSm), fBlendKnob: (this.state.fBlend===false?knobSmOff:knobSmOn),
       tglBlend: () => { var N=window.SwapOnNative; var c=(this.state.fBlend!==false); if(N)N.setBool('face_blend',!c); this.setState({fBlend:!c}, ()=>this.__pushFaceParams()); },
       fDeblueTog: (this.state.fDeblue===false?toggleSmOff:toggleSm), fDeblueKnob: (this.state.fDeblue===false?knobSmOff:knobSmOn),
-      tglDeblue: () => { var N=window.SwapOnNative; var c=(this.state.fDeblue!==false); if(N)N.setBool('face_deblue',!c); this.setState({fDeblue:!c}); },
+      tglDeblue: () => { var N=window.SwapOnNative; var c=(this.state.fDeblue!==false); if(N)N.setBool('face_deblue',!c); this.setState({fDeblue:!c}, ()=>this.__pushFaceParams()); },
+      faceApplyLabel: (this.state.faceApplyState==='sending'?'Отправка…':this.state.faceApplyState==='ok'?'Сервер принял':this.state.faceApplyState==='error'?'Ошибка отправки':''),
+      faceApplyStyle: (this.state.faceApplyState==='ok'?'color:#3AD68E;':this.state.faceApplyState==='error'?'color:#FF6B85;':'color:#8A93A8;'),
       fModelVal: (this.state.fModel||FACE_MODELS[0].name),
       facePrevSrc: (this.state.facePreview||''),
-      // /swap is landscape H.264 with the portrait camera rotated clockwise for
-      // camera consumers. Native injection applies camera orientation metadata;
-      // this plain WebView <video> does not, so turn only the in-app preview back.
-      // The swapped width/height percentages keep the full portrait inside the
-      // existing 4:3 card instead of stretching or cropping it.
       facePrevVidStyle: ((this.state.liveOn && this.state.whepLive) ? 'position:absolute;left:50%;top:50%;width:75%;height:133.334%;object-fit:contain;z-index:4;background:#000;transform:translate(-50%,-50%) rotate(-90deg);transform-origin:center;' : 'display:none;'),
       facePrevImgStyle: ((!this.state.liveOn && this.state.facePreview) ? 'position:absolute;left:50%;top:50%;width:75%;height:133.334%;object-fit:contain;z-index:3;background:#000;transform:translate(-50%,-50%) rotate(-90deg);transform-origin:center;' : 'display:none;'),
       facePrevLive: ((this.state.liveOn && this.state.whepLive) ? 'display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#3AD68E;' : 'display:none;'),
       facePrevIconStyle: ((!this.state.liveOn && !this.state.facePreview) ? '' : 'display:none;'),
       facePrevHint: (this.state.liveOn ? (this.state.whepLive ? '' : 'Подключение к серверу…') : (this.state.facePreview ? '' : 'Нажмите «Live» — увидите свой свап')),
       facePrevHintStyle: (((this.state.liveOn && !this.state.whepLive) || (!this.state.liveOn && !this.state.facePreview)) ? 'position:absolute;bottom:54px;left:0;right:0;text-align:center;font-size:12px;color:#8A93A8;z-index:5;' : 'display:none;'),
-      toggleLive: () => { if(window.__toggleLive) window.__toggleLive(); },
-      liveBtnLabel: (this.state.liveOn ? '■ Стоп' : '▶ Live'),
-      liveBtnStyle: 'position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:6;cursor:pointer;padding:8px 22px;border-radius:20px;font-size:13px;font-weight:800;box-shadow:0 4px 14px rgba(0,0,0,0.35);' + (this.state.liveOn ? 'background:rgba(255,74,74,0.95);color:#fff;' : 'background:rgba(58,214,142,0.95);color:#04150c;'),
+      faceModeBadge: ((this.state.fModelKey==='hyperswap_256'?'HYPERSWAP 256':'INSWAPPER 128')+' · РУЧНОЙ РЕЖИМ'),
+      liveBtnLabel: (this.state.liveOn?'Остановить Live':'Запустить Live'),
+      liveBtnStyle: 'position:absolute;left:50%;bottom:12px;z-index:6;transform:translateX(-50%);padding:9px 16px;border-radius:10px;white-space:nowrap;cursor:pointer;font-size:12px;font-weight:800;color:'+(this.state.liveOn?'#FF8097':'#0A0713')+';background:'+(this.state.liveOn?'rgba(255,80,112,0.16)':'linear-gradient(120deg,#AE9FFF,#8E7CFF)')+';border:1px solid '+(this.state.liveOn?'rgba(255,107,133,0.42)':'rgba(205,191,255,0.5)')+';',
+      toggleLive: () => { if(window.__toggleLive)window.__toggleLive(); },
       faceBoxStyle: 'position:relative;width:104px;height:104px;flex:none;border-radius:16px;background:' + (this.state.faceThumb ? '#000' : 'rgba(174,159,255,0.08)') + ';border:1.5px ' + (this.state.faceThumb?'solid rgba(174,159,255,0.7)':'dashed rgba(174,159,255,0.4)') + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;overflow:hidden;',
       faceThumbSrc: (this.state.faceThumb||''),
       faceThumbImgStyle: (this.state.faceThumb ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;' : 'display:none;'),
-      cycModel: () => { var i=FACE_MODELS.findIndex(m=>m.name===(this.state.fModel||FACE_MODELS[0].name)); var nm=FACE_MODELS[(i+1)%FACE_MODELS.length]; var v0=nm.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',nm.name); N.setStr('face_model_engine',nm.orig); N.setStr('face_variant',v0.name); N.setStr('face_variant_file',v0.file);} this.setState({fModel:nm.name, fVariant:v0.name, fModelKey:nm.model}, ()=>this.__pushFaceParams()); },
+      cycModel: () => { var i=FACE_MODELS.findIndex(m=>m.name===(this.state.fModel||FACE_MODELS[0].name)); this.__selectFaceModel(FACE_MODELS[(i+1)%FACE_MODELS.length]); },
       fVariantVal: (this.state.fVariant||FACE_MODELS[0].variants[0].name),
-      cycVariant: () => { var m=FACE_MODELS.find(function(x){return x.name===(this.state.fModel||FACE_MODELS[0].name);}.bind(this))||FACE_MODELS[0]; var vi=m.variants.findIndex(function(v){return v.name===(this.state.fVariant||m.variants[0].name);}.bind(this)); var nv=m.variants[(vi+1)%m.variants.length]; var N=window.SwapOnNative; if(N){N.setStr('face_variant',nv.name); N.setStr('face_variant_file',nv.file);} this.setState({fVariant:nv.name}); },
+      cycVariant: () => { var m=this.__selectedFaceModel(); var vi=m.variants.findIndex(function(v){return v.file===(this.state.fVariantKey||'');}.bind(this)); this.__selectFaceVariant(m.variants[(vi+1)%m.variants.length]); },
+      inSwapperStyle: faceSegmentStyle(this.state.fModelKey!=='hyperswap_256'),
+      hyperSwapStyle: faceSegmentStyle(this.state.fModelKey==='hyperswap_256'),
+      pickInSwapper: () => this.__selectFaceModel(FACE_MODELS[0]),
+      pickHyperSwap: () => this.__selectFaceModel(FACE_MODELS[1]),
+      variantHint: (this.state.fModelKey==='hyperswap_256'?'реальные ONNX 256px':'аппаратное ускорение'),
+      varALabel: (this.state.fModelKey==='hyperswap_256'?'1A':'TensorRT FP16'),
+      varBLabel: (this.state.fModelKey==='hyperswap_256'?'1B':'—'),
+      varCLabel: (this.state.fModelKey==='hyperswap_256'?'1C':'—'),
+      varAStyle: faceVariantStyle(true, this.state.fVariantKey, this.state.fModelKey),
+      varBStyle: faceVariantStyle(false, this.state.fVariantKey, this.state.fModelKey, 'hyperswap_1b_256'),
+      varCStyle: faceVariantStyle(false, this.state.fVariantKey, this.state.fModelKey, 'hyperswap_1c_256'),
+      pickVarA: () => { var m=this.__selectedFaceModel(); this.__selectFaceVariant(m.variants[0]); },
+      pickVarB: () => { var m=this.__selectedFaceModel(); if(m.variants[1])this.__selectFaceVariant(m.variants[1]); },
+      pickVarC: () => { var m=this.__selectedFaceModel(); if(m.variants[2])this.__selectFaceVariant(m.variants[2]); },
       fOpacityVal: (this.state.fOpacity!=null?this.state.fOpacity:85), fOpacityLabel: ((this.state.fOpacity!=null?this.state.fOpacity:85)+'%'),
       onOpacity: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_opacity',String(v)); this.setState({fOpacity:v}, ()=>this.__pushFaceParams()); },
       fSharpVal: (this.state.fSharp!=null?this.state.fSharp:40), fSharpLabel: ((this.state.fSharp!=null?this.state.fSharp:40)+'%'),
       onSharp: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_sharpness',String(v)); this.setState({fSharp:v}, ()=>this.__pushFaceParams()); },
       fEnhanceTog: (this.state.fEnhance===false?toggleSmOff:toggleSm), fEnhanceKnob: (this.state.fEnhance===false?knobSmOff:knobSmOn),
       tglEnhance: () => { var N=window.SwapOnNative; var c=(this.state.fEnhance!==false); if(N)N.setBool('face_enhance',!c); this.setState({fEnhance:!c}, ()=>this.__pushFaceParams()); },
-      fQualVal: (this.state.fQual!=null?this.state.fQual:4), fQualLabel: ((this.state.fQual!=null?this.state.fQual:4)+'x'),
-      onQual: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_quality',String(v)); this.setState({fQual:v}); },
-      emSoftStyle: emCellStyle(this.state.fEnhModel, 'soft'), pickEmSoft: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Мягкое'); this.setState({fEnhModel:'soft'}); },
-      emSharpStyle: emCellStyle(this.state.fEnhModel, 'sharp'), pickEmSharp: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Чёткое'); this.setState({fEnhModel:'sharp'}); },
-      emRealStyle: emCellStyle(this.state.fEnhModel, 'real'), pickEmReal: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Реалистичное'); this.setState({fEnhModel:'real'}); },
-      emTopStyle: "flex:1;min-width:130px;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:700;color:#B6E86A;cursor:pointer;background:rgba(118,185,0,"+(this.state.fEnhModel==='top'?"0.22)":"0.10)")+";border:"+(this.state.fEnhModel==='top'?"2px solid rgba(118,185,0,0.9);":"1px solid rgba(118,185,0,0.4);"),
-      pickEmTop: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhance_model','Наивысшее'); this.setState({fEnhModel:'top'}); },
+      fQualVal: (this.state.fQual!=null?this.state.fQual:100), fQualLabel: ((this.state.fQual!=null?this.state.fQual:100)+'%'),
+      onQual: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_quality',String(v)); this.setState({fQual:v}, ()=>this.__pushFaceParams()); },
       // ---- Settings: video file picker + fit mode ----
       videoName: (this.state.videoName||'clip_swap.mp4'), videoMeta: (this.state.videoMeta||'1080×1920 · 00:42'),
       pickVideo: () => { try { var inp=document.createElement('input'); inp.type='file'; inp.accept='video/*'; inp.onchange=(ev)=>{ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var N=window.SwapOnNative; if(N){N.setStr('video_file_name',f.name); N.setStr('frame_source','pattern');} this.setState({videoName:f.name, videoMeta:(Math.round(f.size/104857.6)/10+' МБ'), __vsrc:'pattern'}); }; inp.click(); } catch(e){} },
