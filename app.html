@@ -446,35 +446,35 @@
               <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="rgba(174,159,255,0.5)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="{{ facePrevIconStyle }}"><circle cx="12" cy="10" r="4"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg>
               <span style="{{ facePrevHintStyle }}">{{ facePrevHint }}</span>
               <span style="position:absolute;top:10px;left:12px;font-size:10px;font-weight:800;color:#CDBFFF;background:rgba(0,0,0,0.45);padding:3px 8px;border-radius:6px;font-family:'IBM Plex Mono',monospace;">{{ faceModeBadge }}</span>
-              <div onClick="{{ toggleLive }}" style="{{ liveBtnStyle }}">{{ liveBtnLabel }}</div>
+              <div role="button" aria-label="Управление Live-предпросмотром" onClick="{{ toggleLive }}" style="{{ liveBtnStyle }}">{{ liveBtnLabel }}</div>
             </div>
 
             <div style="display:flex;align-items:center;justify-content:space-between;margin:0 2px 9px;"><span style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;">НАСТРОЙКИ ЗАМЕНЫ</span><span style="font-size:10.5px;font-weight:700;{{ faceApplyStyle }}">{{ faceApplyLabel }}</span></div>
             <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:14px;">
-              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Плавное смешивание <span style="font-size:10.5px;color:#8A93A8;">· медленнее</span></span><div onClick="{{ tglBlend }}" style="margin-left:auto;{{ fBlendTog }}"><span style="{{ fBlendKnob }}"></span></div></div>
-              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Убрать синеву камеры</span><div onClick="{{ tglDeblue }}" style="margin-left:auto;{{ fDeblueTog }}"><span style="{{ fDeblueKnob }}"></span></div></div>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Плавное смешивание <span style="font-size:10.5px;color:#8A93A8;">· медленнее</span></span><div role="button" aria-label="Плавное смешивание" onClick="{{ tglBlend }}" style="margin-left:auto;{{ fBlendTog }}"><span style="{{ fBlendKnob }}"></span></div></div>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Убрать синеву камеры</span><div role="button" aria-label="Убрать синеву камеры" onClick="{{ tglDeblue }}" style="margin-left:auto;{{ fDeblueTog }}"><span style="{{ fDeblueKnob }}"></span></div></div>
               <div style="padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
                 <div style="font-size:13.5px;font-weight:600;margin-bottom:9px;">Модель подмены</div>
                 <div style="display:flex;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:3px;gap:3px;">
-                  <div onClick="{{ pickInSwapper }}" style="{{ inSwapperStyle }}">InSwapper 128</div>
-                  <div onClick="{{ pickHyperSwap }}" style="{{ hyperSwapStyle }}">HyperSwap 256</div>
+                  <div role="button" aria-label="Выбрать InSwapper 128" onClick="{{ pickInSwapper }}" style="{{ inSwapperStyle }}">InSwapper 128</div>
+                  <div role="button" aria-label="Выбрать HyperSwap 256" onClick="{{ pickHyperSwap }}" style="{{ hyperSwapStyle }}">HyperSwap 256</div>
                 </div>
               </div>
               <div style="padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Вариант модели</span><span style="font-size:10.5px;color:#8A93A8;">{{ variantHint }}</span></div>
                 <div style="display:flex;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:3px;gap:3px;">
-                  <div onClick="{{ pickVarA }}" style="{{ varAStyle }}">{{ varALabel }}</div>
-                  <div onClick="{{ pickVarB }}" style="{{ varBStyle }}">{{ varBLabel }}</div>
-                  <div onClick="{{ pickVarC }}" style="{{ varCStyle }}">{{ varCLabel }}</div>
+                  <div role="button" aria-label="Выбрать вариант 1A" onClick="{{ pickVarA }}" style="{{ varAStyle }}">{{ varALabel }}</div>
+                  <div role="button" aria-label="Выбрать вариант 1B" onClick="{{ pickVarB }}" style="{{ varBStyle }}">{{ varBLabel }}</div>
+                  <div role="button" aria-label="Выбрать вариант 1C" onClick="{{ pickVarC }}" style="{{ varCStyle }}">{{ varCLabel }}</div>
                 </div>
               </div>
               <div style="padding:13px 15px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Непрозрачность наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fOpacityLabel }}</span></div>
-                <input type="range" min="0" max="100" value="{{ fOpacityVal }}" onChange="{{ onOpacity }}" style="width:100%;accent-color:#AE9FFF;" />
+                <input type="range" min="0" max="100" value="{{ fOpacityVal }}" onInput="{{ onOpacity }}" onChange="{{ onOpacity }}" style="width:100%;accent-color:#AE9FFF;" />
               </div>
               <div style="padding:13px 15px 15px;">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Резкость наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fSharpLabel }}</span></div>
-                <input type="range" min="0" max="100" value="{{ fSharpVal }}" onChange="{{ onSharp }}" style="width:100%;accent-color:#AE9FFF;" />
+                <input type="range" min="0" max="100" value="{{ fSharpVal }}" onInput="{{ onSharp }}" onChange="{{ onSharp }}" style="width:100%;accent-color:#AE9FFF;" />
               </div>
             </div>
 
@@ -482,7 +482,7 @@
               <div style="background:linear-gradient(150deg,rgba(174,159,255,0.10),rgba(45,120,255,0.04));border:1px solid rgba(174,159,255,0.22);border-radius:16px;overflow:hidden;margin-bottom:14px;">
                 <div style="display:flex;align-items:center;padding:14px 15px;border-bottom:1px solid rgba(255,255,255,0.06);">
                   <div style="flex:1;"><div style="font-size:13.5px;font-weight:600;">Улучшение лица</div><div style="font-size:11px;color:#8A93A8;margin-top:2px;">Повышает детализацию и чёткость</div></div>
-                  <div onClick="{{ tglEnhance }}" style="{{ fEnhanceTog }}"><span style="{{ fEnhanceKnob }}"></span></div>
+                  <div role="button" aria-label="Включить или выключить GFPGAN" onClick="{{ tglEnhance }}" style="{{ fEnhanceTog }}"><span style="{{ fEnhanceKnob }}"></span></div>
                 </div>
                 <div style="padding:13px 15px 4px;">
                   <div style="font-size:13.5px;font-weight:600;margin-bottom:9px;">Модель</div>
@@ -492,7 +492,7 @@
                 </div>
                 <div style="padding:13px 15px 15px;">
                   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Интенсивность GFPGAN</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fQualLabel }}</span></div>
-                  <input type="range" min="0" max="100" value="{{ fQualVal }}" onChange="{{ onQual }}" style="width:100%;accent-color:#AE9FFF;" />
+                  <input type="range" min="0" max="100" value="{{ fQualVal }}" onInput="{{ onQual }}" onChange="{{ onQual }}" style="width:100%;accent-color:#AE9FFF;" />
                 </div>
               </div>
           </div>
