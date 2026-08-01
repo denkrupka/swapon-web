@@ -640,7 +640,7 @@ class Component extends DCLogic {
         fModelKey:(_c.faceModelKey||'inswapper_128_fp16'),
         fVariantKey:(_c.faceVariantKey||'tensorrt_fp16') };
       try { var _ft=localStorage.getItem('sw_faceThumb'); if(_ft){ _st.faceThumb=_ft; _st.faceUploaded=true; } } catch(e){}
-      var _fm=FACE_MODELS.find(function(m){return m.model===_st.fModelKey;})||FACE_MODELS[0];
+      var _faceModels=this.__faceModels(); var _fm=_faceModels.find(function(m){return m.model===_st.fModelKey;})||_faceModels[0];
       var _fv=_fm.variants.find(function(v){return v.file===_st.fVariantKey;})||_fm.variants[0];
       _st.fModel=_fm.name; _st.fVariant=_fv.name; _st.fModelKey=_fm.model; _st.fVariantKey=_fv.file;
       if(_c.faceOpacity) _st.fOpacity=_c.faceOpacity; if(_c.faceSharpness) _st.fSharp=_c.faceSharpness;
@@ -703,7 +703,8 @@ class Component extends DCLogic {
   componentWillUnmount() { clearInterval(this._pushTimer); clearInterval(this._facePrevTimer); clearTimeout(this._faceParamTimer); clearTimeout(this._faceApplyClear); try{if(this._whepPc)this._whepPc.close();}catch(e){} try{var N=window.SwapOnNative;if(N&&N.stopLivePreview)N.stopLivePreview();}catch(e){} }
 
   syncTargets(list) { try { var a = list || this.state.added; var pkgs = a.filter(function(x){return x.enabled;}).map(function(x){return x.pkg;}).filter(function(p){return p && p !== '—';}).join(','); var N=window.SwapOnNative; if(N)N.setStr('config_target_packages', pkgs); } catch(e){} }
-  __selectedFaceModel() { var key=this.state.fModelKey||'inswapper_128_fp16'; return FACE_MODELS.find(function(m){return m.model===key;})||FACE_MODELS[0]; }
+  __faceModels() { return [{name:'InSwapper 128',orig:'InSwapper 128 FP16',model:'inswapper_128_fp16',variants:[{name:'TensorRT FP16',file:'tensorrt_fp16'}]},{name:'HyperSwap 256',orig:'HyperSwap 256 ONNX',model:'hyperswap_256',variants:[{name:'1A',file:'hyperswap_1a_256'},{name:'1B',file:'hyperswap_1b_256'},{name:'1C',file:'hyperswap_1c_256'}]}]; }
+  __selectedFaceModel() { var models=this.__faceModels(); var key=this.state.fModelKey||'inswapper_128_fp16'; return models.find(function(m){return m.model===key;})||models[0]; }
   __selectFaceModel(model) { if(!model)return; var variant=model.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',model.name); N.setStr('face_model_engine',model.orig); N.setStr('face_model_key',model.model); N.setStr('face_variant',variant.name); N.setStr('face_variant_file',variant.file);} this.setState({fModel:model.name,fModelKey:model.model,fVariant:variant.name,fVariantKey:variant.file},()=>this.__pushFaceParams()); }
   __selectFaceVariant(variant) { if(!variant)return; var N=window.SwapOnNative; if(N){N.setStr('face_variant',variant.name); N.setStr('face_variant_file',variant.file);} this.setState({fVariant:variant.name,fVariantKey:variant.file},()=>this.__pushFaceParams()); }
   __faceParams() { var s=this.state; var q=Number(s.fQual!=null?s.fQual:100); var model=this.__selectedFaceModel(); var variant=model.variants.find(function(v){return v.file===(s.fVariantKey||'');})||model.variants[0]; return { schema:2, mouth_mask:true, mouth_mask_size:0, poisson_blend:(s.fBlend===true), color_correction:(s.fDeblue===true), enhance:(s.fEnhance===true), enhancer:'gfpgan_1024', enhance_strength:Math.max(0,Math.min(1,q/100)), quality:q, opacity:(Number(s.fOpacity!=null?s.fOpacity:85)/100), sharpness:(Number(s.fSharp!=null?s.fSharp:40)/100), many_faces:false, model:model.model, variant:variant.file }; }
@@ -742,10 +743,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const R = React.createElement;
-    const FACE_MODELS = [
-      {name:'InSwapper 128', orig:'InSwapper 128 FP16', model:'inswapper_128_fp16', variants:[{name:'TensorRT FP16',file:'tensorrt_fp16'}]},
-      {name:'HyperSwap 256', orig:'HyperSwap 256 ONNX', model:'hyperswap_256', variants:[{name:'1A',file:'hyperswap_1a_256'},{name:'1B',file:'hyperswap_1b_256'},{name:'1C',file:'hyperswap_1c_256'}]}
-    ];
+    const FACE_MODELS = this.__faceModels();
     const faceSegmentStyle = (on) => 'flex:1;text-align:center;padding:9px 5px;border-radius:8px;font-size:12px;font-weight:'+(on?700:600)+';cursor:pointer;'+(on?'background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);':'color:#8A93A8;border:1px solid transparent;');
     const faceVariantStyle = (first,current,model,key) => { var hyper=model==='hyperswap_256'; var actual=first?(hyper?'hyperswap_1a_256':'tensorrt_fp16'):key; var enabled=first||hyper; var on=current===actual||(!current&&first); return 'flex:1;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:'+(on?700:600)+';cursor:'+(enabled?'pointer':'default')+';'+(on?'background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);':enabled?'color:#8A93A8;border:1px solid transparent;':'color:#454B5A;border:1px solid transparent;'); };
     const _txTitle = (t) => { var m=t.meta||{}; if(t.kind==='topup')return 'Пополнение · Telegram'; if(t.kind==='referral')return 'Бонус за приглашение'; if(t.kind==='bonus')return 'Бонус'; if(t.kind==='admin')return 'Корректировка'; if(t.kind==='refund')return 'Возврат'; var s=m.state||m.mode||''; if(s==='face'||s==='faceswap')return 'Замена лица'; if(s==='voice')return 'Замена голоса'; if(s==='background'||s==='idle')return 'Фоновый режим'; return 'Замена камеры'; };
