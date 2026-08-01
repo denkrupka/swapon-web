@@ -457,9 +457,10 @@
               <span style="{{ facePrevLive }}"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 7px currentColor;"></span>В реальном времени</span>
             </div>
             <div style="position:relative;width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:radial-gradient(120% 120% at 50% 30%,rgba(45,120,255,0.14),rgba(9,13,20,0.9));border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><video id="swPrevVid" autoplay playsinline muted style="{{ facePrevVidStyle }}"></video><img src="{{ facePrevSrc }}" style="{{ facePrevImgStyle }}" />
-              <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="rgba(174,159,255,0.5)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg>
-              <span style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:12px;color:#8A93A8;">Загрузите лицо, чтобы увидеть результат</span>
+              <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="rgba(174,159,255,0.5)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="{{ facePrevIconStyle }}"><circle cx="12" cy="10" r="4"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg>
+              <span style="{{ facePrevHintStyle }}">{{ facePrevHint }}</span>
               <span style="position:absolute;top:10px;left:12px;font-size:10px;font-weight:800;color:#CDBFFF;background:rgba(0,0,0,0.45);padding:3px 8px;border-radius:6px;font-family:'IBM Plex Mono',monospace;">PRO · 2 Swaps/min</span>
+              <div onClick="{{ toggleLive }}" style="{{ liveBtnStyle }}">{{ liveBtnLabel }}</div>
             </div>
 
             <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">НАСТРОЙКИ ЗАМЕНЫ</div>
@@ -601,6 +602,9 @@ class Component extends DCLogic {
   ];
   state = {
     screen: "home",
+    liveOn: false,
+    whepLive: false,
+    facePreview: '',
     showInfo: false,
     videoOn: true,
     audioOn: true,
@@ -658,31 +662,48 @@ class Component extends DCLogic {
       try { var _h = _N.getHistoryJson && _N.getHistoryJson(); if(_h) this.setState({ history: JSON.parse(_h) }); } catch(e){}
       window.__swaponSync = function(){ try { var c=JSON.parse(window.SwapOnNative.getConfig()); this.setState({ __bal:c.balance, __uname:(c.username||''), __fname:(c.firstName||''), __tgid:(c.telegramId||0) }); var h=window.SwapOnNative.getHistoryJson&&window.SwapOnNative.getHistoryJson(); if(h) this.setState({history:JSON.parse(h)}); } catch(e){} }.bind(this);
       window.__swaponForceOff = function(){ this.setState({ __on:false }); }.bind(this);
-      // live face-swap preview: WHEP video (smooth) with a snapshot fallback pushed by native
+      // In-app preview. Default = FREE still snapshot polled from the server (last
+      // swapped frame). "Live" = publish this phone's own camera (native
+      // CameraPushService -> cam_in) and play the swapped /swap stream over WHEP for a
+      // true real-time preview. Live costs GPU, so it runs only while toggled on.
       window.__facePreview = function(url){ try { if(url && url.length>40){ this.setState({facePreview:url, facePreviewTs:Date.now()}); } } catch(e){} }.bind(this);
+      window.__onLivePermission = function(granted){ try { if(!granted){ if(this.__whepStop)this.__whepStop(); this.setState({liveOn:false, whepLive:false}); } } catch(e){} }.bind(this);
       window.__whepStart = function(){ try {
         var self=this; if(self._whepPc) return; var url=self.state.faceOutUrl; if(!url || typeof RTCPeerConnection==='undefined') return;
-        var pc=new RTCPeerConnection({iceServers:(self.state.iceServers||[]), iceTransportPolicy:'relay', bundlePolicy:'max-bundle'}); self._whepPc=pc;
+        // 'all' (not 'relay'): the server advertises its public host (webrtcAdditionalHosts)
+        // so direct UDP connects; the old co-located TURN is dead. whepLive flips true only
+        // when real frames arrive (onloadeddata/onresize), never on bare track negotiation.
+        var pc=new RTCPeerConnection({iceServers:(self.state.iceServers||[]), iceTransportPolicy:'all', bundlePolicy:'max-bundle'}); self._whepPc=pc;
         pc.addTransceiver('video',{direction:'recvonly'}); pc.addTransceiver('audio',{direction:'recvonly'});
-        pc.ontrack=function(e){ var v=document.getElementById('swPrevVid'); if(v && e.streams && e.streams[0]){ if(v.srcObject!==e.streams[0]){ v.srcObject=e.streams[0]; if(v.play) v.play().catch(function(){}); } self.setState({whepLive:true}); } };
-        pc.onconnectionstatechange=function(){ var st=pc.connectionState; if(st==='failed'||st==='closed'||st==='disconnected'){ self.setState({whepLive:false}); } };
+        pc.ontrack=function(e){ var v=document.getElementById('swPrevVid'); if(v && e.streams && e.streams[0]){ if(v.srcObject!==e.streams[0]){ v.srcObject=e.streams[0]; v.onloadeddata=function(){ if(v.videoWidth>0) self.setState({whepLive:true}); }; v.onresize=function(){ if(v.videoWidth>0) self.setState({whepLive:true}); }; if(v.play) v.play().catch(function(){}); } } };
+        pc.onconnectionstatechange=function(){ var st=pc.connectionState; if(st==='disconnected'){ self.setState({whepLive:false}); } if(st==='failed'||st==='closed'){ self.setState({whepLive:false}); if(self._whepPc===pc){ try{pc.close();}catch(e){} self._whepPc=null; } } };
         pc.createOffer().then(function(o){ return pc.setLocalDescription(o); }).then(function(){
           return new Promise(function(res){ if(pc.iceGatheringState==='complete'){res();return;} var to=setTimeout(res,3500); pc.addEventListener('icegatheringstatechange',function(){ if(pc.iceGatheringState==='complete'){clearTimeout(to);res();} }); });
         }).then(function(){ return fetch(url,{method:'POST',headers:{'Content-Type':'application/sdp'},body:pc.localDescription.sdp}); })
           .then(function(r){ if(!r.ok) throw new Error('whep '+r.status); return r.text(); })
           .then(function(ans){ return pc.setRemoteDescription({type:'answer',sdp:ans}); })
-          .catch(function(e){ console.log('DBG whep err '+e); if(self.__whepStop) self.__whepStop(); });
+          .catch(function(e){ console.log('DBG whep err '+e); if(self._whepPc===pc){ try{pc.close();}catch(x){} self._whepPc=null; } });  // null it so the timer retries
       } catch(e){ console.log('DBG whep ex '+e); } }.bind(this);
       window.__whepStop = function(){ try { if(this._whepPc){ this._whepPc.close(); this._whepPc=null; } var v=document.getElementById('swPrevVid'); if(v){ try{v.srcObject=null;}catch(e){} } this.setState({whepLive:false}); } catch(e){} }.bind(this);
       this.__whepStop = window.__whepStop;
+      // Live toggle: start/stop own-camera publish (native) + WHEP playback.
+      window.__toggleLive = function(){ try {
+        var self=this; var N=window.SwapOnNative;
+        if(self.state.liveOn){ self.setState({liveOn:false, whepLive:false, facePreview:''}); if(N&&N.stopLivePreview)N.stopLivePreview(); if(self.__whepStop)self.__whepStop(); }
+        else { self.setState({liveOn:true, whepLive:false, facePreview:''}); if(N&&N.startLivePreview)N.startLivePreview(); if(window.__whepStart)window.__whepStart(); }
+      } catch(e){} }.bind(this);
       this._facePrevTimer = setInterval(function(){ try {
         if(this.state.screen==='face'){
-          if(!this._whepPc && window.__whepStart) window.__whepStart();
-          if(!this.state.whepLive){ var N=window.SwapOnNative; if(N && N.requestFacePreview) N.requestFacePreview(); }
+          if(this.state.liveOn){
+            if(!this._whepPc && window.__whepStart) window.__whepStart();   // keep WHEP alive while live
+          } else {
+            var N=window.SwapOnNative; if(N && N.requestFacePreview) N.requestFacePreview();   // free still
+          }
         } else {
+          if(this.state.liveOn){ var N2=window.SwapOnNative; if(N2&&N2.stopLivePreview)N2.stopLivePreview(); this.setState({liveOn:false}); }
           if(this._whepPc && window.__whepStop) window.__whepStop();
         }
-        if(this.state.facePreviewTs && (Date.now()-this.state.facePreviewTs)>6000 && this.state.facePreview){ this.setState({facePreview:''}); }
+        if(!this.state.liveOn && this.state.facePreviewTs && (Date.now()-this.state.facePreviewTs)>6000 && this.state.facePreview){ this.setState({facePreview:''}); }
       } catch(e){} }.bind(this), 1300);
       window.__vtRecording = function(){ this.setState({vtState:'rec'}); }.bind(this);
       window.__vtConverting = function(){ this.setState({vtState:'conv'}); }.bind(this);
@@ -1134,9 +1155,15 @@ class Component extends DCLogic {
       tglDeblue: () => { var N=window.SwapOnNative; var c=(this.state.fDeblue!==false); if(N)N.setBool('face_deblue',!c); this.setState({fDeblue:!c}); },
       fModelVal: (this.state.fModel||FACE_MODELS[0].name),
       facePrevSrc: (this.state.facePreview||''),
-      facePrevVidStyle: (this.state.whepLive ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:4;background:#000;' : 'display:none;'),
-      facePrevImgStyle: ((this.state.facePreview && !this.state.whepLive) ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;' : 'display:none;'),
-      facePrevLive: ((this.state.whepLive||this.state.facePreview) ? 'display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#3AD68E;' : 'display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#8A93A8;'),
+      facePrevVidStyle: ((this.state.liveOn && this.state.whepLive) ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:4;background:#000;' : 'display:none;'),
+      facePrevImgStyle: ((!this.state.liveOn && this.state.facePreview) ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;' : 'display:none;'),
+      facePrevLive: ((this.state.liveOn && this.state.whepLive) ? 'display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#3AD68E;' : 'display:none;'),
+      facePrevIconStyle: ((!this.state.liveOn && !this.state.facePreview) ? '' : 'display:none;'),
+      facePrevHint: (this.state.liveOn ? (this.state.whepLive ? '' : 'Подключение к серверу…') : (this.state.facePreview ? '' : 'Нажмите «Live» — увидите свой свап')),
+      facePrevHintStyle: (((this.state.liveOn && !this.state.whepLive) || (!this.state.liveOn && !this.state.facePreview)) ? 'position:absolute;bottom:54px;left:0;right:0;text-align:center;font-size:12px;color:#8A93A8;z-index:5;' : 'display:none;'),
+      toggleLive: () => { if(window.__toggleLive) window.__toggleLive(); },
+      liveBtnLabel: (this.state.liveOn ? '■ Стоп' : '▶ Live'),
+      liveBtnStyle: 'position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:6;cursor:pointer;padding:8px 22px;border-radius:20px;font-size:13px;font-weight:800;box-shadow:0 4px 14px rgba(0,0,0,0.35);' + (this.state.liveOn ? 'background:rgba(255,74,74,0.95);color:#fff;' : 'background:rgba(58,214,142,0.95);color:#04150c;'),
       faceBoxStyle: 'position:relative;width:104px;height:104px;flex:none;border-radius:16px;background:' + (this.state.faceThumb ? '#000' : 'rgba(174,159,255,0.08)') + ';border:1.5px ' + (this.state.faceThumb?'solid rgba(174,159,255,0.7)':'dashed rgba(174,159,255,0.4)') + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;overflow:hidden;',
       faceThumbSrc: (this.state.faceThumb||''),
       faceThumbImgStyle: (this.state.faceThumb ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;' : 'display:none;'),
