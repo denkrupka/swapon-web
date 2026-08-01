@@ -1157,7 +1157,12 @@ class Component extends DCLogic {
       tglDeblue: () => { var N=window.SwapOnNative; var c=(this.state.fDeblue!==false); if(N)N.setBool('face_deblue',!c); this.setState({fDeblue:!c}); },
       fModelVal: (this.state.fModel||FACE_MODELS[0].name),
       facePrevSrc: (this.state.facePreview||''),
-      facePrevVidStyle: ((this.state.liveOn && this.state.whepLive) ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:4;background:#000;' : 'display:none;'),
+      // /swap is landscape H.264 with the portrait camera rotated clockwise for
+      // camera consumers. Native injection applies camera orientation metadata;
+      // this plain WebView <video> does not, so turn only the in-app preview back.
+      // The swapped width/height percentages keep the full portrait inside the
+      // existing 4:3 card instead of stretching or cropping it.
+      facePrevVidStyle: ((this.state.liveOn && this.state.whepLive) ? 'position:absolute;left:50%;top:50%;width:75%;height:133.334%;object-fit:contain;z-index:4;background:#000;transform:translate(-50%,-50%) rotate(-90deg);transform-origin:center;' : 'display:none;'),
       facePrevImgStyle: ((!this.state.liveOn && this.state.facePreview) ? 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;' : 'display:none;'),
       facePrevLive: ((this.state.liveOn && this.state.whepLive) ? 'display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#3AD68E;' : 'display:none;'),
       facePrevIconStyle: ((!this.state.liveOn && !this.state.facePreview) ? '' : 'display:none;'),
