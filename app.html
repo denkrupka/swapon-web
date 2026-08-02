@@ -455,12 +455,14 @@
               <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Убрать синеву камеры</span><div role="button" aria-label="Убрать синеву камеры" onClick="{{ tglDeblue }}" style="margin-left:auto;{{ fDeblueTog }}"><span style="{{ fDeblueKnob }}"></span></div></div>
               <div style="padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
                 <div style="font-size:13.5px;font-weight:600;margin-bottom:9px;">Модель подмены</div>
-                <div style="display:flex;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:3px;gap:3px;">
-                  <div role="button" aria-label="Выбрать InSwapper 128" onClick="{{ pickInSwapper }}" style="{{ inSwapperStyle }}">InSwapper 128</div>
-                  <div role="button" aria-label="Выбрать HyperSwap 256" onClick="{{ pickHyperSwap }}" style="{{ hyperSwapStyle }}">HyperSwap 256</div>
+                <div style="display:flex;flex-wrap:wrap;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:3px;gap:3px;">
+                  <div role="button" aria-label="Выбрать InSwapper 128" onClick="{{ pickModel0 }}" style="{{ model0Style }}">InSwapper 128</div>
+                  <div role="button" aria-label="Выбрать HyperSwap 256" onClick="{{ pickModel1 }}" style="{{ model1Style }}">HyperSwap 256</div>
+                  <div role="button" aria-label="Выбрать ReSwapper 128" onClick="{{ pickModel2 }}" style="{{ model2Style }}">ReSwapper 128</div>
+                  <div role="button" aria-label="Выбрать ReSwapper 256" onClick="{{ pickModel3 }}" style="{{ model3Style }}">ReSwapper 256</div>
                 </div>
               </div>
-              <div style="padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div style="{{ variantBlockStyle }}">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Вариант модели</span><span style="font-size:10.5px;color:#8A93A8;">{{ variantHint }}</span></div>
                 <div style="display:flex;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:3px;gap:3px;">
                   <div role="button" aria-label="Выбрать вариант 1A" onClick="{{ pickVarA }}" style="{{ varAStyle }}">{{ varALabel }}</div>
@@ -476,6 +478,7 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Резкость наложения лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fSharpLabel }}</span></div>
                 <input type="range" min="0" max="100" value="{{ fSharpVal }}" onInput="{{ onSharp }}" onChange="{{ onSharp }}" style="width:100%;accent-color:#AE9FFF;" />
               </div>
+              <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Заменять все лица в кадре</span><div role="button" aria-label="Заменять все лица" onClick="{{ tglMany }}" style="margin-left:auto;{{ fManyTog }}"><span style="{{ fManyKnob }}"></span></div></div>
             </div>
 
               <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ДОПОЛНИТЕЛЬНОЕ УЛУЧШЕНИЕ</div>
@@ -487,12 +490,63 @@
                 <div style="padding:13px 15px 4px;">
                   <div style="font-size:13.5px;font-weight:600;margin-bottom:9px;">Модель</div>
                   <div style="display:flex;flex-wrap:wrap;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:11px;padding:3px;gap:3px;">
-                    <div style="flex:1;text-align:center;padding:9px 6px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(174,159,255,0.2);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);">GFPGAN 1.4 · 1024px</div>
+                    <div role="button" aria-label="GFPGAN 1024" onClick="{{ pickEnh0 }}" style="{{ enh0Style }}">GFPGAN 1024</div>
+                    <div role="button" aria-label="GFPGAN 1.4" onClick="{{ pickEnh1 }}" style="{{ enh1Style }}">GFPGAN 1.4</div>
+                    <div role="button" aria-label="GPEN 256" onClick="{{ pickEnh2 }}" style="{{ enh2Style }}">GPEN 256</div>
+                    <div role="button" aria-label="GPEN 512" onClick="{{ pickEnh3 }}" style="{{ enh3Style }}">GPEN 512</div>
                   </div>
                 </div>
                 <div style="padding:13px 15px 15px;">
                   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Интенсивность GFPGAN</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fQualLabel }}</span></div>
                   <input type="range" min="0" max="100" value="{{ fQualVal }}" onInput="{{ onQual }}" onChange="{{ onQual }}" style="width:100%;accent-color:#AE9FFF;" />
+                </div>
+              </div>
+
+              <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">МАСКИ ЧЕРТ ЛИЦА</div>
+              <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:14px;">
+                <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Маска рта</span><div role="button" aria-label="Маска рта" onClick="{{ tglMouth }}" style="margin-left:auto;{{ fMouthTog }}"><span style="{{ fMouthKnob }}"></span></div></div>
+                <div style="padding:6px 15px 13px;border-bottom:1px solid rgba(255,255,255,0.05);"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;"><span style="font-size:12px;color:#9AA3B8;">Размер маски рта</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fMouthSizeLabel }}</span></div><input type="range" min="0" max="100" value="{{ fMouthSizeVal }}" onInput="{{ onMouthSize }}" onChange="{{ onMouthSize }}" style="width:100%;accent-color:#AE9FFF;" /></div>
+                <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Маска глаз</span><div role="button" aria-label="Маска глаз" onClick="{{ tglEyes }}" style="margin-left:auto;{{ fEyesTog }}"><span style="{{ fEyesKnob }}"></span></div></div>
+                <div style="padding:6px 15px 13px;border-bottom:1px solid rgba(255,255,255,0.05);"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;"><span style="font-size:12px;color:#9AA3B8;">Размер маски глаз</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fEyesSizeLabel }}</span></div><input type="range" min="0" max="100" value="{{ fEyesSizeVal }}" onInput="{{ onEyesSize }}" onChange="{{ onEyesSize }}" style="width:100%;accent-color:#AE9FFF;" /></div>
+                <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Маска бровей</span><div role="button" aria-label="Маска бровей" onClick="{{ tglBrows }}" style="margin-left:auto;{{ fBrowsTog }}"><span style="{{ fBrowsKnob }}"></span></div></div>
+                <div style="padding:6px 15px 13px;border-bottom:1px solid rgba(255,255,255,0.05);"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;"><span style="font-size:12px;color:#9AA3B8;">Размер маски бровей</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fBrowsSizeLabel }}</span></div><input type="range" min="0" max="100" value="{{ fBrowsSizeVal }}" onInput="{{ onBrowsSize }}" onChange="{{ onBrowsSize }}" style="width:100%;accent-color:#AE9FFF;" /></div>
+                <div style="padding:13px 15px 15px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Растушёвка краёв маски</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fFeatherLabel }}</span></div><input type="range" min="1" max="64" value="{{ fFeatherVal }}" onInput="{{ onFeather }}" onChange="{{ onFeather }}" style="width:100%;accent-color:#AE9FFF;" /></div>
+              </div>
+
+              <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ОККЛЮЗИЯ · ПЕРЕКРЫТИЯ ЛИЦА</div>
+              <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:14px;">
+                <div style="padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <div style="font-size:13.5px;font-weight:600;margin-bottom:9px;">Модель окклюзии</div>
+                  <div style="display:flex;flex-wrap:wrap;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:3px;gap:3px;">
+                    <div role="button" aria-label="Без окклюзии" onClick="{{ pickOcc0 }}" style="{{ occ0Style }}">Нет</div>
+                    <div role="button" aria-label="XSeg" onClick="{{ pickOcc1 }}" style="{{ occ1Style }}">XSeg</div>
+                    <div role="button" aria-label="U-Net" onClick="{{ pickOcc2 }}" style="{{ occ2Style }}">U-Net</div>
+                    <div role="button" aria-label="SAM2" onClick="{{ pickOcc3 }}" style="{{ occ3Style }}">SAM2</div>
+                  </div>
+                </div>
+                <div style="padding:13px 15px 15px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:13.5px;font-weight:600;">Сила окклюзии</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fOccStrengthLabel }}</span></div><input type="range" min="0" max="100" value="{{ fOccStrengthVal }}" onInput="{{ onOccStrength }}" onChange="{{ onOccStrength }}" style="width:100%;accent-color:#AE9FFF;" /></div>
+              </div>
+
+              <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ДОПОЛНИТЕЛЬНО</div>
+              <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:14px;">
+                <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Интерполяция кадров · RIFE <span style="font-size:10.5px;color:#8A93A8;">· плавнее</span></span><div role="button" aria-label="RIFE" onClick="{{ tglRife }}" style="margin-left:auto;{{ fRifeTog }}"><span style="{{ fRifeKnob }}"></span></div></div>
+                <div style="padding:6px 15px 13px;border-bottom:1px solid rgba(255,255,255,0.05);"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;"><span style="font-size:12px;color:#9AA3B8;">Вес текущего кадра</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fRifeWeightLabel }}</span></div><input type="range" min="0" max="100" value="{{ fRifeWeightVal }}" onInput="{{ onRifeWeight }}" onChange="{{ onRifeWeight }}" style="width:100%;accent-color:#AE9FFF;" /></div>
+                <div style="{{ optRow }}"><span style="font-size:13.5px;font-weight:600;">Цветокоррекция LUT (.cube)</span><div role="button" aria-label="LUT" onClick="{{ tglLut }}" style="margin-left:auto;{{ fLutTog }}"><span style="{{ fLutKnob }}"></span></div></div>
+                <div style="padding:13px 15px 15px;"><input value="{{ fLutPathVal }}" onChange="{{ onLutPath }}" placeholder="/path/to/grade.cube" style="width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(174,159,255,0.28);border-radius:10px;padding:10px 12px;outline:none;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;font-size:12px;" /></div>
+              </div>
+
+              <div style="font-size:12px;font-weight:700;color:#8A93A8;letter-spacing:0.02em;margin:0 2px 9px;">ВИДЕОПОТОК · СТАБИЛИЗАЦИЯ</div>
+              <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:14px;">
+                <div style="padding:13px 15px 13px;border-bottom:1px solid rgba(255,255,255,0.05);"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;"><span style="font-size:13.5px;font-weight:600;">Стабилизация точек лица</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fLmSmoothLabel }}</span></div><div style="font-size:11px;color:#8A93A8;margin-bottom:9px;">Убирает дрожание черт лица между кадрами</div><input type="range" min="0" max="100" value="{{ fLmSmoothVal }}" onInput="{{ onLmSmooth }}" onChange="{{ onLmSmooth }}" style="width:100%;accent-color:#AE9FFF;" /></div>
+                <div style="padding:13px 15px 13px;border-bottom:1px solid rgba(255,255,255,0.05);"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;"><span style="font-size:13.5px;font-weight:600;">Временное сглаживание</span><span style="font-size:12px;font-weight:700;color:#CDBFFF;font-family:'IBM Plex Mono',monospace;">{{ fTmSmoothLabel }}</span></div><div style="font-size:11px;color:#8A93A8;margin-bottom:9px;">Смешивает область лица во времени — убирает мерцание</div><input type="range" min="0" max="100" value="{{ fTmSmoothVal }}" onInput="{{ onTmSmooth }}" onChange="{{ onTmSmooth }}" style="width:100%;accent-color:#AE9FFF;" /></div>
+                <div style="padding:13px 15px 15px;">
+                  <div style="font-size:13.5px;font-weight:600;margin-bottom:2px;">Проходы идентичности</div>
+                  <div style="font-size:11px;color:#8A93A8;margin-bottom:9px;">Повторный свап усиливает сходство (медленнее)</div>
+                  <div style="display:flex;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:3px;gap:3px;">
+                    <div role="button" aria-label="1 проход" onClick="{{ pickIdPass1 }}" style="{{ idPass1Style }}">1</div>
+                    <div role="button" aria-label="2 прохода" onClick="{{ pickIdPass2 }}" style="{{ idPass2Style }}">2</div>
+                    <div role="button" aria-label="3 прохода" onClick="{{ pickIdPass3 }}" style="{{ idPass3Style }}">3</div>
+                  </div>
                 </div>
               </div>
           </div>
@@ -589,8 +643,26 @@ class Component extends DCLogic {
     facePreview: "",
     fBlend: false,
     fDeblue: false,
-    fEnhance: false,
+    fEnhance: true,
     fEnhModel: "gfpgan_1024",
+    fQual: 70,
+    fManyFaces: false,
+    fMouthMask: true,
+    fMouthSize: 0,
+    fEyesMask: false,
+    fEyesSize: 0,
+    fBrowsMask: false,
+    fBrowsSize: 0,
+    fFeather: 12,
+    fOccluder: "xseg",
+    fOccStrength: 85,
+    fRife: false,
+    fRifeWeight: 50,
+    fLut: false,
+    fLutPath: "",
+    fLmSmooth: 60,
+    fTmSmooth: 30,
+    fIdPasses: 1,
     faceApplyState: "",
     showInfo: false,
     videoOn: true,
@@ -637,7 +709,7 @@ class Component extends DCLogic {
         videoSrc:({pattern:'local',whep:'stream',face:'face'}[_c.videoSource]||'stream'),
         audioSrc:(_c.audioSource==='voice'?'voice':'video'), curVoiceId:(_c.voiceId||''),
         faceOutUrl:(_c.faceOutUrl||''), iceServers:(_c.iceServers||[]),
-        fModelKey:(_c.faceModelKey||'inswapper_128_fp16'),
+        fModelKey:(_c.faceModelKey||'inswapper_128'),
         fVariantKey:(_c.faceVariantKey||'tensorrt_fp16') };
       try { var _ft=localStorage.getItem('sw_faceThumb'); if(_ft){ _st.faceThumb=_ft; _st.faceUploaded=true; } } catch(e){}
       var _faceModels=this.__faceModels(); var _fm=_faceModels.find(function(m){return m.model===_st.fModelKey;})||_faceModels[0];
@@ -707,11 +779,40 @@ class Component extends DCLogic {
   componentWillUnmount() { clearInterval(this._pushTimer); clearInterval(this._facePrevTimer); clearTimeout(this._faceParamTimer); clearTimeout(this._faceApplyClear); try{if(this._whepPc)this._whepPc.close();}catch(e){} try{var N=window.SwapOnNative;if(N&&N.stopLivePreview)N.stopLivePreview();}catch(e){} }
 
   syncTargets(list) { try { var a = list || this.state.added; var pkgs = a.filter(function(x){return x.enabled;}).map(function(x){return x.pkg;}).filter(function(p){return p && p !== '—';}).join(','); var N=window.SwapOnNative; if(N)N.setStr('config_target_packages', pkgs); } catch(e){} }
-  __faceModels() { return [{name:'InSwapper 128',orig:'InSwapper 128 FP16',model:'inswapper_128_fp16',variants:[{name:'TensorRT FP16',file:'tensorrt_fp16'}]},{name:'HyperSwap 256',orig:'HyperSwap 256 ONNX',model:'hyperswap_256',variants:[{name:'1A',file:'hyperswap_1a_256'},{name:'1B',file:'hyperswap_1b_256'},{name:'1C',file:'hyperswap_1c_256'}]}]; }
-  __selectedFaceModel() { var models=this.__faceModels(); var key=this.state.fModelKey||'inswapper_128_fp16'; return models.find(function(m){return m.model===key;})||models[0]; }
+  __faceModels() { return [{name:'InSwapper 128',orig:'InSwapper 128 FP16',model:'inswapper_128',variants:[{name:'FP16',file:'fp16'}]},{name:'HyperSwap 256',orig:'HyperSwap 256 ONNX',model:'hyperswap_256',variants:[{name:'1A',file:'hyperswap_1a_256'},{name:'1B',file:'hyperswap_1b_256'},{name:'1C',file:'hyperswap_1c_256'}]},{name:'ReSwapper 128',orig:'ReSwapper 128',model:'reswapper_128',variants:[{name:'FP16',file:'fp16'}]},{name:'ReSwapper 256',orig:'ReSwapper 256',model:'reswapper_256',variants:[{name:'FP16',file:'fp16'}]}]; }
+  __selectedFaceModel() { var models=this.__faceModels(); var key=this.state.fModelKey||'inswapper_128'; return models.find(function(m){return m.model===key;})||models[0]; }
   __selectFaceModel(model) { if(!model)return; var variant=model.variants[0]; var N=window.SwapOnNative; if(N){N.setStr('face_model',model.name); N.setStr('face_model_engine',model.orig); N.setStr('face_model_key',model.model); N.setStr('face_variant',variant.name); N.setStr('face_variant_file',variant.file);} this.setState({fModel:model.name,fModelKey:model.model,fVariant:variant.name,fVariantKey:variant.file},()=>this.__pushFaceParams()); }
   __selectFaceVariant(variant) { if(!variant)return; var N=window.SwapOnNative; if(N){N.setStr('face_variant',variant.name); N.setStr('face_variant_file',variant.file);} this.setState({fVariant:variant.name,fVariantKey:variant.file},()=>this.__pushFaceParams()); }
-  __faceParams() { var s=this.state; var q=Number(s.fQual!=null?s.fQual:100); var model=this.__selectedFaceModel(); var variant=model.variants.find(function(v){return v.file===(s.fVariantKey||'');})||model.variants[0]; return { schema:2, mouth_mask:true, mouth_mask_size:0, poisson_blend:(s.fBlend===true), color_correction:(s.fDeblue===true), enhance:(s.fEnhance===true), enhancer:'gfpgan_1024', enhance_strength:Math.max(0,Math.min(1,q/100)), quality:q, opacity:(Number(s.fOpacity!=null?s.fOpacity:85)/100), sharpness:(Number(s.fSharp!=null?s.fSharp:40)/100), many_faces:false, model:model.model, variant:variant.file }; }
+  __faceParams() { var s=this.state; var q=Number(s.fQual!=null?s.fQual:100); var model=this.__selectedFaceModel(); var variant=model.variants.find(function(v){return v.file===(s.fVariantKey||'');})||model.variants[0]; var c01=function(n){return Math.max(0,Math.min(1,n));}; return {
+    schema:2,
+    model:model.model,
+    variant:variant.file,
+    opacity:c01(Number(s.fOpacity!=null?s.fOpacity:85)/100),
+    sharpness:c01(Number(s.fSharp!=null?s.fSharp:40)/100),
+    many_faces:(s.fManyFaces===true),
+    mouth_mask:(s.fMouthMask!==false),
+    mouth_mask_size:Math.max(0,Math.min(100,Number(s.fMouthSize!=null?s.fMouthSize:0))),
+    eyes_mask:(s.fEyesMask===true),
+    eyes_mask_size:c01(Number(s.fEyesSize!=null?s.fEyesSize:0)/100),
+    eyebrows_mask:(s.fBrowsMask===true),
+    eyebrows_mask_size:c01(Number(s.fBrowsSize!=null?s.fBrowsSize:0)/100),
+    mask_feather_ratio:Math.max(1,Math.min(64,Math.round(Number(s.fFeather!=null?s.fFeather:12)))),
+    poisson_blend:(s.fBlend===true),
+    color_correction:(s.fDeblue===true),
+    occluder:(s.fOccluder||'none'),
+    occluder_strength:c01(Number(s.fOccStrength!=null?s.fOccStrength:100)/100),
+    enhance:(s.fEnhance===true),
+    enhancer:(s.fEnhModel||'gfpgan_1024'),
+    enhance_strength:c01(q/100),
+    rife:(s.fRife===true),
+    rife_weight:c01(Number(s.fRifeWeight!=null?s.fRifeWeight:50)/100),
+    lut:(s.fLut===true),
+    lut_path:(s.fLutPath||''),
+    landmark_smooth:c01(Number(s.fLmSmooth!=null?s.fLmSmooth:60)/100),
+    temporal_smooth:c01(Number(s.fTmSmooth!=null?s.fTmSmooth:30)/100),
+    identity_passes:Math.max(1,Math.min(3,Math.round(Number(s.fIdPasses!=null?s.fIdPasses:1)))),
+    quality:q
+  }; }
   __pushFaceParams() { try { var N=window.SwapOnNative; if(!N||!N.setFaceParams)return; clearTimeout(this._faceParamTimer); this.setState({faceApplyState:'sending'}); var self=this; this._faceParamTimer=setTimeout(function(){ N.setFaceParams(JSON.stringify(self.__faceParams())); },220); } catch(e){ this.setState({faceApplyState:'error'}); } }
   __syncEngine() { try { var s=this.state; var N=window.SwapOnNative; if(!N)return; var vmap={local:'pattern',stream:'whep',face:'face'}; var amap={video:'whep',voice:'voice',mic:'microphone'}; var vOn=(s.videoOn!==false), aOn=(s.audioOn!==false); N.setBool('inject_front_camera', !!(vOn && s.camFront)); N.setBool('inject_back_camera', !!(vOn && s.camBack)); N.setStr('frame_source', vmap[s.videoSrc]||'whep'); N.setBool('video_replace', vOn); N.setBool('audio_replace', aOn); N.setStr('audio_source', aOn ? (amap[s.audioSrc]||'whep') : 'microphone'); } catch(e){} }
   addFromCatalog(app) {
@@ -749,6 +850,7 @@ class Component extends DCLogic {
     const R = React.createElement;
     const FACE_MODELS = this.__faceModels();
     const faceSegmentStyle = (on) => 'flex:1;text-align:center;padding:9px 5px;border-radius:8px;font-size:12px;font-weight:'+(on?700:600)+';cursor:pointer;'+(on?'background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);':'color:#8A93A8;border:1px solid transparent;');
+    const faceModelStyle = (on) => 'flex:1 1 46%;text-align:center;padding:9px 6px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:'+(on?700:600)+';'+(on?'background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);':'color:#8A93A8;border:1px solid transparent;');
     const faceVariantStyle = (first,current,model,key) => { var hyper=model==='hyperswap_256'; var actual=first?(hyper?'hyperswap_1a_256':'tensorrt_fp16'):key; var enabled=first||hyper; var on=current===actual||(!current&&first); return 'flex:1;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:'+(on?700:600)+';cursor:'+(enabled?'pointer':'default')+';'+(on?'background:rgba(174,159,255,0.20);color:#CDBFFF;border:1px solid rgba(174,159,255,0.35);':enabled?'color:#8A93A8;border:1px solid transparent;':'color:#454B5A;border:1px solid transparent;'); };
     const _txTitle = (t) => { var m=t.meta||{}; if(t.kind==='topup')return 'Пополнение · Telegram'; if(t.kind==='referral')return 'Бонус за приглашение'; if(t.kind==='bonus')return 'Бонус'; if(t.kind==='admin')return 'Корректировка'; if(t.kind==='refund')return 'Возврат'; var s=m.state||m.mode||''; if(s==='face'||s==='faceswap')return 'Замена лица'; if(s==='voice')return 'Замена голоса'; if(s==='background'||s==='idle')return 'Фоновый режим'; return 'Замена камеры'; };
     const _txWhen = (iso) => { try { var d=new Date(iso); var now=new Date(); var hh=('0'+d.getHours()).slice(-2), mm=('0'+d.getMinutes()).slice(-2); var sameDay=d.toDateString()===now.toDateString(); var yd=new Date(now); yd.setDate(now.getDate()-1); if(sameDay)return 'Сегодня, '+hh+':'+mm; if(d.toDateString()===yd.toDateString())return 'Вчера, '+hh+':'+mm; var mon=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'][d.getMonth()]; return d.getDate()+' '+mon+', '+hh+':'+mm; } catch(e){ return ''; } };
@@ -1153,7 +1255,7 @@ class Component extends DCLogic {
       facePrevIconStyle: ((!this.state.liveOn && !this.state.facePreview) ? '' : 'display:none;'),
       facePrevHint: (this.state.liveOn ? (this.state.whepLive ? '' : 'Подключение к серверу…') : (this.state.facePreview ? '' : 'Нажмите «Live» — увидите свой свап')),
       facePrevHintStyle: (((this.state.liveOn && !this.state.whepLive) || (!this.state.liveOn && !this.state.facePreview)) ? 'position:absolute;bottom:54px;left:0;right:0;text-align:center;font-size:12px;color:#8A93A8;z-index:5;' : 'display:none;'),
-      faceModeBadge: ((this.state.fModelKey==='hyperswap_256'?'HYPERSWAP 256':'INSWAPPER 128')+' · РУЧНОЙ РЕЖИМ'),
+      faceModeBadge: (((this.state.fModel||'InSwapper 128').toUpperCase())+' · РУЧНОЙ РЕЖИМ'),
       liveBtnLabel: (this.state.liveOn?'Остановить Live':'Запустить Live'),
       liveBtnStyle: 'position:absolute;left:50%;bottom:12px;z-index:6;transform:translateX(-50%);padding:9px 16px;border-radius:10px;white-space:nowrap;cursor:pointer;font-size:12px;font-weight:800;color:'+(this.state.liveOn?'#FF8097':'#0A0713')+';background:'+(this.state.liveOn?'rgba(255,80,112,0.16)':'linear-gradient(120deg,#AE9FFF,#8E7CFF)')+';border:1px solid '+(this.state.liveOn?'rgba(255,107,133,0.42)':'rgba(205,191,255,0.5)')+';',
       toggleLive: () => { if(window.__toggleLive)window.__toggleLive(); },
@@ -1185,6 +1287,74 @@ class Component extends DCLogic {
       tglEnhance: () => { var N=window.SwapOnNative; var c=(this.state.fEnhance!==false); if(N)N.setBool('face_enhance',!c); this.setState({fEnhance:!c}, ()=>this.__pushFaceParams()); },
       fQualVal: (this.state.fQual!=null?this.state.fQual:100), fQualLabel: ((this.state.fQual!=null?this.state.fQual:100)+'%'),
       onQual: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_quality',String(v)); this.setState({fQual:v}, ()=>this.__pushFaceParams()); },
+      // ---- Face: full engine model list (4 models) + variant gating ----
+      model0Style: faceModelStyle(this.state.fModelKey==='inswapper_128'||!this.state.fModelKey),
+      model1Style: faceModelStyle(this.state.fModelKey==='hyperswap_256'),
+      model2Style: faceModelStyle(this.state.fModelKey==='reswapper_128'),
+      model3Style: faceModelStyle(this.state.fModelKey==='reswapper_256'),
+      pickModel0: () => this.__selectFaceModel(FACE_MODELS[0]),
+      pickModel1: () => this.__selectFaceModel(FACE_MODELS[1]),
+      pickModel2: () => this.__selectFaceModel(FACE_MODELS[2]),
+      pickModel3: () => this.__selectFaceModel(FACE_MODELS[3]),
+      variantBlockStyle: (this.state.fModelKey==='hyperswap_256'?'padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.05);':'display:none;'),
+      // ---- Face: many faces ----
+      fManyTog: (this.state.fManyFaces===true?toggleSm:toggleSmOff), fManyKnob: (this.state.fManyFaces===true?knobSmOn:knobSmOff),
+      tglMany: () => { var c=(this.state.fManyFaces===true); var N=window.SwapOnNative; if(N)N.setBool('face_many',!c); this.setState({fManyFaces:!c}, ()=>this.__pushFaceParams()); },
+      // ---- Face: enhancer model (4 options) ----
+      enh0Style: faceModelStyle((this.state.fEnhModel||'gfpgan_1024')==='gfpgan_1024'),
+      enh1Style: faceModelStyle(this.state.fEnhModel==='gfpgan_1.4'),
+      enh2Style: faceModelStyle(this.state.fEnhModel==='gpen_256'),
+      enh3Style: faceModelStyle(this.state.fEnhModel==='gpen_512'),
+      pickEnh0: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhancer','gfpgan_1024'); this.setState({fEnhModel:'gfpgan_1024'}, ()=>this.__pushFaceParams()); },
+      pickEnh1: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhancer','gfpgan_1.4'); this.setState({fEnhModel:'gfpgan_1.4'}, ()=>this.__pushFaceParams()); },
+      pickEnh2: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhancer','gpen_256'); this.setState({fEnhModel:'gpen_256'}, ()=>this.__pushFaceParams()); },
+      pickEnh3: () => { var N=window.SwapOnNative; if(N)N.setStr('face_enhancer','gpen_512'); this.setState({fEnhModel:'gpen_512'}, ()=>this.__pushFaceParams()); },
+      // ---- Face: landmark masks ----
+      fMouthTog: (this.state.fMouthMask===false?toggleSmOff:toggleSm), fMouthKnob: (this.state.fMouthMask===false?knobSmOff:knobSmOn),
+      tglMouth: () => { var c=(this.state.fMouthMask!==false); var N=window.SwapOnNative; if(N)N.setBool('face_mouth_mask',!c); this.setState({fMouthMask:!c}, ()=>this.__pushFaceParams()); },
+      fMouthSizeVal: (this.state.fMouthSize!=null?this.state.fMouthSize:0), fMouthSizeLabel: ((this.state.fMouthSize!=null?this.state.fMouthSize:0)+'%'),
+      onMouthSize: (e) => { var v=e.target.value; this.setState({fMouthSize:v}, ()=>this.__pushFaceParams()); },
+      fEyesTog: (this.state.fEyesMask===true?toggleSm:toggleSmOff), fEyesKnob: (this.state.fEyesMask===true?knobSmOn:knobSmOff),
+      tglEyes: () => { var c=(this.state.fEyesMask===true); var N=window.SwapOnNative; if(N)N.setBool('face_eyes_mask',!c); this.setState({fEyesMask:!c}, ()=>this.__pushFaceParams()); },
+      fEyesSizeVal: (this.state.fEyesSize!=null?this.state.fEyesSize:0), fEyesSizeLabel: ((this.state.fEyesSize!=null?this.state.fEyesSize:0)+'%'),
+      onEyesSize: (e) => { var v=e.target.value; this.setState({fEyesSize:v}, ()=>this.__pushFaceParams()); },
+      fBrowsTog: (this.state.fBrowsMask===true?toggleSm:toggleSmOff), fBrowsKnob: (this.state.fBrowsMask===true?knobSmOn:knobSmOff),
+      tglBrows: () => { var c=(this.state.fBrowsMask===true); var N=window.SwapOnNative; if(N)N.setBool('face_eyebrows_mask',!c); this.setState({fBrowsMask:!c}, ()=>this.__pushFaceParams()); },
+      fBrowsSizeVal: (this.state.fBrowsSize!=null?this.state.fBrowsSize:0), fBrowsSizeLabel: ((this.state.fBrowsSize!=null?this.state.fBrowsSize:0)+'%'),
+      onBrowsSize: (e) => { var v=e.target.value; this.setState({fBrowsSize:v}, ()=>this.__pushFaceParams()); },
+      fFeatherVal: (this.state.fFeather!=null?this.state.fFeather:12), fFeatherLabel: (String(this.state.fFeather!=null?this.state.fFeather:12)),
+      onFeather: (e) => { var v=e.target.value; this.setState({fFeather:v}, ()=>this.__pushFaceParams()); },
+      // ---- Face: occlusion ----
+      occ0Style: faceModelStyle((this.state.fOccluder||'none')==='none'),
+      occ1Style: faceModelStyle(this.state.fOccluder==='xseg'),
+      occ2Style: faceModelStyle(this.state.fOccluder==='unet'),
+      occ3Style: faceModelStyle(this.state.fOccluder==='sam2'),
+      pickOcc0: () => { var N=window.SwapOnNative; if(N)N.setStr('face_occluder','none'); this.setState({fOccluder:'none'}, ()=>this.__pushFaceParams()); },
+      pickOcc1: () => { var N=window.SwapOnNative; if(N)N.setStr('face_occluder','xseg'); this.setState({fOccluder:'xseg'}, ()=>this.__pushFaceParams()); },
+      pickOcc2: () => { var N=window.SwapOnNative; if(N)N.setStr('face_occluder','unet'); this.setState({fOccluder:'unet'}, ()=>this.__pushFaceParams()); },
+      pickOcc3: () => { var N=window.SwapOnNative; if(N)N.setStr('face_occluder','sam2'); this.setState({fOccluder:'sam2'}, ()=>this.__pushFaceParams()); },
+      fOccStrengthVal: (this.state.fOccStrength!=null?this.state.fOccStrength:100), fOccStrengthLabel: ((this.state.fOccStrength!=null?this.state.fOccStrength:100)+'%'),
+      onOccStrength: (e) => { var v=e.target.value; this.setState({fOccStrength:v}, ()=>this.__pushFaceParams()); },
+      // ---- Face: extras (RIFE frame interpolation + LUT color grade) ----
+      fRifeTog: (this.state.fRife===true?toggleSm:toggleSmOff), fRifeKnob: (this.state.fRife===true?knobSmOn:knobSmOff),
+      tglRife: () => { var c=(this.state.fRife===true); var N=window.SwapOnNative; if(N)N.setBool('face_rife',!c); this.setState({fRife:!c}, ()=>this.__pushFaceParams()); },
+      fRifeWeightVal: (this.state.fRifeWeight!=null?this.state.fRifeWeight:50), fRifeWeightLabel: ((this.state.fRifeWeight!=null?this.state.fRifeWeight:50)+'%'),
+      onRifeWeight: (e) => { var v=e.target.value; this.setState({fRifeWeight:v}, ()=>this.__pushFaceParams()); },
+      fLutTog: (this.state.fLut===true?toggleSm:toggleSmOff), fLutKnob: (this.state.fLut===true?knobSmOn:knobSmOff),
+      tglLut: () => { var c=(this.state.fLut===true); var N=window.SwapOnNative; if(N)N.setBool('face_lut',!c); this.setState({fLut:!c}, ()=>this.__pushFaceParams()); },
+      fLutPathVal: (this.state.fLutPath||''),
+      onLutPath: (e) => { var v=e.target.value; var N=window.SwapOnNative; if(N)N.setStr('face_lut_path', v); this.setState({fLutPath:v}, ()=>this.__pushFaceParams()); },
+      // ---- Face: live-video temporal stabilization ----
+      fLmSmoothVal: (this.state.fLmSmooth!=null?this.state.fLmSmooth:60), fLmSmoothLabel: ((this.state.fLmSmooth!=null?this.state.fLmSmooth:60)+'%'),
+      onLmSmooth: (e) => { var v=e.target.value; this.setState({fLmSmooth:v}, ()=>this.__pushFaceParams()); },
+      fTmSmoothVal: (this.state.fTmSmooth!=null?this.state.fTmSmooth:30), fTmSmoothLabel: ((this.state.fTmSmooth!=null?this.state.fTmSmooth:30)+'%'),
+      onTmSmooth: (e) => { var v=e.target.value; this.setState({fTmSmooth:v}, ()=>this.__pushFaceParams()); },
+      idPass1Style: faceSegmentStyle((this.state.fIdPasses!=null?Number(this.state.fIdPasses):1)===1),
+      idPass2Style: faceSegmentStyle(Number(this.state.fIdPasses)===2),
+      idPass3Style: faceSegmentStyle(Number(this.state.fIdPasses)===3),
+      pickIdPass1: () => { this.setState({fIdPasses:1}, ()=>this.__pushFaceParams()); },
+      pickIdPass2: () => { this.setState({fIdPasses:2}, ()=>this.__pushFaceParams()); },
+      pickIdPass3: () => { this.setState({fIdPasses:3}, ()=>this.__pushFaceParams()); },
       // ---- Settings: video file picker + fit mode ----
       videoName: (this.state.videoName||'clip_swap.mp4'), videoMeta: (this.state.videoMeta||'1080×1920 · 00:42'),
       pickVideo: () => { try { var inp=document.createElement('input'); inp.type='file'; inp.accept='video/*'; inp.onchange=(ev)=>{ var f=ev.target.files&&ev.target.files[0]; if(!f)return; var N=window.SwapOnNative; if(N){N.setStr('video_file_name',f.name); N.setStr('frame_source','pattern');} this.setState({videoName:f.name, videoMeta:(Math.round(f.size/104857.6)/10+' МБ'), __vsrc:'pattern'}); }; inp.click(); } catch(e){} },
